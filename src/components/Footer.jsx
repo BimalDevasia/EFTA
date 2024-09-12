@@ -8,6 +8,7 @@ import { SpecialText } from "./typography";
 const Footer = () => {
   return (
     <footer>
+      <hr className="border-[#6E6E6E]" />
       <Wrapper className="flex justify-between pt-[104px] pb-[92px]">
         <div className="self-stretch flex flex-col justify-between">
           <Logo />
