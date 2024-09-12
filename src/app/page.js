@@ -13,7 +13,6 @@ export default function home() {
       <Community />
       <FrontTemplate />
       <FeaturedGiftSection />
-      <Footer />
     </>
   );
 }
