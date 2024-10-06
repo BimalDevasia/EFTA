@@ -3,7 +3,7 @@ import React,{ useState , useEffect } from 'react'
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-function navbar() {
+function Navbar() {
     const [selPage,setSelPage]=useState()
     let items=[{id:"Home",path:"/"},{id:"Gifts",path:"/gifts"},{id:"Events",path:"/events"},{id:"Courses",path:"/courses"}]
     
@@ -51,4 +51,4 @@ function navbar() {
   )
 }
 
-export default navbar
+export default Navbar
