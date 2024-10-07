@@ -4,10 +4,10 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
   ],
   prefix: "",
   theme: {
@@ -20,19 +20,24 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'custom-gradient': 'linear-gradient(249.81deg, #8300FF -9.71%, #FB718B 61.86%, #FA6D47 105.74%)'
-      }
-      ,boxShadow:{
-        'button_shadow': '7px 8px 17.4px 0px #FFFFFF40 inset, -7px -6px 9.2px 0px #00000029 inset',
+        "custom-gradient":
+          "linear-gradient(249.81deg, #8300FF -9.71%, #FB718B 61.86%, #FA6D47 105.74%)",
+      },
+      boxShadow: {
+        button_shadow:
+          "7px 8px 17.4px 0px #FFFFFF40 inset, -7px -6px 9.2px 0px #00000029 inset",
         "carousal-btn": "0px 3.2px 12px 0px rgba(0, 0, 0, 0.10)",
         "carousal-card": "2.988px 5.23px 33.618px -4.482px rgba(0, 0, 0, 0.16)",
-      },textShadow:{
-        'custom-light': '2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F',
-      }
-      ,fontFamily: {
-        poppins: ['var(--font-poppins)', 'sans-serif'],
-        inter: ['var(--font-inter)', 'sans-serif'],
-        italiana:['var(--font-italiana)','sans-serif']
+        "cart-summary": "0px 1px 2px 0px rgba(130, 130, 130, 0.25)",
+      },
+      textShadow: {
+        "custom-light":
+          "2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F",
+      },
+      fontFamily: {
+        poppins: ["var(--font-poppins)", "sans-serif"],
+        inter: ["var(--font-inter)", "sans-serif"],
+        italiana: ["var(--font-italiana)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -68,9 +73,9 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        primary_color:"#F46782",
-        nav_blue:"#8300FF",
-        gift_blue:"#1F76BD"
+        primary_color: "#F46782",
+        nav_blue: "#8300FF",
+        gift_blue: "#1F76BD",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -96,11 +101,13 @@ module.exports = {
   plugins: [
     function ({ addUtilities }) {
       const newUtilities = {
-        '.text-shadow-custom-light': {
-          textShadow: '2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F',
+        ".text-shadow-custom-light": {
+          textShadow:
+            "2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F",
         },
       };
-      addUtilities(newUtilities, ['responsive', 'hover']);
+      addUtilities(newUtilities, ["responsive", "hover"]);
     },
-    require("tailwindcss-animate")],
-}
+    require("tailwindcss-animate"),
+  ],
+};
