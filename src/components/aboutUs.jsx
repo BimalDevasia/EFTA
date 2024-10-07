@@ -79,10 +79,7 @@ function aboutUs() {
 
 
 
-  const items=["Custom Orders", "Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits","Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits"]
 
-
-  const memoizedItems = useMemo(() => items, [items]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -179,4 +176,4 @@ function aboutUs() {
   )
 }
 
-export default aboutUs
+export default AboutUs

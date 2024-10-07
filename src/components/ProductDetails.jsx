@@ -1,8 +1,8 @@
 "use client";
 import React, { Fragment, useState } from "react";
 import { SpecialText } from "./typography";
-import CartIcon from "./svgs/CartIcon";
 import ShareIcon from "./svgs/ShareIcon";
+import QuantityCounter from "./QuantityCounter";
 
 const specifications = [
   {
@@ -70,30 +70,12 @@ const ProductDetails = () => {
             <SpecialText className="text-white text-[20px]">
               Shop Now
             </SpecialText>
-            <CartIcon />
           </button>
           <button className="rounded-full bg-[#00C63B] w-[38px] h-[38px] flex items-center justify-center">
             <ShareIcon className="-translate-x-[1px]" />
           </button>
         </div>
-        <div className="flex gap-2">
-          <button
-            disabled={count === 0}
-            onClick={() => setCount((prev) => prev - 1)}
-            className="w-[28px] h-[28px] border border-black disabled:border-[#DBDBDB] rounded-full font-inter text-[14px] font-medium text-black disabled:text-[#DBDBDB]"
-          >
-            -
-          </button>
-          <p className="h-[28px] w-[48px] flex items-center justify-center border border-[#DBDBDB]">
-            {count}
-          </p>
-          <button
-            onClick={() => setCount((prev) => prev + 1)}
-            className="w-[28px] h-[28px] border border-black disabled:border-[#DBDBDB] rounded-full font-inter text-[14px] font-medium text-black disabled:text-[#DBDBDB]"
-          >
-            +
-          </button>
-        </div>
+        <QuantityCounter count={count} setCount={setCount} />
         <div className="space-y-6">
           <h2>
             <SpecialText className="text-black text-[20px]">
