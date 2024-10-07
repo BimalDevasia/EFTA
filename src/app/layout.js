@@ -2,23 +2,24 @@ import { Inter,Poppins,Italiana,Caveat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/Footer";
-const inter = Inter({ 
+import ModalProvider from "@/components/ModalProvider";
+const inter = Inter({
   subsets: ["latin"],
-  variable: '--font-inter'
+  variable: "--font-inter",
 });
 
 
-const poppins= Poppins({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ['400', '700','600'],
-  variable: '--font-poppins'
+  weight: ["400", "700", "600"],
+  variable: "--font-poppins",
 });
 
-const italiana=Italiana({
-  weight: '400',
-  subsets: ['latin'], 
-  variable: '--font-italiana',
-})
+const italiana = Italiana({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-italiana",
+});
 
 const caveat = Caveat({
   subsets: ['latin'],
@@ -34,12 +35,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      
-      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable}`}>
-        <Navbar/>
+      <body
+        className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable}`}
+      >
+        <Navbar />
         {children}
-        <Footer />
-        </body>
+        <ModalProvider />
+      </body>
     </html>
   );
 }
