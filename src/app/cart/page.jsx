@@ -4,6 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import QuantityCounter from "@/components/QuantityCounter";
 import { SpecialText } from "@/components/typography";
 import Wrapper from "@/components/Wrapper";
+import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 
 const links = [
@@ -44,47 +45,54 @@ const cartItems = [
 ];
 
 const CartPage = () => {
-  const address = "1234 Main St, Anytown, USA";
+  const [showCheckout, setShowCheckout] = useState(true);
   return (
     <Wrapper className="pt-32 pb-[100px]">
-      <div>
-        <Breadcrumb links={links} />
-        <div className="grid grid-cols-[auto_365px] gap-8">
-          <div className="space-y-9">
-            <div className="flex justify-between items-center px-6 py-5 shadow-cart-summary">
-              <div>
-                Deliver to : <span className="font-medium">{address}</span>
-              </div>
-              <div>
-                <button className="text-[#8300FF] text-[16px] font-medium">
-                  Edit
-                </button>
-              </div>
-            </div>
-            <div className="px-8 shadow-cart-summary">
-              <div className=" py-9">
-                <div className="space-y-9">
-                  {cartItems.map((item) => (
-                    <CartItem key={item.id} item={item} />
-                  ))}
-                </div>
-              </div>
-              <hr />
-              <div className="px-4 py-8 w-full">
-                <button className="bg-[#FB641B] text-white text-[20px] font-semibold py-5 px-10 rounded-[100vmin] ml-auto block">
-                  Place Order
-                </button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <CartSummary />
-          </div>
-        </div>
-      </div>
+      {showCheckout ? <Checkout /> : <CartDetails />}
     </Wrapper>
   );
 };
+
+function CartDetails() {
+  const address = "1234 Main St, Anytown, USA";
+  return (
+    <div>
+      <Breadcrumb links={links} />
+      <div className="grid grid-cols-[auto_365px] gap-8">
+        <div className="space-y-9">
+          <div className="flex justify-between items-center px-6 py-5 shadow-cart-summary">
+            <div>
+              Deliver to : <span className="font-medium">{address}</span>
+            </div>
+            <div>
+              <button className="text-[#8300FF] text-[16px] font-medium">
+                Edit
+              </button>
+            </div>
+          </div>
+          <div className="px-8 shadow-cart-summary">
+            <div className=" py-9">
+              <div className="space-y-9">
+                {cartItems.map((item) => (
+                  <CartItem key={item.id} item={item} />
+                ))}
+              </div>
+            </div>
+            <hr />
+            <div className="px-4 py-8 w-full">
+              <button className="bg-[#FB641B] text-white text-[20px] font-semibold py-5 px-10 rounded-[100vmin] ml-auto block">
+                Place Order
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <CartSummary />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function CartItem({ item }) {
   const [count, setCount] = useState(1);
@@ -159,6 +167,48 @@ function CartSummary() {
         <p>Total</p>
         <p>₹1,700</p>
       </div>
+    </div>
+  );
+}
+
+function Checkout() {
+  return (
+    <div>
+      <h1 className="text-[36px] font-semibold text-[#8300FF] mb-10">
+        Customer Details
+      </h1>
+      <p className="w-full max-w-[275px] text-[10px] text-[#8300FF] mb-5">
+        Please provide your name, email, and phone number to proceed to secure
+        payment.
+      </p>
+      <form className="space-y-5 mb-10">
+        <Input label="Name" />
+        <Input label="Email" />
+        <Input label="Phone Number" />
+      </form>
+      <div className="flex justify-between max-w-[490px] w-full">
+        <p className="text-[10px] text-[#828282] max-w-[225px]">
+          *By clicking continue you will be redirected to the payment gateway.
+        </p>
+        <button className="bg-[#8300FF] text-white text-[20px] font-semibold py-2.5 px-8 rounded-[100vmin]">
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Input({ label, ...props }) {
+  return (
+    <div>
+      <label className="hidden">{label}</label>
+      <input
+        className={cn(
+          "bg-[#D9D9D933] border-[#DBDBDB] border rounded-sm px-[19px] py-[22px] max-w-[490px] w-full"
+        )}
+        placeholder={label ?? props.placeholder ?? undefined}
+        {...props}
+      />
     </div>
   );
 }
