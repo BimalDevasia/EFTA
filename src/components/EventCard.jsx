@@ -8,7 +8,7 @@ function EventCard() {
     <div className='pl-24 w-screen overflow-hidden flex gap-5'>
         {
             Items.map((item,index)=>(
-                <div>
+                <div key={index}>
                     {item.title}
                 </div>
             ))

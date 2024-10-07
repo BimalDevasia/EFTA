@@ -71,7 +71,7 @@ function ParallaxText({ children, baseVelocity = 100 }) {
     </div>
   );
 }
-function aboutUs() {
+function AboutUs() {
   const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
