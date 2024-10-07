@@ -76,8 +76,10 @@ function AboutUs() {
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
 
-
-
+    const items=["Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits","Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits"]
+    const memoizedItems = useMemo(() => {
+      return items.map(item => item); 
+    },[items]);
 
 
 
@@ -124,7 +126,7 @@ function AboutUs() {
       setVisibleItems(newVisibleItems);
       setRemainingCount(newRemainingCount);
     }
-  }, [memoizedItems]);
+  }, [memoizedItems,remainingCount, visibleItems.length]);
 
 
 
@@ -144,9 +146,7 @@ function AboutUs() {
         <div>EVENTS</div>
         <div>COURSES</div>
         <div>GIFTS</div>
-        <div>EVENTS</div>
-        <div>COURSES</div>
-        <div>GIFTS</div>
+      
         
       </motion.div>
       <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./about.png')`}}>

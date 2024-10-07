@@ -91,14 +91,10 @@ const resize=(textarea)=>{
                     ></textarea>
                 </div>
 
-                <div>
-                <p className='font-poppins text-base font-light'>Product Images</p>
-                <textarea name="Offer_Prize" id="" rows={1} 
-                    className='resize-none border-[#0000004D] border-2 w-28 border-solid rounded-[8px] min-h-10 h-auto focus:outline-none px-2 py-3 text-base font-medium  font-poppins overflow-hidden'
-                    onInput={(e)=>resize(e.target)}
-                    ></textarea>
-                </div>
+                {/*  need image upload*/}
 
+
+                
 
             </div>
 

@@ -5,14 +5,15 @@ import Portrait from '@/components/portrait'
 import Morefromefta from '@/components/morefromefta'
 import NormalCardCarousal from '@/components/NormalCardCarousal'
 import GiftMain from '@/components/GiftMain'
+import FeaturedGiftSection from '@/components/home/FeaturedGiftSection'
 function page() {
   return (
     <>
     <GiftMain/>
-    <NormalCardCarousal/>
+    <FeaturedGiftSection/>
     <BrandItem/>
     <Offers/>
-    <NormalCardCarousal/>
+    <FeaturedGiftSection/>
     <Portrait/>
     <Morefromefta/>
     </>
