@@ -24,6 +24,8 @@ module.exports = {
       }
       ,boxShadow:{
         'button_shadow': '7px 8px 17.4px 0px #FFFFFF40 inset, -7px -6px 9.2px 0px #00000029 inset',
+        "carousal-btn": "0px 3.2px 12px 0px rgba(0, 0, 0, 0.10)",
+        "carousal-card": "2.988px 5.23px 33.618px -4.482px rgba(0, 0, 0, 0.16)",
         'white-button':'5.62px 6.42px 13.97px 0px #FFFFFF40 inset,-5.62px -4.82px 7.39px 0px #00000029 inset',
         'carossel_shadow':'4px 4px 9px 0px #0000002B'
       },textShadow:{
