@@ -6,12 +6,24 @@ import { SpecialText } from "@/components/typography";
 import Link from "next/link";
 import React from "react";
 
+const links = [
+  {
+    name: "Gifts",
+    href: "/gifts",
+  },
+  {
+    name: "Valentines Day",
+    href: "/gifts/valentines-day",
+  },
+];
+
+
 const ProductPage = () => {
   return (
     <>
       <Wrapper className="pt-32 pb-[100px] space-y-[100px]">
         <div className="space-y-[30px]">
-          <Breadcrumb />
+          <Breadcrumb links={links} />
           <ProductDetails />
         </div>
         <div>

@@ -2,7 +2,10 @@
 import React from 'react'
 import { useState, useRef,useEffect,useMemo } from 'react';
 import "./homeFront.css"
-function aboutUs() {
+
+const memoizedItems=["Custom Orders", "Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits","Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits"]
+
+function AboutUs() {
   const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
@@ -10,10 +13,7 @@ function aboutUs() {
 
 
 
-  const items=["Custom Orders", "Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits","Bulk Orders", "Corporate Orders", "Frames", "Key Chains", "Portraits"]
 
-
-  const memoizedItems = useMemo(() => items, [items]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -96,4 +96,4 @@ function aboutUs() {
   )
 }
 
-export default aboutUs
+export default AboutUs

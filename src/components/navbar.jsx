@@ -12,18 +12,16 @@ function Navbar() {
     { id: "Courses", path: "/courses" },
   ];
 
-  const pathname =
-    usePathname() != "/"
-      ? usePathname().split("/").filter(Boolean)
-      : usePathname();
+  const pathname = usePathname();
+  const pathSegments = pathname === '/' ? '/': pathname.split('/').filter(Boolean);
 
   useEffect(() => {
     if (pathname === "/") {
       setSelPage("/");
     } else {
-      setSelPage("/".concat(pathname[0]));
+      setSelPage("/".concat(pathSegments[0]));
     }
-  }, [pathname]);
+  }, [pathSegments, pathname]);
 
   console.log(selPage);
   return (
