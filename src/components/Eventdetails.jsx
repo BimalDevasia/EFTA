@@ -10,7 +10,7 @@ function Eventdetails() {
         </div>
         <div className='w-[500px] flex-col flex justify-center h-full gap-5'> 
             <p className='font-italiana text-6xl w-full'>EXCLUSIVE EVENTS</p>
-            <p className='font-poppins font-light text-xl text-center'>Celebrate life's special milestones with our exclusive events, tailored for unforgettable moments like Bride-to-Be celebrations, Haldi ceremonies, and more. We specialize in crafting elegant, personalized experiences that honor tradition while adding a modern, luxurious touch. From intimate gatherings to lavish affairs, we ensure every detail is handled with care, creating magical memories for you and your loved ones in a truly exclusive setting</p>
+            <p className='font-poppins font-light text-xl text-center'>Celebrate life&apso;s special milestones with our exclusive events, tailored for unforgettable moments like Bride-to-Be celebrations, Haldi ceremonies, and more. We specialize in crafting elegant, personalized experiences that honor tradition while adding a modern, luxurious touch. From intimate gatherings to lavish affairs, we ensure every detail is handled with care, creating magical memories for you and your loved ones in a truly exclusive setting</p>
         </div>
     </div>
     </div>
