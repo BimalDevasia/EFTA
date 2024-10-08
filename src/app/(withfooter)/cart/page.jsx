@@ -5,6 +5,7 @@ import QuantityCounter from "@/components/QuantityCounter";
 import { SpecialText } from "@/components/typography";
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
+import { useModal } from "@/stores/useModal";
 import React, { useState } from "react";
 
 const links = [
@@ -45,7 +46,7 @@ const cartItems = [
 ];
 
 const CartPage = () => {
-  const [showCheckout, setShowCheckout] = useState(true);
+  const [showCheckout, setShowCheckout] = useState(false);
   return (
     <Wrapper className="pt-32 pb-[100px]">
       {showCheckout ? <Checkout /> : <CartDetails />}
@@ -54,6 +55,7 @@ const CartPage = () => {
 };
 
 function CartDetails() {
+  const { openModal } = useModal();
   const address = "1234 Main St, Anytown, USA";
   return (
     <div>
@@ -65,7 +67,10 @@ function CartDetails() {
               Deliver to : <span className="font-medium">{address}</span>
             </div>
             <div>
-              <button className="text-[#8300FF] text-[16px] font-medium">
+              <button
+                onClick={() => openModal("address")}
+                className="text-[#8300FF] text-[16px] font-medium"
+              >
                 Edit
               </button>
             </div>
@@ -73,8 +78,8 @@ function CartDetails() {
           <div className="px-8 shadow-cart-summary">
             <div className=" py-9">
               <div className="space-y-9">
-                {cartItems.map((item) => (
-                  <CartItem key={item.id} item={item} />
+                {cartItems.map((item, index) => (
+                  <CartItem key={item.name + index} item={item} />
                 ))}
               </div>
             </div>
@@ -149,7 +154,7 @@ function CartSummary() {
       </h3>
       <hr />
       <div className="space-y-3.5 py-[30px] px-1">
-        <div classN26pxame="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <p>Price (3 items)</p>
           <p>₹1,500</p>
         </div>
