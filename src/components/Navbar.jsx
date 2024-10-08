@@ -8,7 +8,7 @@ function Navbar() {
   let items = [
     { id: "Home", path: "/" },
     { id: "Gifts", path: "/gifts" },
-    { id: "Events", path: "/events" },
+    { id: "Events", path: "/eventpg" },
     { id: "Courses", path: "/courses" },
   ];
 
@@ -32,8 +32,8 @@ function Navbar() {
             selPage === "/"
               ? "fill-primary_color"
               : selPage === "/gifts"
-              ? pathname.length === 1
-                ? "fill-white"
+              ? pathSegments.length === 1
+                ? "fill-black"
                 : "fill-gift_blue"
               : ""
           } `}
@@ -60,16 +60,16 @@ function Navbar() {
               selPage === "/"
                 ? "border-primary_color"
                 : selPage === "/gifts"
-                ? pathname.length === 1
-                  ? "border-white"
+                ? pathSegments.length === 1
+                  ? "border-black"
                   : "border-gift_blue"
                 : ""
             } ${
               selPage === "/"
                 ? "text-primary_color"
                 : selPage === "/gifts"
-                ? pathname.length === 1
-                  ? "text-white"
+                ? pathSegments.length === 1
+                  ? "text-black"
                   : "text-gift_blue"
                 : ""
             } font-semibold font-poppins px-5 py-3`}
@@ -83,8 +83,8 @@ function Navbar() {
             selPage === "/"
               ? "text-primary_color"
               : selPage === "/gifts"
-              ? pathname.length === 1
-                ? "text-white"
+              ? pathSegments.length === 1
+                ? "text-black"
                 : "text-gift_blue"
               : ""
           }  ${selPage === "/" ? "hidden" : ""} `}

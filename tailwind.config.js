@@ -37,7 +37,8 @@ module.exports = {
         poppins: ['var(--font-poppins)', 'sans-serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
         italiana:['var(--font-italiana)','sans-serif'],
-        caveat: ['var(--font-caveat)', 'cursive']
+        caveat: ['var(--font-caveat)', 'cursive'],
+        satisfy:['var(--font-satisfy)','cursive']
       },
       colors: {
         border: "hsl(var(--border))",
