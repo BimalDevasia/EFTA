@@ -7,10 +7,12 @@ import FeaturedGiftSection from "@/components/home/FeaturedGiftSection";
 import Footer from "@/components/Footer";
 
 import AdminGift from "@/components/AdminGift";
+
 export default function home() {
   return (
     <>
       <HomeFront />
+     
       <AboutUs />
       <Community />
       <FrontTemplate />

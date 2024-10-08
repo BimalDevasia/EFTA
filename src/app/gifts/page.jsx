@@ -6,10 +6,12 @@ import Morefromefta from '@/components/morefromefta'
 import NormalCardCarousal from '@/components/NormalCardCarousal'
 import GiftMain from '@/components/GiftMain'
 import FeaturedGiftSection from '@/components/home/FeaturedGiftSection'
+import EventCard from '@/components/EventCard'
 function page() {
   return (
     <>
     <GiftMain/>
+    <EventCard/>
     <FeaturedGiftSection/>
     <BrandItem/>
     <Offers/>
