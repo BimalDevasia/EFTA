@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
       <head>
       <link rel="icon" href="./logo.svg" />
       </head>
-      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable}`}>
+      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable}`}>
         <Navbar/>
         {children}
         <ModalProvider />
