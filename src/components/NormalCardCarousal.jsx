@@ -38,7 +38,13 @@ function NormalCardCarousal() {
   );
 }
 
-const CarousalCard = ({ name, desc, price, discountedPrice, isCustom }) => {
+export const CarousalCard = ({
+  name,
+  desc,
+  price,
+  discountedPrice,
+  isCustom,
+}) => {
   return (
     <Link
       href="/product/djjddfjdj"
