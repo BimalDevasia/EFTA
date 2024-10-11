@@ -12,7 +12,7 @@ const FeaturedGiftSection = () => {
           <h2 className="pl-6">
             <SpecialText>Featured Gifts</SpecialText>
           </h2>
-          <Link href="/">
+          <Link href="/products/anniversary">
             <SpecialText className="text-[24px]">View All</SpecialText>
           </Link>
         </div>

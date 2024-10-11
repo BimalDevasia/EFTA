@@ -10,13 +10,10 @@ export default function home() {
   return (
     <>
       <HomeFront />
-
       <AboutUs />
       <Community />
       <FrontTemplate />
-
       <FeaturedGiftSection />
-
     </>
   );
 }
