@@ -41,7 +41,7 @@ function NormalCardCarousal() {
 const CarousalCard = ({ name, desc, price, discountedPrice, isCustom }) => {
   return (
     <Link
-      href="/"
+      href="/product/djjddfjdj"
       className="block shadow-carousal-card rounded-[20px] border-none h-full"
     >
       <Card className=" border-none shadow-none">
