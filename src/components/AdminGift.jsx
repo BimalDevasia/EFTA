@@ -97,7 +97,6 @@ function AdminGift() {
       ? ((100 - offerPercentage) / 100) * productMRP
       : "NaN";
 
-  console.log("offerPrice", offerPrice);
 
   return (
     <div className="flex w-full overflow-y-auto h-full">
