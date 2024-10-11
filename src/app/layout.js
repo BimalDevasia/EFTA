@@ -41,7 +41,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      
+      <head>
+      <link rel="icon" href="./logo.svg" />
+      </head>
       <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable}`}>
         <Navbar/>
         {children}

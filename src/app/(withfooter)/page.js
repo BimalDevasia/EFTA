@@ -5,6 +5,7 @@ import Community from "@/components/community";
 import FrontTemplate from "@/components/frontTemplate";
 import FeaturedGiftSection from "@/components/home/FeaturedGiftSection";
 
+
 export default function home() {
   return (
     <>
@@ -15,6 +16,7 @@ export default function home() {
       <FrontTemplate />
 
       <FeaturedGiftSection />
+
     </>
   );
 }
