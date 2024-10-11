@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="self-stretch flex flex-col justify-between">
           <Logo />
           <p>
-            <SpecialText className="text-[#1F76BD] text-[30px] font-extrabold  ">
+            <SpecialText className="text-[#1F76BD] text-[30px] font-extrabold">
               All kinds of Gifts, Cakes & Decoration
             </SpecialText>
           </p>

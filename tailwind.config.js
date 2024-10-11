@@ -28,17 +28,21 @@ module.exports = {
           "7px 8px 17.4px 0px #FFFFFF40 inset, -7px -6px 9.2px 0px #00000029 inset",
         "carousal-btn": "0px 3.2px 12px 0px rgba(0, 0, 0, 0.10)",
         "carousal-card": "2.988px 5.23px 33.618px -4.482px rgba(0, 0, 0, 0.16)",
-        'white-button':'5.62px 6.42px 13.97px 0px #FFFFFF40 inset,-5.62px -4.82px 7.39px 0px #00000029 inset',
-        'carossel_shadow':'4px 4px 9px 0px #0000002B'
-      },textShadow:{
-        'custom-light': '2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F',
-      }
-      ,fontFamily: {
-        poppins: ['var(--font-poppins)', 'sans-serif'],
-        inter: ['var(--font-inter)', 'sans-serif'],
-        italiana:['var(--font-italiana)','sans-serif'],
-        caveat: ['var(--font-caveat)', 'cursive'],
-        satisfy:['var(--font-satisfy)','cursive']
+        "white-button":
+          "5.62px 6.42px 13.97px 0px #FFFFFF40 inset,-5.62px -4.82px 7.39px 0px #00000029 inset",
+        carossel_shadow: "4px 4px 9px 0px #0000002B",
+        enquiry_shadow: "3px 5px 23px -4px rgba(0, 0, 0, 0.15)",
+      },
+      textShadow: {
+        "custom-light":
+          "2px 3px 8px 0px #FFFFFF4D inset, -2px -2px 4px 0px #0000001A inset, 4px 4px 10px 0px #0000000F",
+      },
+      fontFamily: {
+        poppins: ["var(--font-poppins)", "sans-serif"],
+        inter: ["var(--font-inter)", "sans-serif"],
+        italiana: ["var(--font-italiana)", "sans-serif"],
+        caveat: ["var(--font-caveat)", "cursive"],
+        satisfy: ["var(--font-satisfy)", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
