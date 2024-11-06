@@ -23,7 +23,6 @@ function Navbar() {
     }
   }, [pathSegments, pathname]);
 
-  console.log(selPage);
   return (
     <div className="fixed flex px-36 w-screen justify-between items-center h-24 z-50 bg-white">
       <Link href="/">

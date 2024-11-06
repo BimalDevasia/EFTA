@@ -6,7 +6,6 @@ import AddressModal from "./modals/AddressModal";
 
 const ModalProvider = () => {
   const { modal, closeModal } = useModal();
-  console.log("modal", modal);
   return (
     <>
       <Dialog open={modal !== null} onOpenChange={closeModal}>
