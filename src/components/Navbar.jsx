@@ -30,7 +30,7 @@ function Navbar() {
           className={`w-24 h-24  ${
             selPage === "/"
               ? "fill-primary_color"
-              : selPage === "/gifts"
+              : selPage === "/product"
               ? pathSegments.length === 1
                 ? "fill-black"
                 : "fill-gift_blue"
@@ -58,7 +58,7 @@ function Navbar() {
             } ${
               selPage === "/"
                 ? "border-primary_color"
-                : selPage === "/gifts"
+                : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "border-black"
                   : "border-gift_blue"
@@ -66,7 +66,7 @@ function Navbar() {
             } ${
               selPage === "/"
                 ? "text-primary_color"
-                : selPage === "/gifts"
+                : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "text-black"
                   : "text-gift_blue"
@@ -81,7 +81,7 @@ function Navbar() {
           className={`w-8 h-8 ${
             selPage === "/"
               ? "text-primary_color"
-              : selPage === "/gifts"
+              : selPage === "/product"
               ? pathSegments.length === 1
                 ? "text-black"
                 : "text-gift_blue"

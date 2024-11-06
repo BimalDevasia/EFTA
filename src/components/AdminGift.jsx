@@ -82,10 +82,27 @@ function AdminGift() {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Handle form submission
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch('/api/gift', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+  
+      if (response.ok) {
+        console.log("Product added successfully!");
+        // Optionally, reset the form or display a success message
+      } else {
+        console.error("Failed to add product");
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
   };
+
+
+
 
   const offerPercentage = watch("offerPercentage");
   const productMRP = watch("productMRP");
