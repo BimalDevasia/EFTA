@@ -14,6 +14,10 @@ function Eventdetails() {
         </div>
     </div>
     </div>
+
+
+    
+
   )
 }
 
