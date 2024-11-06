@@ -99,7 +99,7 @@ function AboutUs() {
 
   return (
     <div className=' relative w-screen h-screen '>
-       <div className='absolute top-[-10%] flex justify-around w-full font-italiana  text-9xl'>
+       <div className='absolute top-[-10%] flex justify-around  font-italiana overflow-hidden lg:text-9xl'>
         <div ref={item1} className='flex gap-32'>
         <div>EVENTS</div>
         <div>COURSES</div>
@@ -137,6 +137,9 @@ function AboutUs() {
         </div>
       </div>
     </div>
+
+
+    
     </div>
   )
 }
