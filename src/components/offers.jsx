@@ -8,7 +8,7 @@ function offers() {
   return (
     <div className='px-36 w-screen h-screen overflow-hidden flex flex-col gap-8 items-center'>
       <div>
-        <div className='text-4xl font-semibold font-poppins text-[#8300FF] '>Grab some Offers</div>
+        <div className='text-4xl font-semibold font-poppins text-[#8300FF] pb-10 '>Grab some Offers</div>
         <div className='grid grid-rows-[repeat(2,170px)] grid-cols-[repeat(5,232px)] gap-5'>
             <div className='relative row-span-2 col-span-3 bg-[#F85556] rounded-[8px] flex overflow-hidden'> 
               <div className=' w-1/2 pl-11 flex flex-col h-full justify-center gap-3'>

@@ -81,6 +81,7 @@ module.exports = {
         primary_color: "#F46782",
         nav_blue: "#8300FF",
         gift_blue: "#1F76BD",
+        course_blue:"#297CC0",
       },
       borderRadius: {
         lg: "var(--radius)",
