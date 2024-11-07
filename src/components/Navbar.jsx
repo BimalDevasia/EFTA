@@ -167,7 +167,7 @@ function Navbar() {
 
                 <div className="flex flex-col">
                 {items.map((item,index)=>(
-                  <Link href={item.path} onClick={()=>setIsOpen(false)}>
+                  <Link href={item.path} key={index} onClick={()=>setIsOpen(false)}>
                   <div className={`font-poppins ${isOpen?"opacity-100":"opacity-0"} transition-all duration-500 font-semibold border-b-2 py-3 text-primary_color`}>{item.id}</div>
                   </Link>
                 ))}
