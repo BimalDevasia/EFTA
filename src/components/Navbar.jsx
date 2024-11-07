@@ -24,7 +24,7 @@ function Navbar() {
   }, [pathSegments, pathname]);
 
   return (
-    <div className="fixed flex px-36 w-screen justify-between items-center h-24 z-50 bg-white">
+    <div className=" hidden lg:fixed lg:flex px-36 w-screen justify-between items-center h-24 z-50 bg-white">
       <Link href="/">
         <svg
           className={`w-24 h-24  ${

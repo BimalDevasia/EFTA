@@ -99,14 +99,14 @@ function AboutUs() {
 
   return (
     <div className=' relative w-screen h-screen '>
-       <div className='absolute top-[-10%] flex justify-around  font-italiana overflow-hidden lg:text-9xl'>
-        <div ref={item1} className='flex gap-32'>
+       <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-screen font-italiana overflow-hidden lg:text-9xl'>
+        <div ref={item1} className='flex gap-32 '>
         <div>EVENTS</div>
         <div>COURSES</div>
-        <div className=''>GIFTS</div>
+        <div>GIFTS</div>
         </div>
 
-        <div ref={item2} className=' flex gap-32'>
+        <div ref={item2} className=' flex gap-32 '>
         <div className='ml-32 max-w-max'>EVENTS</div>
         <div>COURSES</div>
         <div>GIFTS</div>
@@ -114,10 +114,8 @@ function AboutUs() {
       
         
       </div>
-      <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./about.png')`}}>
-
-      </div>
-    <div className='relative flex flex-col  w-3/5  justify-center pl-28 h-full' ref={containerRef}>
+     
+    <div className='relative flex flex-col  w-3/5 lg:mt-0 mt-52 justify-center pl-28 h-full' ref={containerRef}>
       <div className='font-poppins'>
         <p className='text-5xl font-medium text-primary_color'>About Us</p>
         <p className='w-8/12 pt-5 text-xl'>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>
@@ -137,7 +135,9 @@ function AboutUs() {
         </div>
       </div>
     </div>
+    <div className='lg:absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./about.png')`}}>
 
+</div>
 
     
     </div>
