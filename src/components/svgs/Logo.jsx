@@ -8,6 +8,7 @@ const Logo = () => {
       height={105}
       viewBox="0 0 232 105"
       fill="none"
+      className="lg:w-auto lg:h-auto w-[100px] h-[65.34px]"
     >
       <path
         fillRule="evenodd"

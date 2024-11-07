@@ -115,27 +115,27 @@ function AboutUs() {
         
       </div>
      
-    <div className='relative flex flex-col  w-3/5 lg:mt-0 mt-52 justify-center pl-28 h-full' ref={containerRef}>
+    <div className='relative flex flex-col   lg:w-3/5 w-screen lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max' ref={containerRef}>
       <div className='font-poppins'>
-        <p className='text-5xl font-medium text-primary_color'>About Us</p>
-        <p className='w-8/12 pt-5 text-xl'>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>
+        <p className='lg:text-5xl  text-3xl font-medium text-primary_color'>About Us</p>
+        <p className='lg:w-8/12 pt-5 lg:text-xl text-xs  '>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>
         </div>
-      <div className='absolute bottom-12 text-3xl font-medium text-primary_color'><p>We Offer:</p>
+      <div className='lg:absolute bottom-12 lg:text-3xl lg:mt-0 mt-5 text-base font-medium text-primary_color'><p>We Offer:</p>
       <div className='flex flex-wrap gap-3 font-poppins pt-5' >
             {visibleItems.map((item, index) => (
-                <div key={index} className='px-9 py-2 h-11 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold text-[20px] flex items-center ' >
+                <div key={index} className='lg:px-9 lg:py-2 lg:h-11 px-4 py-1 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs flex items-center ' >
                     {item}
                 </div>
             ))}
             {remainingCount > 0 && (
-                <div className='px-9 py-2 h-[46px] bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold text-[20px] flex items-center'>
+                <div className='lg:px-9 lg:py-2 lg:h-11 px-4 py-1 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs flex items-center'>
                     +{remainingCount} more
                 </div>
             )}
         </div>
       </div>
     </div>
-    <div className='lg:absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./about.png')`}}>
+    <div className='absolute  right-0 lg:top-1/2 lg:mt-0 mt-56 translate-y-[-50%] lg:w-6/12 lg:h-[70%] h-[295px] w-[90%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./about.png')`}}>
 
 </div>
 

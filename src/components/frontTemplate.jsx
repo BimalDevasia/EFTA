@@ -19,7 +19,7 @@ function frontTemplate() {
   ];
 
   return (
-    <div className="w-screen">
+    <div className="w-screen lg:flex-none flex flex-col gap-16  ">
       {item.map((item, index) => {
         const alignment = index % 2 === 0 ? "second" : "first";
         return (
@@ -27,24 +27,28 @@ function frontTemplate() {
             key={index}
             className={cn(
               "flex",
-              alignment === "first" ? "flex-row-reverse" : "flex-row"
+              alignment === "first" ? "lg:flex-row-reverse flex-col lg:gap-0 gap-5 " : "lg:flex-row flex-col lg:gap-0 gap-5"
             )}
           >
-            <div className=" w-1/2 h-screen px-28 flex items-center ">
+            <div className=" lg:w-1/2 lg:h-screen w-screen   lg:px-28 px-10 flex items-center ">
               <div className="relative">
-                <div className="absolute top-0 h-1 bg-primary_color w-1/3 border-solid rounded-full border-primary_color"></div>
-                <p className="py-12 text-xl font-normal font-poppins">
+                <div className={cn("absolute top-0 h-1 bg-primary_color w-1/3 border-solid rounded-full border-primary_color",alignment === "second" ?"left-0":"right-0")}></div>
+                <p className="py-12 lg:text-xl text-xs font-normal font-poppins">
                   {item.desc}
                 </p>
               </div>
             </div>
+
+            <div className="lg:flex-none flex justify-center lg:w-1/2  lg:h-screen">
             <div
               className={cn(
-                "w-1/2 h-screen bg-center bg-cover bg-no-repeat",
-                alignment === "first" ? "rounded-r-[50px]" : "rounded-l-[50px]"
+                "lg:w-full  w-[90%] lg:h-screen h-[380px]  bg-center bg-cover bg-no-repeat",
+                alignment === "first" ? "lg:rounded-r-[50px]" : "lg;rounded-l-[50px]"
               )}
               style={{ backgroundImage: `url(${item.link})` }}
             ></div>
+            </div>
+           
           </div>
         );
       })}
