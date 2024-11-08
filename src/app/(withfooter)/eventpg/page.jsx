@@ -1,6 +1,7 @@
 import EventAbout from '@/components/EventAbout'
 import Eventdetails from '@/components/Eventdetails'
 import EventMain from '@/components/EventMain'
+import Eventmulticard from '@/components/Eventmulticard'
 import React from 'react'
 
 function page() {
@@ -9,6 +10,7 @@ function page() {
    <EventMain/>
    <EventAbout/>
    <Eventdetails/>
+  <Eventmulticard/>
    </>
   )
 }

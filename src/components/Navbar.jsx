@@ -92,6 +92,7 @@ function Navbar() {
               <Link href={item.path}>{item.id}</Link>
             </div>
           ))}
+          <Link href="/cart" className="cursor-pointer">
           <PiShoppingCartSimpleFill
             className={`w-8 h-8 ${
               selPage === "/"
@@ -103,6 +104,7 @@ function Navbar() {
                 : ""
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
+          </Link>
         </div>
       </div>
 
@@ -150,15 +152,7 @@ function Navbar() {
              <div className="w-full  flex justify-between items-center">
             <Link href="/">
               <svg
-                className={`w-16 h-12   ${
-                  selPage === "/"
-                    ? "fill-primary_color"
-                    : selPage === "/product"
-                    ? pathSegments.length === 1
-                      ? "fill-black"
-                      : "fill-gift_blue"
-                    : ""
-                } `}
+                className={`w-16 h-12 fill-primary_color `}
                 viewBox="0 0 121 54"
                 xmlns="http://www.w3.org/2000/svg"
               >

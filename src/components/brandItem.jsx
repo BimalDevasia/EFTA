@@ -21,7 +21,7 @@ function BrandItem() {
   ]
 
   return (
-    <div className='lg:px-36 px-10 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
+    <div className='lg:px-36 px-8 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
       <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 lg:px-10 px-2'>
         <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10 '>
         <div className='lg:text-4xl text-2xl font-poppins break-normal font-light'>

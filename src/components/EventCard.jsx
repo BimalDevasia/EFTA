@@ -18,12 +18,12 @@ function EventCard() {
         {
             Items.slice(0,isMobile).map((item,index)=>(
                 <div key={index} 
-                className={`flex justify-between lg:px-10 px-5 lg:h-32 lg:min-w-[400px] lg:w-auto w-[128px] h-[48px]   items-center rounded-2xl lg:text-4xl text-xs text-white font-poppins font-semibold`}
+                className={`flex justify-between lg:px-10 px-5 lg:h-32 lg:min-w-[370px]  lg:w-auto w-[145px]  h-[50px]   items-center rounded-2xl lg:text-4xl text-xs text-white font-poppins font-semibold`}
                 style={{backgroundColor:`${item.color}`}}>
                     <div className='w-1/3'>
                     {item.title}
                     </div>
-                    <img src={`${item.link}`} alt=""  className='w-[20px] h-[19px]'/>
+                    <img src={`${item.link}`} alt=""  className='lg:w-auto lg:h-auto w-[20px] h-[19px]'/>
                 </div>
             ))
         }
