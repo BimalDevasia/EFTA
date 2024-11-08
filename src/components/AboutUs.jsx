@@ -26,7 +26,11 @@ function AboutUs() {
 
   
   useEffect(() => {
-    requestAnimationFrame(animation);
+
+    if(window.innerWidth>=1024){
+      requestAnimationFrame(animation);
+    
+    }
   }, []);
   
   const animation = () => {

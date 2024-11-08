@@ -62,7 +62,7 @@ function NormalCardCarousal() {
         {gifts.map((gift) => (
           <CarouselItem
             key={gift._id}
-            className="md:basis-1/2 lg:basis-[28%] pl-6 last-of-type:pr-6 first-of-type:pl-10"
+            className="md:basis-1/2  lg:basis-[28%] pl-6 last-of-type:pr-6 first-of-type:pl-10"
           >
             <CarousalCard
               id={gift._id}
@@ -76,8 +76,8 @@ function NormalCardCarousal() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-0 -translate-x-1/2" disappear />
-      <CarouselNext className="right-0 translate-x-1/2" disappear />
+      <CarouselPrevious className="lg:left-0 left-5 -translate-x-1/2" disappear />
+      <CarouselNext className="lg:right-0 right-5  translate-x-1/2" disappear />
     </Carousel>
   );
 }

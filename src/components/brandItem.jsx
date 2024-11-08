@@ -21,28 +21,31 @@ function BrandItem() {
   ]
 
   return (
-    <div className='px-36 w-screen h-screen flex justify-center items-center overflow-hidden '>
-      <div className='w-full bg-[#FFBDCB59] h-[450px] rounded-2xl flex gap-4 justify-center py-9'>
-        <div className='w-2/5  h-full rounded-[8px]  px-2 flex flex-col justify-around'>
-        <div className='text-4xl font-poppins break-normal font-light'>
-          CREATE YOUR <span className='text-6xl font-caveat break-words font-bold'>BRAND ITEMS </span> FROM EFTA
+    <div className='lg:px-36 px-10 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
+      <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 lg:px-10 px-2'>
+        <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10 '>
+        <div className='lg:text-4xl text-2xl font-poppins break-normal font-light'>
+          CREATE YOUR <span className='lg:text-6xl text-3xl font-caveat break-words font-bold'>BRAND ITEMS </span> FROM EFTA
           </div>
-          <div className='font-poppins font-medium'>
+          <div className='font-poppins font-medium lg:text-base text-xs '>
           Create your Brand showing materials like <br />
         T-shirt, ID cards, Cap, Notepad.... and a lot <br />
           more with best price with EFTA. <br />
           Show your Brand everywhere.
           </div>
-          <button className='bg-primary_color shadow-button_shadow py-4 px-12 rounded-[100px] text-white font-semibold text-[20px] w-52'>View All</button>
+          <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold lg:text-[20px] text-xs lg:w-52 w-28'>View All</button>
         </div>
-        <div  className='relative overflow-hidden  w-1/4  h-full rounded-[8px] shadow-carossel_shadow '>
+
+
+        <div className='lg:w-[60%] max-w-screen lg:h-full h-[200px] flex gap-4 '>
+         <div  className='relative overflow-hidden  lg:w-2/3 w-1/2  h-full rounded-[8px] shadow-carossel_shadow '>
         {
           items.map((item,index)=>(
             <motion.img 
             key={index} 
             src={item.path} 
             alt={item.id} 
-            className='absolute object-cover h-full w-full'
+            className='absolute object-cover h-full w-full '
             initial={{ opacity:0, x: 100 }}
             animate={{
             opacity: index === currentIndex ? 1 : 0,
@@ -54,7 +57,7 @@ function BrandItem() {
           ))
         }
         </div>
-        <div  className='relative overflow-hidden  w-1/4  h-full rounded-[8px] shadow-carossel_shadow '>
+        <div  className='relative overflow-hidden  lg:w-2/3 w-1/2  h-full rounded-[8px] shadow-carossel_shadow '>
         {
           items.map((item,index)=>(
             <motion.img 
@@ -72,6 +75,9 @@ function BrandItem() {
           ))
         }
         </div>
+
+        </div>
+       
       </div>
     </div>
   )

@@ -119,7 +119,7 @@ function Navbar() {
                 ? pathSegments.length === 1
                   ? "fill-black"
                   : "fill-gift_blue"
-                : ""
+                : "fill-primary_color"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -170,7 +170,7 @@ function Navbar() {
               </svg>
             </Link>
 
-           <RxCross2 className={`w-10 h-10 ${isOpen?"opacity-100":"opacity-0"} transition-all duration-500 text-primary_color`}  
+           <RxCross2 className={`w-10 h-10 ${isOpen?"opacity-100":"opacity-0"} transition-all duration-1000 text-primary_color`}  
            onClick={()=>setIsOpen(false)}/>
 
           </div>
