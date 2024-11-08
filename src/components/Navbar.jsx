@@ -5,6 +5,12 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { BsFilterLeft } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
+import { motion } from 'framer-motion';
+
+const sidebarVariants = {
+  hidden: { x: '-100%' },
+  visible: { x: 0 },
+};
 
 function Navbar() {
   const [selPage, setSelPage] = useState();
@@ -102,8 +108,9 @@ function Navbar() {
 
       {/* this is for responsive         */}
 
-      <div className="relative lg:hidden w-screen h-12 flex items-center px-10 justify-between">
-        <Link href="/">
+      <div className="relative lg:hidden ">
+       <div className="w-screen h-12 flex items-center px-10 justify-between">
+       <Link href="/">
           <svg
             className={`w-16 h-12   ${
               selPage === "/"
@@ -124,19 +131,22 @@ function Navbar() {
             />
           </svg>
         </Link>
+        
         <BsFilterLeft
           className={`w-10 h-10 ${isOpen?"opacity-0":"opacity-100"} transition-all duration-500 text-primary_color`}
           onClick={() => setIsOpen(true)}
         />
-        
+       </div>
 
-        <div
-          className={`absolute  overflow-hidden${
-            isOpen ? "min-w-screen w-screen" : "min-w-0 w-0"
-          } transition-all duration-500 min-h-screen h-screen top-0 left-0 bg-white z-50 `}
-        >
-          {isOpen&&
-          <div className="w-screen px-10 flex flex-col gap-16">
+        <motion.div
+      className="sidebar w-screen h-screen absolute top-0 bg-white z-20"
+      initial="hidden"
+      animate={isOpen ? "visible" : "hidden"}
+      variants={sidebarVariants}
+      transition={{ type: 'tween', duration: 0.3 }}
+    >
+         
+          <div className=" px-10 flex flex-col gap-16">
              <div className="w-full  flex justify-between items-center">
             <Link href="/">
               <svg
@@ -165,10 +175,10 @@ function Navbar() {
 
           </div>
 
-                <div className="flex flex-col">
+                <div className={`flex ${isOpen?"opacity-100 max-w-screen":"opacity-0 max-w-0" } flex-col`}>
                 {items.map((item,index)=>(
                   <Link href={item.path} key={index} onClick={()=>setIsOpen(false)}>
-                  <div className={`font-poppins ${isOpen?"opacity-100":"opacity-0"} transition-all duration-500 font-semibold border-b-2 py-3 text-primary_color`}>{item.id}</div>
+                  <div className={`font-poppins  transition-all duration-500 font-semibold border-b-2 py-3 text-primary_color`}>{item.id}</div>
                   </Link>
                 ))}
                 <Link href="/cart" onClick={()=>setIsOpen(false)}>
@@ -183,8 +193,8 @@ function Navbar() {
          
           
           
-          }
-        </div>
+          
+        </motion.div>
       </div>
     </>
   );
