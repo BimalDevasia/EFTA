@@ -1,11 +1,16 @@
 import React from 'react'
 import { cn } from "@/lib/utils";
-const Cardcomponent=({ className,item })=> {
-  return (
+const Cardcomponent=({ className,item ,title,reverse })=> {
+  return (    
     <div className={cn("w-screen h-auto lg:px-24",className)}>
+       {title&&
+        <div className='w-screen text-4xl font-semibold text-gift_blue font-poppins pb-20'>
+        {title}
+         </div>
+       }
         {item.map((items,index)=>{
-            const alignment = index % 2 === 0 ? "second" : "first";
-            console.log(alignment)
+            let alignment = index % 2 === 0 ? "second" : "first";
+            if(reverse){alignment = index % 2 === 0 ? "first" : "second";}
             return(
             <div key={index} className= {cn("max-w-screen  max-h-screen flex ",alignment==="first"?"flex-row-reverse":"flex-row")}>
 

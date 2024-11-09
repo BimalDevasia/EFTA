@@ -6,7 +6,7 @@ function Eventmulticard() {
         {title:"Music Events",desc:"Bring the rhythm to life with our expertly curated music events! Whether it’s a concert, festival, or intimate live performance, we specialize in creating electrifying atmospheres that captivate audiences. From stage design to sound perfection, we handle every detail to ensure a seamless, unforgettable experience where music takes center stage.",image1:"/pic7.png",image2:"/pic8.png",image3:"/pic9.png"},
     ]
   return (
-    <Cardcomponent item={item} className="mt-52"/>
+    <Cardcomponent item={item} className="mt-52" />
   )
 }
 
