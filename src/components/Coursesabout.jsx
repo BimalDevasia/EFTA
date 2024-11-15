@@ -111,5 +111,5 @@ const Coursesabout=forwardRef((props,ref)=> {
     </div>
   )
 })
-
+Coursesabout.displayName="Coursesabout"
 export default Coursesabout

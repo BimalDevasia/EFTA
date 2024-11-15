@@ -85,5 +85,5 @@ const Corperategift=forwardRef((props,ref)=> {
     
   )
 })
-
+Corperategift.displayName='Corperategift'
 export default Corperategift
