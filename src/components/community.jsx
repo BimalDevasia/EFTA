@@ -12,7 +12,7 @@ function community() {
             <div>Creative Community</div>
             </div> 
            <div className='lg:text-2xl text-lg font-poppins font-normal text-center w-3/4 text-primary_color'>
-           Behind every custom gift at EDTA is a vibrant community of artisans, designers, and makers who bring your ideas to life. Our team is a diverse group of talented individuals who share a passion for creativity and craftsmanship.
+           Behind every custom gift at EFTA is a vibrant community of artisans, designers, and makers who bring your ideas to life. Our team is a diverse group of talented individuals who share a passion for creativity and craftsmanship.
            </div>
         </div>
         </div>

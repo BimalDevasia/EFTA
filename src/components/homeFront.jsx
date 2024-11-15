@@ -1,5 +1,6 @@
 import React from 'react'
 import "./homeFront.css"
+import Link from 'next/link'
 function HomeFront() {
   return (
     <div className='relative flex flex-col justify-center items-center min-h-screen w-screen font-poppins gap-14 overflow-hidden '>
@@ -10,7 +11,7 @@ function HomeFront() {
         <div>Gifting Happiness</div>
       </div>
       <div className='flex gap-14'>
-        <button className='bg-primary_color shadow-button_shadow lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-white font-semibold lg:text-[20px] text-[14px]'>Shop Now</button>
+        <Link href="/gifts"> <button className='bg-primary_color shadow-button_shadow lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-white font-semibold lg:text-[20px] text-[14px]'>Shop Now</button> </Link>
         <button className='bg-white bg-clip-border lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-[14px]'>Know More</button>
       </div>
      

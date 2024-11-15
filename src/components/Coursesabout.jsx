@@ -41,7 +41,7 @@ function Coursesabout() {
     
           cumulativeWidth += buttonWidth;
     
-          if (cumulativeWidth > containerWidth * 1.8) {
+          if (cumulativeWidth > containerWidth * 1.7) {
             break;
           }
     
@@ -81,18 +81,18 @@ function Coursesabout() {
 
 
   return (
-    <div className=' relative w-screen h-screen mt-32'>
+    <div className=' relative w-screen h-screen mt-32 pt-20'>
       
       <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./courseabout.png')`}}>
 
       </div>
-    <div className='relative flex flex-col pt-28 w-3/5 pl-28 h-full' ref={containerRef}>
+    <div className='relative flex flex-col w-[55%] pl-28 h-full gap-7 justify-center' ref={containerRef}>
       <div className='font-poppins'>
         <p className='text-5xl font-medium text-course_blue font-italiana'>About Us</p>
-        <p className='w-8/12 pt-5 text-xl'>Immerse yourself in the art of mural painting, drawing, crafting, cake baking adn so on with EFTA&apos;s captivating courses. Offering both one-on-one instruction and batch classes, our expert artists provide personalized guidance in well-equipped studios. Explore your creativity on flexible schedules, and earn certificates of completion. Whether you&apos;re a beginner or experienced, EFTA&apos;s courses will help you unlock your artistic potential.</p>
+        <p className='w-8/12 pt-5 text-lg'>Immerse yourself in the art of mural painting, drawing, crafting, cake baking adn so on with EFTA&apos;s captivating courses. Offering both one-on-one instruction and batch classes, our expert artists provide personalized guidance in well-equipped studios. Explore your creativity on flexible schedules, and earn certificates of completion. Whether you&apos;re a beginner or experienced, EFTA&apos;s courses will help you unlock your artistic potential.</p>
         </div>
-      <div className='absolute bottom-12 text-3xl font-medium font-italiana text-course_blue'><p>We Offer:</p>
-      <div className='flex flex-wrap gap-3 font-poppins pt-5' >
+      <div className=' bottom-12 text-3xl font-medium font-italiana text-course_blue'><p>We Offer:</p>
+      <div className='flex flex-wrap gap-3 font-poppins pt-2' >
             {visibleItems.map((item, index) => (
                 <div key={index} className='py-2 h-11 bg-white bg-clip-border  text-course_blue font-normal text-[20px] flex items-center  gap-3 ' >
                     <div>

@@ -39,8 +39,8 @@ function Navbar() {
 
   return (
     <>
-      <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between jitems-center h-24 z-50 bg-white">
-        <Link href="/">
+      <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between jitems-center h-24 z-40 bg-white/10  ">
+        <Link href="/" className="z-50">
           <svg
             className={`w-24 h-24  ${
               selPage === "/"
@@ -49,7 +49,7 @@ function Navbar() {
                 ? pathSegments.length === 1
                   ? "fill-black"
                   : "fill-gift_blue"
-                : ""
+                : "fill-white"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@ function Navbar() {
                   ? pathSegments.length === 1
                     ? "border-black"
                     : "border-gift_blue"
-                  : ""
+                  : "border-white"
               } ${
                 selPage === "/"
                   ? "text-primary_color"
@@ -85,7 +85,7 @@ function Navbar() {
                   ? pathSegments.length === 1
                     ? "text-black"
                     : "text-gift_blue"
-                  : ""
+                  : "text-white"
               } font-semibold font-poppins px-5 py-3`}
             >
               <div></div>
@@ -101,7 +101,7 @@ function Navbar() {
                 ? pathSegments.length === 1
                   ? "text-black"
                   : "text-gift_blue"
-                : ""
+                : "text-white"
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
           </Link>

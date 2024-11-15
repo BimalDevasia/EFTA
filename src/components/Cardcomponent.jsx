@@ -2,7 +2,9 @@ import React from 'react'
 import { cn } from "@/lib/utils";
 const Cardcomponent=({ className,item ,title,reverse })=> {
   return (    
-    <div className={cn("w-screen h-auto lg:px-24",className)}>
+    <div className={cn("w-screen h-auto lg:px-24  flex flex-col items-center ",className)}>
+
+        <div className='lg:max-w-[1255px]'>
        {title&&
         <div className='w-screen text-4xl font-semibold text-gift_blue font-poppins pb-20'>
         {title}
@@ -34,6 +36,7 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
 
             </div>
         )})}
+        </div>
     </div>
   )
 }

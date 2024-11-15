@@ -1,7 +1,7 @@
 "use client"
 import React,{ useState,useRef,useMemo,useEffect } from 'react'
 
-function EventAbout() {
+const EventAbout= React.forwardRef((props, ref) => {
     const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
@@ -81,7 +81,7 @@ function EventAbout() {
 
 
   return (
-    <div className=' relative w-screen h-screen '>
+    <div ref={ref} className=' relative w-screen h-screen '>
       
       <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./party2.png')`}}>
 
@@ -110,6 +110,6 @@ function EventAbout() {
     </div>
     </div>
   )
-}
+})
 
 export default EventAbout
