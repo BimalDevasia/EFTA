@@ -11,7 +11,7 @@ const EventCard = React.forwardRef((props, ref) => {
         else{
             setIsmobile(4);
         }
-    },[window.innerWidth])
+    },[])
 
   return (
     <div ref={ref} className='lg:pl-24 w-screen overflow-hidden flex lg:gap-5  gap-2 px-10 lg:flex-nowrap flex-wrap '>
