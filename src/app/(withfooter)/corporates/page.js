@@ -3,7 +3,7 @@ import React,{ useRef} from 'react'
 import Coperatefront from '@/components/Corporatefront'
 import Corperategift from '@/components/Corperategift'
 import Corporatemulticard from '@/components/Corporatemulticard'
-function page() {
+function Page() {
   const copRef = useRef(null);
   const ScrollToAboutUs = () => {
     if (copRef.current) {
@@ -19,4 +19,4 @@ function page() {
   )
 }
 
-export default page
+export default Page
