@@ -1,8 +1,8 @@
 'use client'
-import React,{ useState, useEffect } from 'react'
+import React,{ useState, useEffect ,forwardRef} from 'react'
 import { motion } from 'framer-motion';
 
-function Corperategift() {
+const Corperategift=forwardRef((props,ref)=> {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -24,7 +24,7 @@ function Corperategift() {
   <>
     
 
-  <div className='px-36 w-screen h-screen flex flex-col justify-center items-center overflow-hidden mt-10'>
+  <div ref={ref} className='px-36 w-screen h-screen flex flex-col justify-center items-center overflow-hidden mt-10'>
   <div className='flex justify-between w-full items-center pb-6 text-gift_blue'>
         <p className='font-poppins font-semibold text-3xl'>Corporate  Gifts</p>
         <p className='font-poppins font-semibold text-base'>View All</p>
@@ -84,6 +84,6 @@ function Corperategift() {
   </>
     
   )
-}
+})
 
 export default Corperategift

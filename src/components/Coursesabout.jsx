@@ -1,7 +1,7 @@
 "use client"
-import React,{ useState,useRef,useMemo,useEffect } from 'react'
+import React,{ useState,useRef,useMemo,useEffect,forwardRef } from 'react'
 
-function Coursesabout() {
+const Coursesabout=forwardRef((props,ref)=> {
     const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
@@ -81,7 +81,7 @@ function Coursesabout() {
 
 
   return (
-    <div className=' relative w-screen h-screen mt-32 pt-20'>
+    <div ref={ref} className=' relative w-screen h-screen mt-32 pt-20'>
       
       <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./courseabout.png')`}}>
 
@@ -110,6 +110,6 @@ function Coursesabout() {
     </div>
     </div>
   )
-}
+})
 
 export default Coursesabout
