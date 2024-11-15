@@ -5,7 +5,7 @@ import EventMain from '@/components/EventMain'
 import Eventmulticard from '@/components/Eventmulticard'
 import React,{ useRef } from 'react'
 
-function page() {
+function Page() {
 
   const eventRef = useRef(null);
 
@@ -24,4 +24,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

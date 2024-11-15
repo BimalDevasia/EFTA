@@ -30,5 +30,6 @@ const EventCard = React.forwardRef((props, ref) => {
     </div>
   )
 })
+EventCard.displayName='EventCard'
 
 export default EventCard

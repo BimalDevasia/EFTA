@@ -111,5 +111,5 @@ const EventAbout= React.forwardRef((props, ref) => {
     </div>
   )
 })
-
+EventAbout.displayName='EventAbout'
 export default EventAbout

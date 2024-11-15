@@ -9,7 +9,7 @@ import GiftMain from '@/components/GiftMain'
 import FeaturedGiftSection from '@/components/home/FeaturedGiftSection'
 import EventCard from '@/components/EventCard'
 
-function page() {
+function Page() {
   const eventRef = useRef(null);
 
   const scrollToAboutUs = () => {
@@ -33,4 +33,4 @@ function page() {
   )
 }
 
-export default page
+export default Page
