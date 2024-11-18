@@ -18,7 +18,7 @@ const EventCard = React.forwardRef((props, ref) => {
         {
             Items.slice(0,isMobile).map((item,index)=>(
                 <div key={index} 
-                className={`flex justify-between lg:px-10 px-5 lg:h-32 lg:min-w-[370px]  lg:w-auto w-[145px]  h-[50px]   items-center rounded-2xl lg:text-4xl text-xs text-white font-poppins font-semibold`}
+                className={`flex justify-between lg:px-10 px-5 lg:h-24 lg:min-w-[370px]  lg:w-auto w-[145px]  h-[50px]   items-center rounded-2xl lg:text-2xl text-xs text-white font-poppins font-semibold`}
                 style={{backgroundColor:`${item.color}`}}>
                     <div className='w-1/3'>
                     {item.title}

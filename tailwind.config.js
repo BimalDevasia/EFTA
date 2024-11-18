@@ -1,3 +1,4 @@
+const { Instrument_Sans } = require('next/font/google');
 
 
 /** @type {import('tailwindcss').Config} */
@@ -43,6 +44,7 @@ module.exports = {
         italiana: ["var(--font-italiana)", "sans-serif"],
         caveat: ["var(--font-caveat)", "cursive"],
         satisfy: ["var(--font-satisfy)", "cursive"],
+        instrumentsans:["var(--font-instrument-serif)","sans-serif"]
       },
       colors: {
         border: "hsl(var(--border))",

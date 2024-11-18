@@ -4,7 +4,7 @@ import AboutUs from "@/components/AboutUs";
 import Community from "@/components/community";
 import FrontTemplate from "@/components/frontTemplate";
 import FeaturedGiftSection from "@/components/home/FeaturedGiftSection";
-
+import Testimony from "@/components/Testimony";
 
 export default function home() {
   return (
@@ -13,7 +13,7 @@ export default function home() {
       <AboutUs />
       <Community />
       <FrontTemplate />
-      
+      <Testimony/>
     </>
   );
 }

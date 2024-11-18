@@ -1,4 +1,4 @@
-import { Inter,Poppins,Italiana,Caveat,Satisfy } from "next/font/google";
+import { Inter,Poppins,Italiana,Caveat,Satisfy,Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,7 +7,11 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
-
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"], 
+  weight: "400", 
+  variable: "--font-instrument-serif", 
+});
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -44,7 +48,7 @@ export default function RootLayout({ children }) {
       <head>
       <link rel="icon" href="./logo.svg" />
       </head>
-      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable}`}>
+      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable}`}>
         <Navbar/>
         {children}
         <ModalProvider />
