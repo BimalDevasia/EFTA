@@ -11,7 +11,7 @@ function EventMain({click}) {
           <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>Celebrate In</p>
           <p className='font-satisfy lg:text-9xl text-6xl font-normal text-white'>Style</p>
           </div>
-          <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]]'>Shop Now</button>
+          <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>Shop Now</button>
           <p onClick={click} className='absolute bottom-10 text-white font-poppins font-semibold cursor-pointer left-[50%] translate-x-[-50%] flex items-center gap-2'>Scroll down <MdKeyboardArrowDown /> </p>
         </div>
           

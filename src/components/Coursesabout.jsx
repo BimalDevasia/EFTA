@@ -41,7 +41,10 @@ const Coursesabout=forwardRef((props,ref)=> {
     
           cumulativeWidth += buttonWidth;
     
-          if (cumulativeWidth > containerWidth * 1.7) {
+          if (window.innerWidth >=1024 && cumulativeWidth > containerWidth * 1.5) {
+            break;
+          }
+          else if(cumulativeWidth > containerWidth * 2.5){
             break;
           }
     
@@ -81,33 +84,34 @@ const Coursesabout=forwardRef((props,ref)=> {
 
 
   return (
-    <div ref={ref} className=' relative w-screen h-screen mt-32 pt-20'>
+    <div ref={ref} className=' relative w-screen h-screen mt-32 pt-20 lg:mb-auto mb-[100px]'>
       
-      <div className='absolute right-0 top-1/2 translate-y-[-50%] w-6/12 h-[70%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./courseabout.png')`}}>
-
-      </div>
-    <div className='relative flex flex-col w-[55%] pl-28 h-full gap-7 justify-center' ref={containerRef}>
+      
+    <div className='relative flex flex-col lg:w-3/5 w-screen lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max' ref={containerRef}>
       <div className='font-poppins'>
-        <p className='text-5xl font-medium text-course_blue font-italiana'>About Us</p>
-        <p className='w-8/12 pt-5 text-lg'>Immerse yourself in the art of mural painting, drawing, crafting, cake baking adn so on with EFTA&apos;s captivating courses. Offering both one-on-one instruction and batch classes, our expert artists provide personalized guidance in well-equipped studios. Explore your creativity on flexible schedules, and earn certificates of completion. Whether you&apos;re a beginner or experienced, EFTA&apos;s courses will help you unlock your artistic potential.</p>
+        <p className='lg:text-5xl  text-3xl font-medium text-course_blue font-italiana'>About Us</p>
+        <p className='lg:w-8/12 pt-5 lg:text-xl text-xs'>Immerse yourself in the art of mural painting, drawing, crafting, cake baking adn so on with EFTA&apos;s captivating courses. Offering both one-on-one instruction and batch classes, our expert artists provide personalized guidance in well-equipped studios. Explore your creativity on flexible schedules, and earn certificates of completion. Whether you&apos;re a beginner or experienced, EFTA&apos;s courses will help you unlock your artistic potential.</p>
         </div>
-      <div className=' bottom-12 text-3xl font-medium font-italiana text-course_blue'><p>We Offer:</p>
+      <div className=' bottom-12 lg:text-3xl lg:mt-0 mt-5 text-base font-medium font-italiana text-course_blue'><p>We Offer:</p>
       <div className='flex flex-wrap gap-3 font-poppins pt-2' >
             {visibleItems.map((item, index) => (
-                <div key={index} className='py-2 h-11 bg-white bg-clip-border  text-course_blue font-normal text-[20px] flex items-center  gap-3 ' >
+                <div key={index} className='lg:px-9 lg:py-2 lg:h-11  py-1 lg:text-[20px] text-xs bg-clip-border  text-course_blue font-normal  flex items-center  gap-3 ' >
                     <div>
                     {item} </div>
                     <p>/</p>
                 </div>
             ))}
             {remainingCount > 0 && (
-                <div className='py-2 h-[46px] bg-white bg-clip-border  text-course_blue font-normal text-[20px] flex items-center'>
+                <div className='lg:px-9 lg:py-2 lg:h-11 px-2 py-1  bg-clip-border  text-course_blue font-normal lg:text-[20px] text-xs flex items-center'>
                     +{remainingCount} more
                 </div>
             )}
         </div>
       </div>
     </div>
+    <div className='absolute right-0  lg:top-1/2 lg:mt-0 mt-56 translate-y-[-50%] lg:w-6/12 lg:h-[70%] h-[295px] w-[90%] rounded-l-full bg-no-repeat bg-cover bg-center ' style={{backgroundImage:`url('./courseabout.png')`}}>
+
+      </div>
     </div>
   )
 })
