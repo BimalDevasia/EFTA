@@ -14,7 +14,7 @@ const Footer = () => {
           <Logo  />
           <p>
             <SpecialText className="text-[#1F76BD] lg:text-[30px] text-lg font-extrabold  " >
-              All kinds of Gifts, Cakes & Decoration
+              All kinds of Gifts, Cakes & Events
             </SpecialText>
           </p>
         </div>

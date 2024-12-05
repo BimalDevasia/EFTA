@@ -2,37 +2,37 @@ import React from 'react'
 
 function Morefromefta() {
   return (
-    <div className='px-36 w-screen h-auto  flex flex-col gap-20 '>
-        <div className='w-full flex justify-center font-poppins text-4xl font-semibold text-nav_blue'>
+    <div className='lg:px-36 px-10 w-screen h-auto  flex flex-col gap-20 '>
+        <div className='w-full flex justify-center font-poppins lg:text-4xl text-xl  font-semibold text-nav_blue'>
                 More form EFTA
         </div>
-        <div className='flex gap-8'>
-            <div className='relative w-2/5 h-[400px] '>
-                <img src="./party.png" alt="" srcset="" />
-                <img src="./drink.png" alt="" srcset="" className='absolute top-1/2 left-1/2 transform -translate-x-1/2' />
+        <div className='flex lg:gap-8 '>
+            <div className='relative lg:w-2/5 w-full  lg:h-[400px] '>
+                <img src="./party.png" alt="" srcset=""  className='lg:w-auto lg:h-auto w-[115px] h-[136px]'/>
+                <img src="./drink.png" alt="" srcset="" className='absolute top-1/2 left-1/2 transform -translate-x-1/2 lg:w-auto lg:h-auto w-[115px] h-[136px]' />
             </div>
-            <div className='flex flex-col gap-6'>
-                <div className='text-nav_blue text-5xl font-semibold'>EFTA</div>
-                <div className='text-[87px] text-nav_blue font-bold leading-[50px]'>EVENTS</div>
-                <div className='text-lg  font-medium font-poppins '>Create your Brand showing materials like <br />
+            <div className='flex flex-col lg:gap-6 gap-1 lg:justify-normal justify-center'>
+                <div className='text-nav_blue lg:text-5xl text-base font-semibold '>EFTA</div>
+                <div className='lg:text-[87px] text-[30px] text-nav_blue font-bold lg:leading-[50px] leading-6'>EVENTS</div>
+                <div className='lg:text-lg text-[5.4px]  font-medium font-poppins '>Create your Brand showing materials like <br />
                 T-shirt, ID cards, Cap, Notepad.... and a lot <br />
                 more with best price with EFTA. <br />
                 Show your Brand everywhere.</div>
-                <p className='text-xl text-nav_blue font-poppins font-semibold '> Know more</p>
+                <p className='lg:text-xl text-[7px] text-nav_blue font-poppins font-semibold '> Know more</p>
             </div>
         </div>
-        <div className='flex w-full  '>
-        <div className='flex flex-col gap-6 items-end w-4/5 h-[400px] justify-center'>
-                <div className='text-nav_blue text-5xl font-semibold'>EFTA</div>
-                <div className='text-[87px] text-nav_blue font-bold leading-[50px]'>COURSES</div>
-                <div className='text-lg  font-medium font-poppins text-right '>Create your Brand showing materials like <br />
+        <div className='flex w-full lg:gap-0 gap-4 mb-10 '>
+        <div className='flex flex-col lg:gap-6 items-end w-3/5 lg:h-[400px] justify-center'>
+                <div className='text-nav_blue lg:text-5xl text-[19px] font-semibold'>EFTA</div>
+                <div className='lg:text-[87px] text-[34px] text-nav_blue font-bold leading-[50px]'>COURSES</div>
+                <div className='lg:text-lg text-[6px] font-medium font-poppins text-right '>Create your Brand showing materials like <br />
                 T-shirt, ID cards, Cap, Notepad.... and a lot <br />
                 more with best price with EFTA. <br />
                 Show your Brand everywhere.</div>
-                <p className='text-xl text-nav_blue font-poppins font-semibold '> Know more</p>
+                <p className='lg:text-xl text-[8px] text-nav_blue font-poppins font-semibold '> Know more</p>
             </div>
             <div className='flex justify-end w-2/5'>
-                <img src="./clock.png" alt="" />
+                <img src="./clock.png" alt="" className='lg:w-auto w-[130.85px] lg:h-auto h-[155.49] '/>
             </div>
         </div>
     </div>
