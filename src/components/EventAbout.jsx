@@ -96,10 +96,10 @@ const EventAbout= React.forwardRef((props, ref) => {
       <div className='lg:absolute bottom-12 lg:text-3xl lg:mt-0 mt-5 text-base font-medium font-italiana text-[#7C2EF9]'><p>We Offer:</p>
       <div className='flex flex-wrap gap-3 font-poppins pt-5' >
             {visibleItems.map((item, index) => (
-                <div key={index} className='lg:px-9 lg:py-2 lg:h-11  py-1 lg:text-[20px] text-xs bg-clip-border  text-[#7C2EF9] font-normal flex items-center  gap-3 ' >
+                <div key={index} className='lg:px-2 lg:py-2 lg:h-11  py-1 lg:text-[20px] text-xs bg-clip-border  text-[#7C2EF9] font-normal flex items-center  gap-3 ' >
                     <div>
                     {item} </div>
-                    <p>/</p>
+                    <p className='font-bold'>/</p>
                 </div>
             ))}
             {remainingCount > 0 && (

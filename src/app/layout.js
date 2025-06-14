@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ModalProvider from "@/components/ModalProvider";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -48,10 +49,28 @@ export default function RootLayout({ children }) {
       <head>
       <link rel="icon" href="./logo.svg" />
       </head>
-      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable}`}>
+      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable} overflow-x-hidden`}>
+        <div className="w-full overflow-x-hidden">
         <Navbar/>
         {children}
         <ModalProvider />
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              theme: {
+                primary: '#4aed88',
+              },
+            },
+          }}
+        />
+        </div>
       </body>
     </html>
   );

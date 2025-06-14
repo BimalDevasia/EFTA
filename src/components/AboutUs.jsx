@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { useState, useRef,useEffect,useMemo } from 'react';
+import { useState, useRef,useEffect,useMemo,useCallback } from 'react';
 import "./homeFront.css"
 import gsap from 'gsap';
 import { wrap } from "@motionone/utils";
@@ -13,43 +13,35 @@ function AboutUs() {
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
 
-    const items=["Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits","Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits"]
     const memoizedItems = useMemo(() => {
-      return items.map(item => item); 
-    },[items]);
-
-
+      return ["Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits","Custom Orders","Bulk Orders","Corporate Orders","Frames","Key Chains","Portraits"];
+    }, []);
   const item1 = useRef(null);
   const item2 = useRef(null);
-  let xPercent = 0;
-  let direction = -1;
+  const xPercentRef = useRef(0);
+  const directionRef = useRef(-1);
 
+  const animation = useCallback(() => {
+      if (xPercentRef.current <= -100) {
+        xPercentRef.current = 0;
+      }
+      if (xPercentRef.current > 0) {
+        xPercentRef.current = -100;
+      }
   
-  useEffect(() => {
+      gsap.set(item1.current, { xPercent: xPercentRef.current });
+      gsap.set(item2.current, { xPercent: xPercentRef.current });
+ 
+      xPercentRef.current += 0.15 * directionRef.current;
+    
+      requestAnimationFrame(animation);
+  }, []);
 
+  useEffect(() => {
     if(window.innerWidth>=1024){
       requestAnimationFrame(animation);
-    
     }
-  }, []);
-  
-  const animation = () => {
-
-      if (xPercent <= -100) {
-        xPercent = 0;
-      }
-      if (xPercent > 0) {
-        xPercent = -100;
-      }
-  
-      gsap.set(item1.current, { xPercent: xPercent });
-      gsap.set(item2.current, { xPercent: xPercent });
- 
-      xPercent += 0.15 * direction;
-    
-  
-    requestAnimationFrame(animation);
-  };
+  }, [animation]);
 
 
 
@@ -102,8 +94,8 @@ function AboutUs() {
 
 
   return (
-    <div className=' relative w-screen h-screen '>
-       <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-screen font-italiana overflow-hidden lg:text-9xl'>
+    <div className=' relative w-full h-screen overflow-hidden'>
+       <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-full font-italiana overflow-hidden lg:text-9xl'>
         <div ref={item1} className='flex gap-32 '>
         <div>EVENTS</div>
         <div>COURSES</div>
@@ -119,7 +111,7 @@ function AboutUs() {
         
       </div>
      
-    <div className='relative flex flex-col   lg:w-3/5 w-screen lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max' ref={containerRef}>
+    <div className='relative flex flex-col   lg:w-3/5 w-full lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max' ref={containerRef}>
       <div className='font-poppins'>
         <p className='lg:text-5xl  text-3xl font-medium text-primary_color'>About Us</p>
         <p className='lg:w-8/12 pt-5 lg:text-xl text-xs  '>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>

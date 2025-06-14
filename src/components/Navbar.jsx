@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { BsFilterLeft } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { motion } from 'framer-motion';
+import { useCart } from "@/stores/useCart";
 
 const sidebarVariants = {
   hidden: { x: '-100%' },
@@ -14,6 +15,11 @@ const sidebarVariants = {
 
 function Navbar() {
   const [selPage, setSelPage] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const mobileNavRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const { totalItems } = useCart();
+  
   let items = [
     { id: "Home", path: "/" },
     { id: "Gifts", path: "/gifts" },
@@ -21,9 +27,6 @@ function Navbar() {
     { id: "Courses", path: "/courses" },
     { id: "Corporates", path: "/corporates" },
   ];
-
-  const [isOpen, setIsOpen] = useState(false);
-
 
   const pathname = usePathname();
   const pathSegments =
@@ -37,9 +40,41 @@ function Navbar() {
     }
   }, [pathSegments, pathname]);
 
+  // Focus management for accessibility
+  useEffect(() => {
+    if (isOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, [isOpen]);
+
+  // Handle escape key to close mobile menu
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  const handleMobileNavClose = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
-      <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between jitems-center h-24 z-40 bg-white/10  ">
+      <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between lg:items-center h-24 z-40 bg-white/10">
         <Link href="/" className="z-50">
           <svg
             className={`w-24 h-24  ${
@@ -92,7 +127,7 @@ function Navbar() {
               <Link href={item.path}>{item.id}</Link>
             </div>
           ))}
-          <Link href="/cart" className="cursor-pointer">
+          <Link href="/cart" className="cursor-pointer relative">
           <PiShoppingCartSimpleFill
             className={`w-8 h-8 ${
               selPage === "/"
@@ -104,14 +139,19 @@ function Navbar() {
                 : "text-white"
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+              {totalItems > 99 ? '99+' : totalItems}
+            </span>
+          )}
           </Link>
         </div>
       </div>
 
       {/* this is for responsive         */}
 
-      <div className="relative lg:hidden ">
-       <div className="w-screen h-12 flex items-center px-10 justify-between">
+      <div className="relative lg:hidden">
+       <div className="w-screen h-12 flex items-center px-10 justify-between pt-2">
        <Link href="/">
           <svg
             className={`w-16 h-12   ${
@@ -135,22 +175,45 @@ function Navbar() {
         </Link>
         
         <BsFilterLeft
-          className={`w-10 h-10 ${isOpen?"opacity-0":"opacity-100"} transition-all duration-500 text-primary_color`}
+          className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 text-primary_color cursor-pointer`}
           onClick={() => setIsOpen(true)}
+          aria-label="Open navigation menu"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsOpen(true);
+            }
+          }}
         />
        </div>
 
+        {/* Backdrop overlay */}
+        {isOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-10"
+            onClick={handleMobileNavClose}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Mobile sidebar */}
         <motion.div
-      className="sidebar w-screen h-screen absolute top-0 bg-white z-20"
-      initial="hidden"
-      animate={isOpen ? "visible" : "hidden"}
-      variants={sidebarVariants}
-      transition={{ type: 'tween', duration: 0.3 }}
-    >
+          ref={mobileNavRef}
+          className="sidebar w-screen h-screen absolute top-0 bg-white z-20"
+          initial="hidden"
+          animate={isOpen ? "visible" : "hidden"}
+          variants={sidebarVariants}
+          transition={{ type: 'tween', duration: 0.3 }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-nav-title"
+        >
          
-          <div className=" px-10 flex flex-col gap-16">
-             <div className="w-full  flex justify-between items-center">
-            <Link href="/">
+          <div className="px-10 flex flex-col gap-16">
+             <div className="w-full flex justify-between items-center">
+            <Link href="/" aria-label="EFTA Home">
               <svg
                 className={`w-16 h-12 fill-primary_color `}
                 viewBox="0 0 121 54"
@@ -164,20 +227,50 @@ function Navbar() {
               </svg>
             </Link>
 
-           <RxCross2 className={`w-10 h-10 ${isOpen?"opacity-100":"opacity-0"} transition-all duration-1000 text-primary_color`}  
-           onClick={()=>setIsOpen(false)}/>
+           <RxCross2 
+             ref={closeButtonRef}
+             className={`w-10 h-10 ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 text-primary_color cursor-pointer`}  
+             onClick={handleMobileNavClose}
+             aria-label="Close navigation menu"
+             role="button"
+             tabIndex={0}
+             onKeyDown={(e) => {
+               if (e.key === 'Enter' || e.key === ' ') {
+                 e.preventDefault();
+                 handleMobileNavClose();
+               }
+             }}
+           />
 
           </div>
 
-                <div className={`flex ${isOpen?"opacity-100 max-w-screen":"opacity-0 max-w-0" } flex-col`}>
-                {items.map((item,index)=>(
-                  <Link href={item.path} key={index} onClick={()=>setIsOpen(false)}>
-                  <div className={`font-poppins  transition-all duration-500 font-semibold border-b-2 py-3 text-primary_color`}>{item.id}</div>
+                <div className={`flex ${isOpen ? "opacity-100 max-w-screen" : "opacity-0 max-w-0"} flex-col transition-all duration-300`}>
+                {items.map((item, index) => (
+                  <Link 
+                    href={item.path} 
+                    key={index} 
+                    onClick={handleMobileNavClose}
+                    className="focus:outline-none focus:ring-2 focus:ring-primary_color focus:ring-offset-2 rounded"
+                  >
+                    <div className="font-poppins transition-all duration-300 font-semibold border-b-2 py-3 text-primary_color hover:bg-gray-50">
+                      {item.id}
+                    </div>
                   </Link>
                 ))}
-                <Link href="/cart" onClick={()=>setIsOpen(false)}>
-                  <div className={`font-poppins ${isOpen?"opacity-100":"opacity-0"} transition-all duration-500 font-semibold border-b-2 py-3 text-primary_color`}>Cart</div>
-                  </Link>
+                <Link 
+                  href="/cart" 
+                  onClick={handleMobileNavClose}
+                  className="focus:outline-none focus:ring-2 focus:ring-primary_color focus:ring-offset-2 rounded relative"
+                >
+                  <div className={`font-poppins ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 font-semibold border-b-2 py-3 text-primary_color hover:bg-gray-50 flex items-center justify-between`}>
+                    <span>Cart</span>
+                    {totalItems > 0 && (
+                      <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                        {totalItems > 99 ? '99+' : totalItems}
+                      </span>
+                    )}
+                  </div>
+                </Link>
 
                 </div>
 

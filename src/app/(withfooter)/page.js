@@ -12,6 +12,7 @@ export default function home() {
       <HomeFront />
       <AboutUs />
       <Community />
+
       <FrontTemplate />
       <Testimony/>
     </>

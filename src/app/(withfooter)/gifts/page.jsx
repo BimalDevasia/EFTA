@@ -1,6 +1,6 @@
 "use client"
 import React, { useRef } from 'react';
-import GiftMain from '@/components/GiftMain';
+import DynamicBanner from '@/components/DynamicBanner';
 import EventCard from '@/components/EventCard';
 import FeaturedGiftSection from '@/components/home/FeaturedGiftSection';
 import BrandItem from '@/components/brandItem';
@@ -20,7 +20,13 @@ function Page() {
 
   return (
     <>
-      <GiftMain click={ScrollToAboutUs} />
+      <DynamicBanner 
+        pageType="gifts"
+        onClick={ScrollToAboutUs}
+        defaultImage="./giftmain.png"
+        defaultTitle="Valentine"
+        defaultSubtitle="Surprise your"
+      />
       <EventCard ref={eventRef} />
       <FeaturedGiftSection />
       <BrandItem />

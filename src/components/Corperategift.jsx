@@ -7,24 +7,24 @@ const Corperategift=forwardRef((props,ref)=> {
   const [currentIndex, setCurrentIndex] = useState(0);
 
  
+  const items = [
+    {id:"t-shirt",path:"/t-shirt.png"},
+    {id:"Id cards",path:"/ID-cards.png"},
+    // {id:"template",path:"/template1.png"}
+  ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
-
-  const items = [
-    {id:"t-shirt",path:"/t-shirt.png"},
-    {id:"Id cards",path:"/ID-cards.png"},
-    // {id:"template",path:"/template1.png"}
-  ]
+  }, [items.length]);
 
   return (
   <>
     
 
-  <div ref={ref} className='lg:px-36 px-8 w-screen  h-auto flex justify-center  flex-col items-center overflow-hidden  lg:py-32 py-12'>
+  <div ref={ref} className='lg:px-36 px-8 w-full  h-auto flex justify-center  flex-col items-center overflow-hidden  lg:py-32 py-12'>
   <div className='flex justify-between w-full items-center pb-6 text-gift_blue'>
         <p className='font-poppins font-semibold text-3xl'>Corporate  Gifts</p>
         <p className='font-poppins font-semibold text-base'>View All</p>
@@ -43,7 +43,7 @@ const Corperategift=forwardRef((props,ref)=> {
           <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold lg:text-[20px] text-xs lg:w-52 w-28'>View All</button>
         </div>
 
-        <div className='lg:w-[60%] max-w-screen lg:h-full h-[200px] flex gap-4 '>
+        <div className='lg:w-[60%] w-full lg:h-full h-[200px] flex gap-4 '>
         <div  className='relative overflow-hidden  lg:w-2/3 w-1/2  h-full rounded-[8px] shadow-carossel_shadow '>
         {
           items.map((item,index)=>(

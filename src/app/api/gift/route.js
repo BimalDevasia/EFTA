@@ -8,6 +8,14 @@ export async function POST(req) {
     
     const data = await req.json();
     
+    // Validate required images
+    if (!data.images || data.images.length === 0) {
+      return NextResponse.json(
+        { error: 'At least one product image is required' },
+        { status: 400 }
+      );
+    }
+    
     // Calculate offer price
     const offerPrice = ((100 - data.offerPercentage) / 100) * data.productMRP;
     

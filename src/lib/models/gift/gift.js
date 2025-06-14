@@ -70,8 +70,18 @@ const giftSchema = new mongoose.Schema({
     }
   },
   images: [{
-    type: String,
-    required: [true, 'At least one product image is required']
+    url: {
+      type: String,
+      required: true
+    },
+    public_id: {
+      type: String,
+      required: true
+    },
+    alt: {
+      type: String,
+      default: ''
+    }
   }]
 }, {
   timestamps: true
@@ -86,4 +96,4 @@ giftSchema.index({ offerPrice: 1 });
 // Check if model exists before creating a new one
 const Gift = mongoose.models.Gift || mongoose.model('Gift', giftSchema);
 
-export default Gift;``
+export default Gift;

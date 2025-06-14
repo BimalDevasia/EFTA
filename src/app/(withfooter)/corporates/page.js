@@ -1,6 +1,6 @@
 "use client"
 import React,{ useRef} from 'react'
-import Coperatefront from '@/components/Corporatefront'
+import DynamicBanner from '@/components/DynamicBanner'
 import Corperategift from '@/components/Corperategift'
 import Corporatemulticard from '@/components/Corporatemulticard'
 function Page() {
@@ -12,7 +12,13 @@ function Page() {
   };
   return (
     <>
-    <Coperatefront click={ScrollToAboutUs}/>
+    <DynamicBanner 
+      pageType="corporate"
+      onClick={ScrollToAboutUs}
+      defaultImage="./coperatefront.png"
+      defaultTitle="Company"
+      defaultSubtitle="Brand your"
+    />
     <Corperategift ref={copRef}/>
     <Corporatemulticard/>
     </>

@@ -1,6 +1,6 @@
 "use client"
 import React,{useRef} from 'react'
-import Coursesfront from '@/components/Coursesfront'
+import DynamicBanner from '@/components/DynamicBanner'
 import Coursesabout from '@/components/Coursesabout'
 function Page() {
 
@@ -12,7 +12,13 @@ function Page() {
   };
   return (
     <>
-    <Coursesfront click={ScrollToAboutUs}/>
+    <DynamicBanner 
+      pageType="courses"
+      onClick={ScrollToAboutUs}
+      defaultImage="./coursesfront.png"
+      defaultTitle="Creativity"
+      defaultSubtitle="Unlock"
+    />
     <Coursesabout ref={couRef}/>
     </>
   )

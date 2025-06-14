@@ -2,7 +2,7 @@ import React from 'react'
 
 function Eventdetails() {
   return (
-    <div className='flex justify-center w-screen lg:h-screen lg:mb-0 mb-[350px] lg:mt-20 '>
+    <div className='flex justify-center w-full lg:h-screen lg:mb-0 mb-[350px] lg:mt-20 overflow-hidden'>
     <div className=' lg:px-24 px-8 h-auto flex gap-6 justify-center lg:flex-row flex-col-reverse '>
         <div className='lg:w-[620px] w-full relative flex justify-center'>
         <img src="./marriage1.png" alt="" className='absolute left-0 lg:top-10 lg:w-[300px] lg:h-[389px] w-[156.72px] h-[194.97px]'/>

@@ -1,7 +1,7 @@
 "use client"
 import EventAbout from '@/components/EventAbout'
 import Eventdetails from '@/components/Eventdetails'
-import EventMain from '@/components/EventMain'
+import DynamicBanner from '@/components/DynamicBanner'
 import Eventmulticard from '@/components/Eventmulticard'
 import React,{ useRef } from 'react'
 
@@ -16,7 +16,13 @@ function Page() {
   };
   return (
    <>
-   <EventMain click={scrollToAboutUs}/>
+   <DynamicBanner 
+     pageType="events"
+     onClick={scrollToAboutUs}
+     defaultImage="./eventmain.png"
+     defaultTitle="Style"
+     defaultSubtitle="Celebrate In"
+   />
    <EventAbout ref={eventRef}/>
    <Eventdetails/>
   <Eventmulticard/>

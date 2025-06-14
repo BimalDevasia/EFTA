@@ -1,22 +1,20 @@
 "use client"
-import React,{ useState,useRef,useMemo,useEffect,forwardRef } from 'react'
+import React,{ useState,useRef,useMemo,useEffect,forwardRef,useCallback } from 'react'
 
 const Coursesabout=forwardRef((props,ref)=> {
     const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
     
-    const items = [
-      "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses", 
-      "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses",
-      "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses",
-    ];
-    
     const memoizedItems = useMemo(() => {
-      return items.map(item => item);
-    }, [items]);
+      return [
+        "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses", 
+        "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses",
+        "Drawing courses", "Mural painting courses", "Craft courses", "Cake Baking courses",
+      ];
+    }, []);
    
-    const calculateVisibleItems = () => {
+    const calculateVisibleItems = useCallback(() => {
         if (!containerRef.current) return;
     
         const containerWidth = containerRef.current.clientWidth;
@@ -64,7 +62,7 @@ const Coursesabout=forwardRef((props,ref)=> {
           setVisibleItems(newVisibleItems);
           setRemainingCount(newRemainingCount);
         }
-      };
+      }, [memoizedItems, visibleItems.length, remainingCount]);
     
       useEffect(() => {
         calculateVisibleItems(); // Run initially
@@ -79,7 +77,7 @@ const Coursesabout=forwardRef((props,ref)=> {
         return () => {
           window.removeEventListener('resize', handleResize);
         };
-      }, [memoizedItems, remainingCount, visibleItems.length]);
+      }, [calculateVisibleItems]);
 
 
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 function Morefromefta() {
   return (
-    <div className='lg:px-36 px-10 w-screen h-auto  flex flex-col gap-20 '>
+    <div className='lg:px-36 px-10 w-full h-auto  flex flex-col gap-20 '>
         <div className='w-full flex justify-center font-poppins lg:text-4xl text-xl  font-semibold text-nav_blue'>
                 More form EFTA
         </div>
