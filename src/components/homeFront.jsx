@@ -7,10 +7,10 @@ function HomeFront() {
   return (
     <div className='relative flex flex-col justify-center items-center min-h-screen w-full font-poppins gap-14 overflow-hidden '>
       <div className='absolute lg:top-24 lg:left-24 top-24 left-5 z-0'>
-        <Image src="/love.svg" alt="love" width={60} height={60} className='max-w-full h-auto' />
+        <Image src="/love.svg" alt="love" width={180} height={120} className='max-w-full h-auto' />
       </div>
       <div className='absolute lg:top-32 lg:right-32 bottom-24 right-5 z-0'>
-        <Image src="/gift.svg" alt="gift" width={60} height={60} className='max-w-full h-auto' />
+        <Image src="/gift.svg" alt="gift" width={160} height={60} className='max-w-full h-auto' />
       </div>
       <div className='w-full h-max  text-shadow-custom-light shadow-text-shadow flex flex-col lg:justify-normal lg:items-center justify-center items-center bg-custom-gradient z-10 bg-clip-text text-transparent font-poppins lg:leading-[155px] leading-[37.83px] font-semibold lg:text-[126px] text-[32px] text-center'>
         <div>Creating Bonds</div>
