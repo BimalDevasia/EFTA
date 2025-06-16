@@ -8,12 +8,22 @@ if (!MONGODB_URI) {
 
 export async function connectDB() {
   try {
-    const { connection } = await mongoose.connect(MONGODB_URI);
-    
-    if (connection.readyState === 1) {
-      console.log('MongoDB connected successfully');
-      return;
+    // Check if already connected
+    if (mongoose.connection.readyState === 1) {
+      console.log('MongoDB already connected');
+      return mongoose.connection;
     }
+    
+    // Check if connecting
+    if (mongoose.connection.readyState === 2) {
+      console.log('MongoDB connecting...');
+      return mongoose.connection;
+    }
+    
+    // Connect to MongoDB
+    const connection = await mongoose.connect(MONGODB_URI);
+    console.log('MongoDB connected successfully');
+    return connection;
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
@@ -35,6 +45,14 @@ mongoose.connection.on('disconnected', () => {
 
 // Handle app termination
 process.on('SIGINT', async () => {
-  await mongoose.connection.close();
+  try {
+    await mongoose.connection.close();
+    console.log('MongoDB connection closed through app termination');
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+  }
   process.exit(0);
 });
+
+// Export default for convenience
+export default connectDB;

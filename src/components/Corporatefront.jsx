@@ -1,10 +1,17 @@
 import React from 'react'
+import Image from 'next/image'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import "./homeFront.css"
 function Coperatefront({click}) {
   return (
-    <div className='h-svh w-screen lg:mb-5 mb-10 items-center flex '>
-        <img src="./coperatefront.png" alt="" className='absolute object-cover w-screen lg:h-full h-svh object-center' />
+    <div className='relative h-svh w-screen lg:mb-5 mb-10 items-center flex '>
+        <Image 
+          src="/coperatefront.png" 
+          alt="Corporate front background" 
+          fill
+          className='object-cover object-center' 
+          priority
+        />
         <div className='z-10 lg:px-24 px-10 flex flex-col gap-14'>
           <div className='flex flex-col gap-6'>
           <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>Brand your</p>

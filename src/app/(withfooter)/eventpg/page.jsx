@@ -19,7 +19,7 @@ function Page() {
    <DynamicBanner 
      pageType="events"
      onClick={scrollToAboutUs}
-     defaultImage="./eventmain.png"
+     defaultImage="/eventmain.png"
      defaultTitle="Style"
      defaultSubtitle="Celebrate In"
    />

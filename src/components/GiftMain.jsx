@@ -1,9 +1,16 @@
 import React from 'react'
+import Image from 'next/image'
 import { MdKeyboardArrowDown } from "react-icons/md";
 function GiftMain({click}) {
   return (
-    <div className='h-screen w-screen lg:mb-10 mb-10 items-center flex'>
-        <img src="./giftmain.png" alt="" className='absolute object-cover w-screen lg:h-full h-svh object-center' />
+    <div className='relative h-screen w-screen lg:mb-10 mb-10 items-center flex'>
+        <Image 
+          src="/giftmain.png" 
+          alt="Gift main background" 
+          fill
+          className='object-cover object-center' 
+          priority
+        />
         <div className='z-10 lg:px-24 px-10 flex flex-col gap-14'>
           <div className='flex flex-col gap-6'>
           <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>Surprise your</p>

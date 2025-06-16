@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import Link from 'next/link';
 
@@ -46,10 +47,12 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
     return (
       <div className='h-screen w-full lg:mb-5 mb-10 items-center flex relative overflow-hidden'>
         {defaultImage && (
-          <img 
+          <Image 
             src={defaultImage} 
             alt={defaultTitle || "Banner"}
             className='absolute object-cover w-full lg:h-full h-screen object-center' 
+            fill
+            priority
           />
         )}
         
@@ -95,10 +98,12 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
   return (
     <div className='h-screen w-full lg:mb-5 mb-10 items-center flex relative overflow-hidden'>
       {displayImage && (
-        <img 
+        <Image 
           src={displayImage} 
           alt={displayTitle || `${pageType} banner`}
           className='absolute object-cover w-full lg:h-full h-screen object-center' 
+          fill
+          priority
         />
       )}
       

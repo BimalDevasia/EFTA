@@ -1,24 +1,24 @@
 'use client'
-import React,{ useState, useEffect } from 'react'
+import React,{ useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 function Portrait() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const items = useMemo(() => [
+    {id:"portrait1",path:"/portrait1.png"},
+    {id:"portrait2",path:"/portrait2.png"},
+    // {id:"template",path:"/template1.png"}
+  ], []);
  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
-
-  const items = [
-    {id:"portrait1",path:"/portrait1.png"},
-    {id:"portrait2",path:"/portrait2.png"},
-    // {id:"template",path:"/template1.png"}
-  ]
+  }, [items.length]);
 
   return (
     <div className='lg:px-36 px-10 w-screen h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
@@ -42,37 +42,47 @@ function Portrait() {
          <div  className='relative overflow-hidden  lg:w-2/3 w-1/2  h-full rounded-[8px] shadow-carossel_shadow '>
         {
           items.map((item,index)=>(
-            <motion.img 
+            <motion.div 
             key={index} 
-            src={item.path} 
-            alt={item.id} 
-            className='absolute object-cover h-full w-full '
+            className='absolute h-full w-full'
             initial={{ opacity:0, x: 100 }}
             animate={{
             opacity: index === currentIndex ? 1 : 0,
             x: index === currentIndex ? 0 : 100,
           }}
           exit={{ opacity: 1, x: 0}}
-          transition={{ duration: 1 }} />
-            
+          transition={{ duration: 1 }}
+          >
+            <Image 
+              src={item.path} 
+              alt={item.id} 
+              fill
+              className='object-cover'
+            />
+            </motion.div>
           ))
         }
         </div>
         <div  className='relative overflow-hidden  lg:w-2/3 w-1/2  h-full rounded-[8px] shadow-carossel_shadow '>
         {
           items.map((item,index)=>(
-            <motion.img 
+            <motion.div 
             key={index} 
-            src={item.path} 
-            alt={item.id} 
-            className='absolute object-cover h-full w-full'
+            className='absolute h-full w-full'
             initial={{ opacity: 0, x: 100 }}
             animate={{
             opacity: index === currentIndex ? 1 : 0,
             x: index === currentIndex ? 0 : 100,
           }}
-          transition={{ duration: 1,delay:1 }} />
-            
+          transition={{ duration: 1,delay:1 }}
+          >
+            <Image 
+              src={item.path} 
+              alt={item.id} 
+              fill
+              className='object-cover'
+            />
+            </motion.div>
           ))
         }
         </div>

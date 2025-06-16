@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 function Morefromefta() {
   return (
@@ -8,8 +9,20 @@ function Morefromefta() {
         </div>
         <div className='flex lg:gap-8 '>
             <div className='relative lg:w-2/5 w-full  lg:h-[400px] '>
-                <img src="./party.png" alt="" srcset=""  className='lg:w-auto lg:h-auto w-[115px] h-[136px]'/>
-                <img src="./drink.png" alt="" srcset="" className='absolute top-1/2 left-1/2 transform -translate-x-1/2 lg:w-auto lg:h-auto w-[115px] h-[136px]' />
+                <Image 
+                  src="/party.png" 
+                  alt="Party decoration" 
+                  width={115} 
+                  height={136} 
+                  className='lg:w-auto lg:h-auto w-[115px] h-[136px]'
+                />
+                <Image 
+                  src="/drink.png" 
+                  alt="Party drinks" 
+                  width={115} 
+                  height={136} 
+                  className='absolute top-1/2 left-1/2 transform -translate-x-1/2 lg:w-auto lg:h-auto w-[115px] h-[136px]' 
+                />
             </div>
             <div className='flex flex-col lg:gap-6 gap-1 lg:justify-normal justify-center'>
                 <div className='text-nav_blue lg:text-5xl text-base font-semibold '>EFTA</div>
@@ -32,7 +45,13 @@ function Morefromefta() {
                 <p className='lg:text-xl text-[8px] text-nav_blue font-poppins font-semibold '> Know more</p>
             </div>
             <div className='flex justify-end w-2/5'>
-                <img src="./clock.png" alt="" className='lg:w-auto w-[130.85px] lg:h-auto h-[155.49] '/>
+                <Image 
+                  src="/clock.png" 
+                  alt="Course timing clock" 
+                  width={130} 
+                  height={155} 
+                  className='lg:w-auto w-[130.85px] lg:h-auto h-[155.49px]'
+                />
             </div>
         </div>
     </div>

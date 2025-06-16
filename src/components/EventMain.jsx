@@ -1,11 +1,18 @@
 import React from 'react'
+import Image from 'next/image'
 import './homeFront'
 import { MdKeyboardArrowDown } from "react-icons/md";
 function EventMain({click}) {
   return (
     <div>
-        <div className='h-svh w-screen lg:mb-5 mb-10 items-center flex '>
-        <img src="./eventmain.png" alt="" className='absolute object-cover w-screen lg:h-full h-svh object-center' />
+        <div className='relative h-svh w-screen lg:mb-5 mb-10 items-center flex '>
+        <Image 
+          src="/eventmain.png" 
+          alt="Event main background" 
+          fill
+          className='object-cover object-center' 
+          priority
+        />
         <div className='z-10 lg:px-24 px-10 flex flex-col gap-14'>
           <div className='flex flex-col gap-6'>
           <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>Celebrate In</p>

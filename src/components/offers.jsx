@@ -1,9 +1,10 @@
 import React from 'react'
+import Image from 'next/image'
 import './homeFront.css'
 function offers() {
 
   const offers=[
-    {title:"Luxury Gift Hampers",discount:"20",src:"./gift.png"},
+    {title:"Luxury Gift Hampers",discount:"20",src:"/gift.png"},
   ]
   return (
     <div className='lg:px-36 px-10 w-full h-screen overflow-hidden flex flex-col gap-8 items-center'>
@@ -38,7 +39,13 @@ function offers() {
                 <button className='bg-white shadow-white-button py-4 px-12 rounded-[100px] text-primary_color font-semibold text-[20px] w-52 font-poppins'>Order Now</button>
 
               </div>
-              <img src="./cake.png" alt="" srcset="" className='z-10 lg:pl-5 lg:w-auto lg:h-auto w-40 h-48 lg:relative absolute right-[-15px] bottom-7 '/>
+              <Image 
+                src="/cake.png" 
+                alt="EFTA cake" 
+                width={160} 
+                height={192} 
+                className='z-10 lg:pl-5 lg:w-auto lg:h-auto w-40 h-48 lg:relative absolute right-[-15px] bottom-7'
+              />
             </div>
             <div className='relative col-span-2 bg-[#EC5601] rounded-[8px] overflow-hidden '>
 
@@ -58,7 +65,13 @@ function offers() {
 
                   <div className='text-2xl font-bold font-poppins text-white pl-8 z-10'>{offer.title}</div>
                   <div className='text-5xl font-bold text-white font-poppins z-10'> <span className='text_stroke text-transparent text-5xl font-poppins font-bold'>{offer.discount}%</span> off</div>
-                  <img src={offer.src} alt="" className='absolute right-0 max-h-full' />
+                  <Image 
+                    src={offer.src} 
+                    alt={offer.title} 
+                    width={200} 
+                    height={170} 
+                    className='absolute right-0 max-h-full' 
+                  />
                 </div>
                ))}
               
@@ -77,7 +90,13 @@ function offers() {
               <div className='w-1/2 flex flex-col justify-end p-4 h-full'>
                 <p className='z-10 text-white text-2xl font-poppins font-bold'>Wall <br /> Hangings</p>
               </div>
-              <img src="./hanging.png" alt=""  className='absolute right-1 w-[120px] h-[140px] z-10'/>
+              <Image 
+                src="/hanging.png" 
+                alt="Wall hanging decoration"  
+                width={120} 
+                height={140} 
+                className='absolute right-1 w-[120px] h-[140px] z-10'
+              />
             </div>
             <div className='relative bg-[#7A61FF] rounded-[8px] overflow-hidden p-4 z-0 '>
 
@@ -94,7 +113,13 @@ function offers() {
               </div>
              
               </div>
-            <img src="./chocolate.png" alt="" className='absolute right-0 top-5' />
+            <Image 
+              src="/chocolate.png" 
+              alt="Chocolate treat" 
+              width={100} 
+              height={100} 
+              className='absolute right-0 top-5' 
+            />
             </div>
 
         </div>

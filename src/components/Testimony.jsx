@@ -1,5 +1,6 @@
 "use client"
-import { useState,useEffect } from "react";
+import { useState,useEffect,useCallback } from "react";
+import Image from 'next/image';
 
 const Carousel = () => {
   const contents = [
@@ -11,16 +12,16 @@ const Carousel = () => {
   const [activeIndex, setActiveIndex] = useState(1); // Start with the center div
   const [isHovered,setIshovered]=useState(false);
 
-  const nextIndex = () => {
+  const nextIndex = useCallback(() => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % contents.length);
-  };
+  }, [contents.length]);
 
   useEffect(() => {
     if(!isHovered){
     const interval = setInterval(nextIndex, 3000); 
     return () => clearInterval(interval);
     }
-  }, [isHovered]);
+  }, [isHovered, nextIndex]);
 
 
 
@@ -59,8 +60,16 @@ const Carousel = () => {
               }`}
             >
               <div className="text-black lg:text-2xl text-lg py-3 flex justify-between">
-                <div className="flex gap-5 items-center"><img src={item.link} alt="" className="rounded-full lg:h-[70px] lg:w-[70px] h-[20px] w-[20px] object-cover object-center"/>
-                {item.name}</div>
+                <div className="flex gap-5 items-center">
+                  <Image 
+                    src={item.link} 
+                    alt={item.name} 
+                    width={70} 
+                    height={70} 
+                    className="rounded-full lg:h-[70px] lg:w-[70px] h-[20px] w-[20px] object-cover object-center"
+                  />
+                  {item.name}
+                </div>
                 <div className="font-instrumentsans lg:text-[190px] text-[50px] rotate-180 max-h-[0px] text-primary_color ">
                   {/*for comma*/}
                   “

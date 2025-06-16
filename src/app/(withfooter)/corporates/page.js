@@ -15,7 +15,7 @@ function Page() {
     <DynamicBanner 
       pageType="corporate"
       onClick={ScrollToAboutUs}
-      defaultImage="./coperatefront.png"
+      defaultImage="/coperatefront.png"
       defaultTitle="Company"
       defaultSubtitle="Brand your"
     />

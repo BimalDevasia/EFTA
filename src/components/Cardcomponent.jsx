@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { cn } from "@/lib/utils";
 const Cardcomponent=({ className,item ,title,reverse })=> {
   return (    
@@ -28,9 +29,27 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
 
                
                  <div className='relative lg:w-1/3 lg:h-screen h-[400px] w-full overflow-hidden' >
-                    <img src={items.image1} alt="" className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-24",alignment==="first"?"lg:left-0 left-4":"lg:right-0 right-4")}/>
-                    <img src={items.image2} alt="" className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-32",alignment==="first"?"left-10":"right-10")} />
-                    <img src={items.image3} alt="" className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-40",alignment==="first"?"lg:left-20 left-24":"lg:right-20 right-24")} />
+                    <Image 
+                      src={items.image1} 
+                      alt={`${items.title} image 1`} 
+                      width={512} 
+                      height={351} 
+                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-24",alignment==="first"?"lg:left-0 left-4":"lg:right-0 right-4")}
+                    />
+                    <Image 
+                      src={items.image2} 
+                      alt={`${items.title} image 2`} 
+                      width={512} 
+                      height={351} 
+                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-32",alignment==="first"?"left-10":"right-10")} 
+                    />
+                    <Image 
+                      src={items.image3} 
+                      alt={`${items.title} image 3`} 
+                      width={512} 
+                      height={351} 
+                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-40",alignment==="first"?"lg:left-20 left-24":"lg:right-20 right-24")} 
+                    />
                 </div>  
                
 

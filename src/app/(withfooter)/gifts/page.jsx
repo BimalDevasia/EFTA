@@ -23,7 +23,7 @@ function Page() {
       <DynamicBanner 
         pageType="gifts"
         onClick={ScrollToAboutUs}
-        defaultImage="./giftmain.png"
+        defaultImage="/giftmain.png"
         defaultTitle="Valentine"
         defaultSubtitle="Surprise your"
       />

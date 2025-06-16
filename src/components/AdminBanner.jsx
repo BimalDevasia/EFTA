@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -348,9 +349,11 @@ function AdminBanner() {
 
             {uploadedImage && (
               <div className="relative group mt-4">
-                <img
+                <Image
                   src={uploadedImage.url}
                   alt="Banner Preview"
+                  width={400}
+                  height={160}
                   className="w-full h-40 object-cover rounded-lg border-2 border-gray-200"
                 />
                 <button
@@ -405,9 +408,11 @@ function AdminBanner() {
                 </div>
                 
                 {banner.image && (
-                  <img
+                  <Image
                     src={banner.image.url}
                     alt={banner.title}
+                    width={300}
+                    height={96}
                     className="w-full h-24 object-cover rounded border"
                   />
                 )}
