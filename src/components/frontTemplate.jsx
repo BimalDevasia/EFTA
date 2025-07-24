@@ -5,15 +5,15 @@ import React from "react";
 function frontTemplate() {
   const item = [
     {
-      desc: "We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!",
+      desc: "EFTA offers a wide range of gift options to suit every occasion and preference. From our signature line of unique, non-customized products crafted by our talented artisan community, to our custom gift services that allow you to personalize items with your own designs and messages, there's something for everyone.  Each EFTA gift comes with the guarantee of quality craftsmanship and the stories behind the makers who poured their passion into creating it.",
       link: "./template1.png",
     },
     {
-      desc: "We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!",
+      desc: "EFTA also provides comprehensive event management services for businesses of all sizes. From sourcing the perfect corporate gifts that align with your brand to planning and executing unforgettable company parties, conferences, and team-building activities, our event experts are equipped to handle every detail. We understand the importance of making a lasting impression, which is why we work closely with you to bring your vision to life while ensuring a seamless, stress-free experience for you and your guests.",
       link: "./template2.png",
     },
     {
-      desc: "We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!",
+      desc: "Fueling the creative spirit is at the heart of what we do at EFTA. We offer a diverse range of educational classes and workshops led by our talented artisan instructors. Whether you're an aspiring painter, budding ceramicist, or simply looking to explore a new hobby, our courses provide a nurturing environment for individuals of all skill levels to unlock their inner artist. From beginner-friendly introductions to advanced techniques, our curriculum is designed to inspire, educate, and empower the next generation of makers.",
       link: "./template3.png",
     },
   ];

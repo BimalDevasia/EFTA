@@ -16,6 +16,7 @@ const sidebarVariants = {
 function Navbar() {
   const [selPage, setSelPage] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const mobileNavRef = useRef(null);
   const closeButtonRef = useRef(null);
   const { totalItems } = useCart();
@@ -23,9 +24,9 @@ function Navbar() {
   let items = [
     { id: "Home", path: "/" },
     { id: "Gifts", path: "/gifts" },
+    { id: "Corporates", path: "/corporates" },
     { id: "Events", path: "/eventpg" },
     { id: "Courses", path: "/courses" },
-    { id: "Corporates", path: "/corporates" },
   ];
 
   const pathname = usePathname();
@@ -68,23 +69,38 @@ function Navbar() {
     };
   }, [isOpen]);
 
+  // Handle scroll to show/hide navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleMobileNavClose = () => {
     setIsOpen(false);
   };
 
   return (
     <>
-      <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between lg:items-center h-24 z-40 bg-white/10">
-        <Link href="/" className="z-50">
+      <div className={`hidden lg:fixed lg:flex px-8 w-screen lg:justify-between lg:items-center h-20 z-[9999] transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white shadow-md' 
+          : 'bg-transparent'
+      }`}>
+        <Link href="/" className="z-[10000] ml-4">
           <svg
-            className={`w-24 h-24  ${
+            className={`w-20 h-16 transition-colors duration-300 ${
               selPage === "/"
-                ? "fill-primary_color"
+                ? isScrolled ? "fill-primary_color" : "fill-primary_color"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
                   : "fill-gift_blue"
-                : "fill-white"
+                : isScrolled ? "fill-black" : "fill-white"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -96,32 +112,32 @@ function Navbar() {
             />
           </svg>
         </Link>
-        <div className="lg:flex items-center gap-14 ">
+        <div className="lg:flex items-center gap-8 mr-8">
           {items.slice(selPage === "/" ? 0 : 1).map((item, index) => (
             <div
               key={index}
               onClick={() => setSelPage(item.path)}
-              className={` relative text-2xl ${
+              className={` relative text-xl ${
                 selPage === item.path
                   ? "border-x-2 border-t-2  rounded-t-2xl"
                   : ""
               } ${
                 selPage === "/"
-                  ? "border-primary_color"
+                  ? isScrolled ? "border-primary_color" : "border-primary_color"
                   : selPage === "/product"
                   ? pathSegments.length === 1
                     ? "border-black"
                     : "border-gift_blue"
-                  : "border-white"
+                  : isScrolled ? "border-black" : "border-white"
               } ${
                 selPage === "/"
-                  ? "text-primary_color"
+                  ? isScrolled ? "text-primary_color" : "text-primary_color"
                   : selPage === "/product"
                   ? pathSegments.length === 1
                     ? "text-black"
                     : "text-gift_blue"
-                  : "text-white"
-              } font-semibold font-poppins px-5 py-3`}
+                  : isScrolled ? "text-black" : "text-white"
+              } font-semibold font-poppins px-4 py-2`}
             >
               <div></div>
               <Link href={item.path}>{item.id}</Link>
@@ -129,14 +145,14 @@ function Navbar() {
           ))}
           <Link href="/cart" className="cursor-pointer relative">
           <PiShoppingCartSimpleFill
-            className={`w-8 h-8 ${
+            className={`w-7 h-7 transition-colors duration-300 ${
               selPage === "/"
-                ? "text-primary_color"
+                ? isScrolled ? "text-primary_color" : "text-primary_color"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "text-black"
                   : "text-gift_blue"
-                : "text-white"
+                : isScrolled ? "text-black" : "text-white"
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
           {totalItems > 0 && (
@@ -151,17 +167,19 @@ function Navbar() {
       {/* this is for responsive         */}
 
       <div className="relative lg:hidden">
-       <div className="w-screen h-12 flex items-center px-10 justify-between pt-2">
+       <div className={`w-screen h-12 flex items-center px-10 justify-between pt-2 transition-all duration-300 ${
+         isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+       }`}>
        <Link href="/">
           <svg
-            className={`w-16 h-12   ${
+            className={`w-16 h-12 transition-colors duration-300 ${
               selPage === "/"
-                ? "fill-primary_color"
+                ? isScrolled ? "fill-primary_color" : "fill-primary_color"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
                   : "fill-gift_blue"
-                : "fill-primary_color"
+                : isScrolled ? "fill-primary_color" : "fill-primary_color"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +193,9 @@ function Navbar() {
         </Link>
         
         <BsFilterLeft
-          className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 text-primary_color cursor-pointer`}
+          className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 ${
+            isScrolled ? "text-primary_color" : "text-primary_color"
+          } cursor-pointer`}
           onClick={() => setIsOpen(true)}
           aria-label="Open navigation menu"
           role="button"
@@ -192,7 +212,7 @@ function Navbar() {
         {/* Backdrop overlay */}
         {isOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-10"
+            className="fixed inset-0 bg-black bg-opacity-50 z-[9998]"
             onClick={handleMobileNavClose}
             aria-hidden="true"
           />
@@ -201,7 +221,7 @@ function Navbar() {
         {/* Mobile sidebar */}
         <motion.div
           ref={mobileNavRef}
-          className="sidebar w-screen h-screen absolute top-0 bg-white z-20"
+          className="sidebar w-screen h-screen absolute top-0 bg-white z-[9999]"
           initial="hidden"
           animate={isOpen ? "visible" : "hidden"}
           variants={sidebarVariants}

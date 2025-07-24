@@ -39,7 +39,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
   const displayImage = banner?.image?.url || defaultImage;
   const displayTitle = banner?.title || defaultTitle;
   const displaySubtitle = banner?.subtitle || defaultSubtitle;
-  const buttonText = banner?.buttonText || "Shop Now";
+  const buttonText = banner?.buttonText || (pageType === 'courses' || pageType === 'events' ? "Enquiry" : "Shop Now");
   const description = banner?.description;
 
   // If no pageType is provided, use defaults immediately
@@ -70,7 +70,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
             )}
           </div>
           
-          <button className='w-max bg-gift_blue shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
+          <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
             Shop Now
           </button>
           
@@ -127,7 +127,9 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
         </div>
         
         <Link href="/gifts">
-          <button className='w-max bg-gift_blue shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
+          <button className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] ${
+            pageType === 'gifts' ? 'bg-primary_color' : 'bg-gift_blue'
+          }`}>
             {buttonText}
           </button>
         </Link>
