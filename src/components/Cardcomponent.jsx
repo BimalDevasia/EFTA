@@ -35,20 +35,26 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
                       width={512} 
                       height={351} 
                       className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-24",alignment==="first"?"lg:left-0 left-4":"lg:right-0 right-4")}
+                      loading="lazy"
+                      sizes="(max-width: 768px) 256px, 512px"
                     />
                     <Image 
                       src={items.image2} 
                       alt={`${items.title} image 2`} 
                       width={512} 
                       height={351} 
-                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-32",alignment==="first"?"left-10":"right-10")} 
+                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-32",alignment==="first"?"left-10":"right-10")}
+                      loading="lazy" 
+                      sizes="(max-width: 768px) 256px, 512px"
                     />
                     <Image 
                       src={items.image3} 
                       alt={`${items.title} image 3`} 
                       width={512} 
                       height={351} 
-                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-40",alignment==="first"?"lg:left-20 left-24":"lg:right-20 right-24")} 
+                      className={cn("absolute lg:w-[512px] lg:h-[351px] w-[255.87px] h-[175.6px] rounded-3xl bottom-40",alignment==="first"?"lg:left-20 left-24":"lg:right-20 right-24")}
+                      loading="lazy"
+                      sizes="(max-width: 768px) 256px, 512px"
                     />
                 </div>  
                

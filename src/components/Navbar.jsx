@@ -17,6 +17,7 @@ function Navbar() {
   const [selPage, setSelPage] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const mobileNavRef = useRef(null);
   const closeButtonRef = useRef(null);
   const { totalItems } = useCart();
@@ -40,6 +41,19 @@ function Navbar() {
       setSelPage("/".concat(pathSegments[0]));
     }
   }, [pathSegments, pathname]);
+
+  // Scroll detection for hero sections
+  useEffect(() => {
+    const handleScroll = () => {
+      // Hero sections are typically full height (100vh)
+      // Change color when scrolled past 80% of viewport height
+      const scrollThreshold = window.innerHeight * 0.8;
+      setIsScrolled(window.scrollY > scrollThreshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Focus management for accessibility
   useEffect(() => {
@@ -119,7 +133,7 @@ function Navbar() {
               onClick={() => setSelPage(item.path)}
               className={` relative text-xl ${
                 selPage === item.path
-                  ? "border-x-2 border-t-2  rounded-t-2xl"
+                  ? "border-x-2 border-t-2 rounded-t-2xl"
                   : ""
               } ${
                 selPage === "/"

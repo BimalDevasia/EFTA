@@ -53,6 +53,8 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
             className='absolute object-cover w-full lg:h-full h-screen object-center' 
             fill
             priority
+            sizes="100vw"
+            quality={85}
           />
         )}
         
@@ -104,6 +106,8 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
           className='absolute object-cover w-full lg:h-full h-screen object-center' 
           fill
           priority
+          sizes="100vw"
+          quality={85}
         />
       )}
       

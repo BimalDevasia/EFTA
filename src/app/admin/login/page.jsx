@@ -68,11 +68,8 @@ const LoginPage = () => {
           <p className="mt-2 text-center text-sm text-gray-600">
             Access EFTA Admin Panel
           </p>
-          <div className="mt-4 text-center text-xs text-gray-500 bg-blue-50 p-3 rounded">
-            <p><strong>Admin Credentials:</strong></p>
-            <p>Email: bimaldevasia@gmail.com</p>
-            <p>Password: 12345678</p>
-          </div>
+         
+          
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
