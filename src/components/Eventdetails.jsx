@@ -12,13 +12,17 @@ function Eventdetails() {
           width={300} 
           height={389} 
           className='absolute left-0 lg:top-10 lg:w-[300px] lg:h-[389px] w-[156.72px] h-[194.97px]'
+          loading="lazy"
+          sizes="(max-width: 768px) 157px, 300px"
         />
         <Image 
           src="/marriage2.png" 
           alt="Marriage celebration 2" 
           width={280} 
           height={443} 
-          className='absolute right-0 lg:bottom-10 lg:top-auto top-20 lg:w-[280px] lg:h-[443px] w-[147.81px] h-[221.71px]' 
+          className='absolute right-0 lg:bottom-10 lg:top-auto top-20 lg:w-[280px] lg:h-[443px] w-[147.81px] h-[221.71px]'
+          loading="lazy"
+          sizes="(max-width: 768px) 148px, 280px"
         />
         </div>
         <div className='lg:w-[500px] w-full flex-col flex justify-center lg:h-full gap-5'> 

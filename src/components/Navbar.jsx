@@ -16,6 +16,7 @@ const sidebarVariants = {
 function Navbar() {
   const [selPage, setSelPage] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const mobileNavRef = useRef(null);
   const closeButtonRef = useRef(null);
   const { totalItems } = useCart();
@@ -39,6 +40,19 @@ function Navbar() {
       setSelPage("/".concat(pathSegments[0]));
     }
   }, [pathSegments, pathname]);
+
+  // Scroll detection for hero sections
+  useEffect(() => {
+    const handleScroll = () => {
+      // Hero sections are typically full height (100vh)
+      // Change color when scrolled past 80% of viewport height
+      const scrollThreshold = window.innerHeight * 0.8;
+      setIsScrolled(window.scrollY > scrollThreshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Focus management for accessibility
   useEffect(() => {
@@ -68,6 +82,40 @@ function Navbar() {
     };
   }, [isOpen]);
 
+  // Helper function to determine text color based on page and scroll state
+  const getTextColor = () => {
+    if (selPage === "/") {
+      // Home page: always use primary color
+      return "text-primary_color";
+    } else if (selPage === "/product") {
+      // Product page logic (existing)
+      return pathSegments.length === 1 ? "text-black" : "text-gift_blue";
+    } else {
+      // Other pages with hero sections: white when not scrolled, black when scrolled
+      return isScrolled ? "text-black" : "text-white";
+    }
+  };
+
+  const getBorderColor = () => {
+    if (selPage === "/") {
+      return "border-primary_color";
+    } else if (selPage === "/product") {
+      return pathSegments.length === 1 ? "border-black" : "border-gift_blue";
+    } else {
+      return isScrolled ? "border-black" : "border-white";
+    }
+  };
+
+  const getFillColor = () => {
+    if (selPage === "/") {
+      return "fill-primary_color";
+    } else if (selPage === "/product") {
+      return pathSegments.length === 1 ? "fill-black" : "fill-gift_blue";
+    } else {
+      return isScrolled ? "fill-black" : "fill-white";
+    }
+  };
+
   const handleMobileNavClose = () => {
     setIsOpen(false);
   };
@@ -77,15 +125,7 @@ function Navbar() {
       <div className="hidden lg:fixed lg:flex px-36 w-screen lg:justify-between lg:items-center h-24 z-40 bg-white/10">
         <Link href="/" className="z-50">
           <svg
-            className={`w-24 h-24  ${
-              selPage === "/"
-                ? "fill-primary_color"
-                : selPage === "/product"
-                ? pathSegments.length === 1
-                  ? "fill-black"
-                  : "fill-gift_blue"
-                : "fill-white"
-            } `}
+            className={`w-24 h-24 ${getFillColor()}`}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -101,27 +141,11 @@ function Navbar() {
             <div
               key={index}
               onClick={() => setSelPage(item.path)}
-              className={` relative text-2xl ${
+              className={`relative text-2xl ${
                 selPage === item.path
-                  ? "border-x-2 border-t-2  rounded-t-2xl"
+                  ? "border-x-2 border-t-2 rounded-t-2xl"
                   : ""
-              } ${
-                selPage === "/"
-                  ? "border-primary_color"
-                  : selPage === "/product"
-                  ? pathSegments.length === 1
-                    ? "border-black"
-                    : "border-gift_blue"
-                  : "border-white"
-              } ${
-                selPage === "/"
-                  ? "text-primary_color"
-                  : selPage === "/product"
-                  ? pathSegments.length === 1
-                    ? "text-black"
-                    : "text-gift_blue"
-                  : "text-white"
-              } font-semibold font-poppins px-5 py-3`}
+              } ${getBorderColor()} ${getTextColor()} font-semibold font-poppins px-5 py-3`}
             >
               <div></div>
               <Link href={item.path}>{item.id}</Link>
@@ -129,15 +153,7 @@ function Navbar() {
           ))}
           <Link href="/cart" className="cursor-pointer relative">
           <PiShoppingCartSimpleFill
-            className={`w-8 h-8 ${
-              selPage === "/"
-                ? "text-primary_color"
-                : selPage === "/product"
-                ? pathSegments.length === 1
-                  ? "text-black"
-                  : "text-gift_blue"
-                : "text-white"
-            }  ${selPage === "/" ? "hidden" : ""} `}
+            className={`w-8 h-8 ${getTextColor()} ${selPage === "/" ? "hidden" : ""}`}
           />
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
@@ -154,15 +170,7 @@ function Navbar() {
        <div className="w-screen h-12 flex items-center px-10 justify-between pt-2">
        <Link href="/">
           <svg
-            className={`w-16 h-12   ${
-              selPage === "/"
-                ? "fill-primary_color"
-                : selPage === "/product"
-                ? pathSegments.length === 1
-                  ? "fill-black"
-                  : "fill-gift_blue"
-                : "fill-primary_color"
-            } `}
+            className={`w-16 h-12 ${getFillColor()}`}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -175,7 +183,7 @@ function Navbar() {
         </Link>
         
         <BsFilterLeft
-          className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 text-primary_color cursor-pointer`}
+          className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 ${getTextColor()} cursor-pointer`}
           onClick={() => setIsOpen(true)}
           aria-label="Open navigation menu"
           role="button"
