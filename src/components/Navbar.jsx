@@ -16,8 +16,6 @@ const sidebarVariants = {
 function Navbar() {
   const [selPage, setSelPage] = useState();
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const mobileNavRef = useRef(null);
   const closeButtonRef = useRef(null);
   const { totalItems } = useCart();
