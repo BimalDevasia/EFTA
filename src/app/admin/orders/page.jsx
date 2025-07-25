@@ -18,7 +18,7 @@ import { FilterIcon, SearchIcon } from "lucide-react";
 const OrderPage = () => {
   return (
     <div className="h-screen min-h-screen grid grid-cols-[auto_215px]">
-      <div className="pt-40 pb-4 pl-6 pr-3 space-y-10 flex flex-col overflow-hidden h-full border-r border-gray-200">
+      <div className="pt-40 pb-4 px-6 space-y-10 flex flex-col overflow-hidden h-full border-r border-gray-200">
         <div className="flex items-center justify-between shrink-0">
           <h1 className="text-[36px] text-[#8300FF] font-bold">Orders</h1>
           <div>
@@ -41,7 +41,7 @@ const OrderPage = () => {
         </div>
         <OrderData />
       </div>
-      <div className="pt-40 space-y-10 h-full overflow-auto px-3">
+      <div className="pt-40 space-y-10 h-full overflow-auto px-6">
         <div className="space-y-4">
           <h3 className="text-[#10011F] text-[22px] font-medium">
             Customer Details

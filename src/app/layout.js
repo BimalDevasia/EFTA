@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ModalProvider from "@/components/ModalProvider";
 import { Toaster } from "react-hot-toast";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -51,7 +52,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable} overflow-x-hidden`}>
         <div className="w-full overflow-x-hidden">
-        <Navbar/>
+        <ConditionalNavbar/>
         {children}
         <ModalProvider />
         <Toaster 

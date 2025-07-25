@@ -32,6 +32,7 @@ function AdminBanner() {
   const [banners, setBanners] = useState([]);
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const {
     register,
@@ -217,37 +218,31 @@ function AdminBanner() {
   };
 
   return (
-    <div className="flex w-full h-full overflow-auto">
-      {/* Form Section */}
-      <div className="w-1/2 px-5 border-r border-gray-200">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 pt-5">
-          <div className="flex justify-between items-center">
-            <h2 className="text-nav_blue text-4xl font-poppins font-bold">
-              {isEditing ? 'Edit Banner' : 'Banner Management'}
-            </h2>
-            <div className="flex gap-3">
-              <button 
-                type="button"
-                onClick={handleCancel}
-                className="w-32 h-10 px-3 border-[#8300FF] border-2 font-poppins font-bold text-[#8300FF]"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isUploading || !uploadedImage}
-                className={`w-32 h-10 px-3 font-poppins font-bold transition-colors ${
-                  isUploading || !uploadedImage
-                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                    : 'bg-[#8300FF] text-white hover:bg-[#6b00cc]'
-                }`}
-              >
-                {isUploading ? 'Processing...' : 'Save'}
-              </button>
-            </div>
-          </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-[36px] text-[#8300FF] font-bold">Banner Management</h1>
+        <button
+          onClick={() => {
+            setShowAddForm(!showAddForm);
+            if (!showAddForm) {
+              setIsEditing(false);
+              setSelectedBanner(null);
+              reset();
+              setUploadedImage(null);
+            }
+          }}
+          className="bg-[#8300FF] text-white px-4 py-2 rounded-md hover:bg-[#6b00cc] transition-colors"
+        >
+          {showAddForm ? 'Cancel' : (isEditing ? 'Cancel Edit' : 'Add Banner')}
+        </button>
+      </div>
 
-          {/* Page Type Selection */}
+      {showAddForm && (
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <h2 className="text-xl font-semibold mb-4">
+            {isEditing ? 'Edit Banner' : 'Add New Banner'}
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex flex-col gap-2">
             <p className="font-poppins text-base font-light">Page Type</p>
             <Controller
@@ -370,59 +365,94 @@ function AdminBanner() {
               <p className="text-red-500 text-sm">{errors.image.message}</p>
             )}
           </div>
+
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={isUploading || !uploadedImage}
+              className="bg-[#8300FF] text-white px-6 py-2 rounded-md hover:bg-[#6b00cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUploading ? 'Processing...' : (isEditing ? 'Update Banner' : 'Add Banner')}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setShowAddForm(false);
+                setIsEditing(false);
+                setSelectedBanner(null);
+                reset();
+                setUploadedImage(null);
+              }}
+              className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+
+          {errors.image && (
+            <p className="text-red-500 text-sm">{errors.image.message}</p>
+          )}
         </form>
-      </div>
+        </div>
+      )}
 
       {/* Banners List Section */}
-      <div className="w-1/2 px-5 pt-5">
-        <h3 className="text-2xl font-poppins font-bold text-gray-800 mb-6">Existing Banners</h3>
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <h2 className="text-lg font-semibold">Existing Banners ({banners.length})</h2>
+        </div>
         
-        <div className="space-y-4 overflow-y-auto max-h-[600px]">
+        <div className="p-6">
           {banners.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No banners created yet</p>
           ) : (
-            banners.map((banner) => (
-              <div key={banner._id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="font-poppins font-semibold text-lg">{banner.title}</h4>
-                    <p className="text-sm text-gray-600 capitalize">{banner.pageType} Page</p>
-                    {banner.subtitle && (
-                      <p className="text-sm text-gray-500">{banner.subtitle}</p>
-                    )}
+            <div className="space-y-4">
+              {banners.map((banner) => (
+                <div key={banner._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h4 className="font-semibold text-lg">{banner.title}</h4>
+                      <p className="text-sm text-gray-600 capitalize">{banner.pageType} Page</p>
+                      {banner.subtitle && (
+                        <p className="text-sm text-gray-500">{banner.subtitle}</p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          handleEdit(banner);
+                          setShowAddForm(true);
+                        }}
+                        className="text-[#8300FF] hover:text-[#6b00cc] text-sm font-medium"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(banner._id, banner.image.public_id)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(banner)}
-                      className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(banner._id, banner.image.public_id)}
-                      className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
+                  
+                  {banner.image && (
+                    <Image
+                      src={banner.image.url}
+                      alt={banner.title}
+                      width={300}
+                      height={96}
+                      className="w-full h-24 object-cover rounded border mb-3"
+                    />
+                  )}
+                  
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Button: {banner.buttonText}</span>
+                    <span>Page: {banner.pageType}</span>
                   </div>
                 </div>
-                
-                {banner.image && (
-                  <Image
-                    src={banner.image.url}
-                    alt={banner.title}
-                    width={300}
-                    height={96}
-                    className="w-full h-24 object-cover rounded border"
-                  />
-                )}
-                
-                <div className="mt-3 flex justify-between text-sm text-gray-600">
-                  <span>Button: {banner.buttonText}</span>
-                  <span>Link: /gifts</span>
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </div>
       </div>

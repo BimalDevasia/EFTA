@@ -12,11 +12,13 @@ const AdminLayout = ({ children }) => {
     <AuthProvider>
       <AuthGuard>
         <Wrapper>
-          <div className="grid grid-cols-[232px_auto]">
-            <div>
+          <div className="flex h-screen overflow-hidden">
+            <div className="flex-shrink-0 w-[232px]">
               <Sidebar />
             </div>
-            <div>{children}</div>
+            <div className="flex-1 overflow-auto">
+              {children}
+            </div>
           </div>
         </Wrapper>
       </AuthGuard>
@@ -67,8 +69,8 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-between border-r border-gray-200 h-screen pt-56 pl-4 pb-24">
-      <div>
+    <div className="flex flex-col justify-between border-r border-gray-200 h-full pt-56 pl-4 pb-24 overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
         <nav>
           <ul className="space-y-6">
             <li>
@@ -137,6 +139,17 @@ const Sidebar = () => {
               <Link
                 className={cn(
                   "text-[20px] text-[#00000063] font-bold",
+                  pathname === "/admin/testimonies" && "text-[#8300FF]"
+                )}
+                href="/admin/testimonies"
+              >
+                Testimonies
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={cn(
+                  "text-[20px] text-[#00000063] font-bold",
                   pathname === "/admin/admins" && "text-[#8300FF]"
                 )}
                 href="/admin/admins"
@@ -147,7 +160,7 @@ const Sidebar = () => {
           </ul>
         </nav>
       </div>
-      <div className="space-y-4">
+      <div className="flex-shrink-0 space-y-4">
         {user && (
           <div className="pl-4 text-sm text-gray-600">
             <p>Logged in as:</p>

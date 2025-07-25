@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import DynamicBanner from '@/components/DynamicBanner';
 import EventCard from '@/components/EventCard';
 import FeaturedGiftSection from '@/components/home/FeaturedGiftSection';
+import ExploreMoreGifts from '@/components/home/ExploreMoreGifts';
 import BrandItem from '@/components/brandItem';
 import Offers from '@/components/offers';
 import Portrait from '@/components/portrait';
@@ -31,7 +32,7 @@ function Page() {
       <FeaturedGiftSection />
       <BrandItem />
       <Offers />
-      <FeaturedGiftSection />
+      <ExploreMoreGifts />
       <Portrait />
       <Morefromefta />
     </>

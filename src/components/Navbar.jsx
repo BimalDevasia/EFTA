@@ -16,6 +16,7 @@ const sidebarVariants = {
 function Navbar() {
   const [selPage, setSelPage] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const mobileNavRef = useRef(null);
   const closeButtonRef = useRef(null);
   const { totalItems } = useCart();
@@ -40,13 +41,11 @@ function Navbar() {
     }
   }, [pathSegments, pathname]);
 
-  // Scroll detection for hero sections
+  // Handle scroll to show/hide navbar background
   useEffect(() => {
     const handleScroll = () => {
-      // Hero sections are typically full height (100vh)
-      // Change color when scrolled past 80% of viewport height
-      const scrollThreshold = window.innerHeight * 0.8;
-      setIsScrolled(window.scrollY > scrollThreshold);
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -81,17 +80,6 @@ function Navbar() {
     };
   }, [isOpen]);
 
-  // Handle scroll to show/hide navbar background
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleMobileNavClose = () => {
     setIsOpen(false);
   };
@@ -112,7 +100,7 @@ function Navbar() {
                 ? pathSegments.length === 1
                   ? "fill-black"
                   : "fill-gift_blue"
-                : isScrolled ? "fill-black" : "fill-white"
+                : isScrolled ? "fill-nav_blue" : "fill-white"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +128,7 @@ function Navbar() {
                   ? pathSegments.length === 1
                     ? "border-black"
                     : "border-gift_blue"
-                  : isScrolled ? "border-black" : "border-white"
+                  : isScrolled ? "border-nav_blue" : "border-white"
               } ${
                 selPage === "/"
                   ? isScrolled ? "text-primary_color" : "text-primary_color"
@@ -148,7 +136,7 @@ function Navbar() {
                   ? pathSegments.length === 1
                     ? "text-black"
                     : "text-gift_blue"
-                  : isScrolled ? "text-black" : "text-white"
+                  : isScrolled ? "text-nav_blue" : "text-white"
               } font-semibold font-poppins px-4 py-2`}
             >
               <div></div>
@@ -164,7 +152,7 @@ function Navbar() {
                 ? pathSegments.length === 1
                   ? "text-black"
                   : "text-gift_blue"
-                : isScrolled ? "text-black" : "text-white"
+                : isScrolled ? "text-nav_blue" : "text-white"
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
           {totalItems > 0 && (
