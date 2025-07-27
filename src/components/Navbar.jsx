@@ -52,6 +52,9 @@ function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Force navbar background on products page
+  const shouldShowBackground = isScrolled || pathname === '/products';
+
   // Focus management for accessibility
   useEffect(() => {
     if (isOpen && closeButtonRef.current) {
@@ -87,7 +90,7 @@ function Navbar() {
   return (
     <>
       <div className={`hidden lg:fixed lg:flex px-8 w-screen lg:justify-between lg:items-center h-20 z-[9999] transition-all duration-300 ${
-        isScrolled 
+        shouldShowBackground 
           ? 'bg-white shadow-md' 
           : 'bg-transparent'
       }`}>
@@ -95,12 +98,12 @@ function Navbar() {
           <svg
             className={`w-20 h-16 transition-colors duration-300 ${
               selPage === "/"
-                ? isScrolled ? "fill-primary_color" : "fill-primary_color"
+                ? shouldShowBackground ? "fill-[#1F76BD]" : "fill-[#1F76BD]"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
-                  : "fill-gift_blue"
-                : isScrolled ? "fill-nav_blue" : "fill-white"
+                  : "fill-[#1F76BD]"
+                : shouldShowBackground ? "fill-[#1F76BD]" : "fill-white"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -123,20 +126,20 @@ function Navbar() {
                   : ""
               } ${
                 selPage === "/"
-                  ? isScrolled ? "border-primary_color" : "border-primary_color"
+                  ? shouldShowBackground ? "border-[#1F76BD]" : "border-[#1F76BD]"
                   : selPage === "/product"
                   ? pathSegments.length === 1
                     ? "border-black"
-                    : "border-gift_blue"
-                  : isScrolled ? "border-nav_blue" : "border-white"
+                    : "border-[#1F76BD]"
+                  : shouldShowBackground ? "border-[#1F76BD]" : "border-white"
               } ${
                 selPage === "/"
-                  ? isScrolled ? "text-primary_color" : "text-primary_color"
+                  ? shouldShowBackground ? "text-primary_color" : "text-primary_color"
                   : selPage === "/product"
                   ? pathSegments.length === 1
                     ? "text-black"
-                    : "text-gift_blue"
-                  : isScrolled ? "text-nav_blue" : "text-white"
+                    : "text-[#1F76BD]"
+                  : shouldShowBackground ? "text-[#1F76BD]" : "text-white"
               } font-semibold font-poppins px-4 py-2`}
             >
               <div></div>
@@ -147,12 +150,12 @@ function Navbar() {
           <PiShoppingCartSimpleFill
             className={`w-7 h-7 transition-colors duration-300 ${
               selPage === "/"
-                ? isScrolled ? "text-primary_color" : "text-primary_color"
+                ? shouldShowBackground ? "text-primary_color" : "text-primary_color"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "text-black"
-                  : "text-gift_blue"
-                : isScrolled ? "text-nav_blue" : "text-white"
+                  : "text-[#1F76BD]"
+                : shouldShowBackground ? "text-[#1F76BD]" : "text-white"
             }  ${selPage === "/" ? "hidden" : ""} `}
           />
           {totalItems > 0 && (
@@ -168,18 +171,18 @@ function Navbar() {
 
       <div className="relative lg:hidden">
        <div className={`w-screen h-12 flex items-center px-10 justify-between pt-2 transition-all duration-300 ${
-         isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+         shouldShowBackground ? 'bg-white shadow-md' : 'bg-transparent'
        }`}>
        <Link href="/">
           <svg
             className={`w-16 h-12 transition-colors duration-300 ${
               selPage === "/"
-                ? isScrolled ? "fill-primary_color" : "fill-primary_color"
+                ? shouldShowBackground ? "fill-[#1F76BD]" : "fill-[#1F76BD]"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
-                  : "fill-gift_blue"
-                : isScrolled ? "fill-primary_color" : "fill-primary_color"
+                  : "fill-[#1F76BD]"
+                : shouldShowBackground ? "fill-[#1F76BD]" : "fill-[#1F76BD]"
             } `}
             viewBox="0 0 121 54"
             xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +197,7 @@ function Navbar() {
         
         <BsFilterLeft
           className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 ${
-            isScrolled ? "text-primary_color" : "text-primary_color"
+            shouldShowBackground ? "text-[#1F76BD]" : "text-[#1F76BD]"
           } cursor-pointer`}
           onClick={() => setIsOpen(true)}
           aria-label="Open navigation menu"
@@ -235,7 +238,7 @@ function Navbar() {
              <div className="w-full flex justify-between items-center">
             <Link href="/" aria-label="EFTA Home">
               <svg
-                className={`w-16 h-12 fill-primary_color `}
+                className={`w-16 h-12 fill-[#1F76BD] `}
                 viewBox="0 0 121 54"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -249,7 +252,7 @@ function Navbar() {
 
            <RxCross2 
              ref={closeButtonRef}
-             className={`w-10 h-10 ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 text-primary_color cursor-pointer`}  
+             className={`w-10 h-10 ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 text-[#1F76BD] cursor-pointer`}  
              onClick={handleMobileNavClose}
              aria-label="Close navigation menu"
              role="button"
@@ -270,9 +273,9 @@ function Navbar() {
                     href={item.path} 
                     key={index} 
                     onClick={handleMobileNavClose}
-                    className="focus:outline-none focus:ring-2 focus:ring-primary_color focus:ring-offset-2 rounded"
+                    className="focus:outline-none focus:ring-2 focus:ring-nav_blue focus:ring-offset-2 rounded"
                   >
-                    <div className="font-poppins transition-all duration-300 font-semibold border-b-2 py-3 text-primary_color hover:bg-gray-50">
+                    <div className="font-poppins transition-all duration-300 font-semibold border-b-2 py-3 text-[#1F76BD] hover:bg-gray-50">
                       {item.id}
                     </div>
                   </Link>
@@ -280,9 +283,9 @@ function Navbar() {
                 <Link 
                   href="/cart" 
                   onClick={handleMobileNavClose}
-                  className="focus:outline-none focus:ring-2 focus:ring-primary_color focus:ring-offset-2 rounded relative"
+                  className="focus:outline-none focus:ring-2 focus:ring-nav_blue focus:ring-offset-2 rounded relative"
                 >
-                  <div className={`font-poppins ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 font-semibold border-b-2 py-3 text-primary_color hover:bg-gray-50 flex items-center justify-between`}>
+                  <div className={`font-poppins ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 font-semibold border-b-2 py-3 text-[#1F76BD] hover:bg-gray-50 flex items-center justify-between`}>
                     <span>Cart</span>
                     {totalItems > 0 && (
                       <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">

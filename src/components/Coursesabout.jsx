@@ -85,7 +85,7 @@ const Coursesabout=forwardRef((props,ref)=> {
     <div ref={ref} className=' relative w-screen h-screen mt-32 pt-20 lg:mb-auto mb-[100px]'>
       
       
-    <div className='relative flex flex-col lg:w-3/5 w-screen lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max' ref={containerRef}>
+    <div className='relative flex flex-col lg:w-3/5 w-screen lg:mt-0  lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-max' ref={containerRef}>
       <div className='font-poppins'>
         <p className='lg:text-5xl  text-3xl font-medium text-course_blue font-italiana'>About Us</p>
         <p className='lg:w-8/12 pt-5 lg:text-xl text-xs'>Immerse yourself in the art of mural painting, drawing, crafting, cake baking adn so on with EFTA&apos;s captivating courses. Offering both one-on-one instruction and batch classes, our expert artists provide personalized guidance in well-equipped studios. Explore your creativity on flexible schedules, and earn certificates of completion. Whether you&apos;re a beginner or experienced, EFTA&apos;s courses will help you unlock your artistic potential.</p>

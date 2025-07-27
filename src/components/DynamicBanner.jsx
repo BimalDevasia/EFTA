@@ -58,7 +58,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
           />
         )}
         
-        <div className='z-10 lg:px-24 px-10 flex flex-col gap-14 w-full'>
+        <div className='z-10 px-10 lg:px-8 flex flex-col gap-14 w-full'>
           <div className='flex flex-col gap-6'>
             {defaultSubtitle && (
               <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>
@@ -111,7 +111,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
         />
       )}
       
-      <div className='z-10 lg:px-24 px-10 flex flex-col gap-14  w-full'>
+      <div className='z-10 px-10 lg:px-8 flex flex-col gap-14  w-full'>
         <div className='flex flex-col gap-6'>
           {displaySubtitle && (
             <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>

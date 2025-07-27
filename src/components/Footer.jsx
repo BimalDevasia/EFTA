@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer>
       <hr className="border-[#6E6E6E]" />
-      <Wrapper className="flex lg:flex-row flex-col lg:gap-0 gap-16 justify-between pt-[104px] pb-[92px] lg:px-0 px-10">
+      <Wrapper className="flex lg:flex-row flex-col lg:gap-0 gap-16 justify-between pt-[104px] pb-[92px] px-10 lg:px-8">
         <div className="self-stretch flex flex-col justify-between lg:gap-0 gap-10">
           <Logo  />
           <p>
@@ -25,13 +25,13 @@ const Footer = () => {
             </SpecialText>
           </p>
           <div className="flex gap-12">
-            <Link href="/">
+            <Link href="https://www.instagram.com/efta_gifts/" target="_blank" rel="noopener noreferrer">
               <Image src="/insta.svg" alt="instagram" width={60} height={60} />
             </Link>
-            <Link href="/">
+            <Link href="https://www.youtube.com/@efta_artworld" target="_blank" rel="noopener noreferrer">
               <Image
                 src="/youtube.svg"
-                alt="instagram"
+                alt="youtube"
                 width={60}
                 height={60}
               />
@@ -39,23 +39,23 @@ const Footer = () => {
           </div>
           <ul className="space-y-1.5">
             <li>
-              <Link href="/">
+              <Link href="https://www.instagram.com/efta_eventz/" target="_blank" rel="noopener noreferrer">
                 <SpecialText className="text-[#1F76BD] lg:text-[20px] text-sm ">
-                  @efta_artworld
+                  @efta_eventz
                 </SpecialText>
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="https://www.instagram.com/efta_gifts/" target="_blank" rel="noopener noreferrer">
                 <SpecialText className="text-[#1F76BD] lg:text-[20px] text-sm">
-                  @efta_artworld
+                  @efta_gifts
                 </SpecialText>
               </Link>
             </li>
             <li>
-              <Link href="/">
+              <Link href="https://www.instagram.com/efta_cakes/" target="_blank" rel="noopener noreferrer">
                 <SpecialText className="text-[#1F76BD] lg:text-[20px] text-sm">
-                  @efta_artworld
+                  @efta_cakes
                 </SpecialText>
               </Link>
             </li>

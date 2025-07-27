@@ -112,7 +112,7 @@ const ProductPage = () => {
             <h2 className="pl-6">
               <SpecialText>Similar Products</SpecialText>
             </h2>
-            <Link href="/gifts">
+            <Link href="/products">
               <SpecialText className="text-[24px]">View All</SpecialText>
             </Link>
           </div>

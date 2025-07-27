@@ -140,10 +140,10 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
       <Wrapper>
         <div className="flex justify-between items-center lg:px-0 px-10 mb-8">
           <h2 className="lg:pl-6">
-            <SpecialText>Explore more Gifts</SpecialText>
+            <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
           </h2>
-          <Link href="/products/anniversary">
-            <SpecialText className="lg:text-[24px] text-xs">View All</SpecialText>
+          <Link href="/products">
+            <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>
         
@@ -154,8 +154,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
               <FeaturedGiftCard
                 id={gift._id}
                 name={gift.productName}
-                price={`₹${gift.offerPrice}`}
-                discountedPrice={gift.offerPercentage > 0 ? `₹${gift.productMRP}` : null}
+                price={`Rs ${gift.offerPrice}`}
+                discountedPrice={gift.offerPercentage > 0 ? `Rs ${gift.productMRP}` : null}
                 desc={gift.description}
                 image={gift.images && gift.images.length > 0 ? 
                   optimizeCloudinaryImage(gift.images[0].url, { width: 400, height: 290, crop: 'fill' }) : 
@@ -248,3 +248,4 @@ const FeaturedGiftCard = ({
 };
 
 export default ExploreMoreGifts;
+export { FeaturedGiftCard };

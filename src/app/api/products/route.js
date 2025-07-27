@@ -10,13 +10,32 @@ export async function GET(request) {
     
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    const tags = searchParams.get('tags');
+    const search = searchParams.get('search');
     const limit = parseInt(searchParams.get('limit')) || 50;
     const page = parseInt(searchParams.get('page')) || 1;
     const skip = (page - 1) * limit;
     
     let query = {};
+    
+    // Filter by category
     if (category && category !== 'all') {
       query.productCategory = category;
+    }
+    
+    // Filter by tags
+    if (tags) {
+      const tagArray = tags.split(',').map(tag => tag.trim());
+      query.tags = { $in: tagArray };
+    }
+    
+    // Search functionality
+    if (search) {
+      query.$or = [
+        { productName: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { tags: { $regex: search, $options: 'i' } }
+      ];
     }
     
     const products = await Product.find(query)

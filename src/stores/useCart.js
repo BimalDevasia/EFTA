@@ -101,7 +101,7 @@ export const useCart = create(
           })),
           totalItems: totalItems || 0,
           totalPrice: safeTotal,
-          deliveryCharge: safeTotal > 500 ? 0 : 50, // Free delivery above ₹500
+          deliveryCharge: safeTotal > 500 ? 0 : 50, // Free delivery above Rs 500
           finalTotal: Math.round((safeTotal + (safeTotal > 500 ? 0 : 50)) * 100) / 100
         };
       }

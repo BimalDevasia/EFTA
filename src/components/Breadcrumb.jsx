@@ -1,6 +1,5 @@
 import Link from "next/link";
 import RightArrow from "./svgs/RightArrow";
-import { SpecialText } from "./typography";
 import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 
@@ -13,14 +12,14 @@ const Breadcrumb = ({ links}) => {
           <Fragment key={index}>
             <li className="">
               <Link href={link.href}>
-                <SpecialText
+                <span
                   className={cn(
-                    "text-[20px] text-[#0000005C]",
-                    index === links.length - 1 && "text-[#8300FF]"
+                    "text-xl font-semibold font-poppins text-[#0000005C]",
+                    index === links.length - 1 && "text-[#1F76BD]"
                   )}
                 >
                   {link.name}
-                </SpecialText>
+                </span>
               </Link>
             </li>
             {index !== links.length - 1 && (

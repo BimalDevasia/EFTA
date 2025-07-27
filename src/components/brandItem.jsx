@@ -21,19 +21,19 @@ function BrandItem() {
   }, [items.length]);
 
   return (
-    <div className='lg:px-36 px-8 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
-      <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 lg:px-10 px-2'>
+    <div className='px-10 lg:px-8 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
+      <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 px-10 lg:px-8'>
         <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10 '>
-        <div className='lg:text-4xl text-2xl font-poppins break-normal font-light'>
+        <div className='text-3xl font-poppins break-normal font-light'>
           CREATE YOUR <span className='lg:text-6xl text-3xl font-caveat break-words font-bold'>BRAND ITEMS </span> FROM EFTA
           </div>
-          <div className='font-poppins font-medium lg:text-base text-xs '>
+          <div className='font-poppins font-medium text-base'>
           Create your Brand showing materials like <br />
         T-shirt, ID cards, Cap, Notepad.... and a lot <br />
           more with best price with EFTA. <br />
           Show your Brand everywhere.
           </div>
-          <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold lg:text-[20px] text-xs lg:w-52 w-28'>View All</button>
+          <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold text-sm lg:text-base lg:w-52 w-28'>View All</button>
         </div>
 
 

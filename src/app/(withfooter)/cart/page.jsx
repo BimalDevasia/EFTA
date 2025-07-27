@@ -151,14 +151,14 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
           <div className="mb-5 flex gap-[14px] items-end">
             <p className="">
               <SpecialText className="font-inter text-[30px] font-medium text-black tracking-[-0.6px]">
-                ₹{parseFloat(price).toFixed(2)}
+                Rs {parseFloat(price).toFixed(2)}
               </SpecialText>
             </p>
             {originalPrice && originalPrice > price && (
               <>
                 <p>
                   <SpecialText className="font-inter text-[20px] font-normal text-[#828282] tracking-[-0.4px] line-through">
-                    ₹{parseFloat(originalPrice).toFixed(2)}
+                    Rs {parseFloat(originalPrice).toFixed(2)}
                   </SpecialText>
                 </p>
                 {discountPercentage && (
@@ -209,24 +209,24 @@ function CartSummary() {
       <div className="space-y-3.5 py-[30px] px-1">
         <div className="flex justify-between items-center">
           <p>Price ({safeTotalItems} items)</p>
-          <p>₹{safeTotal.toFixed(2)}</p>
+          <p>Rs {safeTotal.toFixed(2)}</p>
         </div>
         <div className="flex justify-between items-center">
           <p>Delivery Charges</p>
           <p className={safeTotal > 500 ? "text-green-600" : ""}>
-            {safeTotal > 500 ? "FREE" : `₹${deliveryCharge.toFixed(2)}`}
+            {safeTotal > 500 ? "FREE" : `Rs ${deliveryCharge.toFixed(2)}`}
           </p>
         </div>
         {safeTotal > 500 && (
           <div className="text-sm text-green-600">
-            🎉 You saved ₹50 on delivery!
+            🎉 You saved Rs 50 on delivery!
           </div>
         )}
       </div>
       <hr />
       <div className="flex justify-between items-center mt-5 font-semibold text-lg">
         <p>Total</p>
-        <p>₹{finalTotal.toFixed(2)}</p>
+        <p>Rs {finalTotal.toFixed(2)}</p>
       </div>
     </div>
   );

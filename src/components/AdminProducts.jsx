@@ -10,20 +10,29 @@ const AdminProducts = ({ category = 'gift' }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
+    productId: '',
     productName: '',
     description: '',
     productDetails: '',
+    specifications: [],
+    whatsInside: [],
     productCategory: category,
     productMRP: '',
+    offerType: 'none',
     offerPercentage: '',
+    offerPrice: '',
     productType: 'non-customisable',
     customTextHeading: '',
     numberOfCustomImages: 0,
-    images: []
+    images: [],
+    tags: [],
+    tagsInput: ''
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [checkingProductId, setCheckingProductId] = useState(false);
+  const [productIdStatus, setProductIdStatus] = useState({ available: null, message: '' });
 
   const { user } = useAuth();
   const router = useRouter();
@@ -52,31 +61,195 @@ const AdminProducts = ({ category = 'gift' }) => {
 
   const resetForm = () => {
     setFormData({
+      productId: '',
       productName: '',
       description: '',
       productDetails: '',
+      specifications: [],
+      whatsInside: [],
       productCategory: category,
       productMRP: '',
+      offerType: 'none',
       offerPercentage: '',
+      offerPrice: '',
       productType: 'non-customisable',
       customTextHeading: '',
       numberOfCustomImages: 0,
-      images: []
+      images: [],
+      tags: [],
+      tagsInput: ''
     });
     setErrors({});
+    setProductIdStatus({ available: null, message: '' });
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    
+    let processedValue = value;
+    
+    // Special handling for productId - convert to lowercase and remove spaces
+    if (name === 'productId') {
+      processedValue = value.toLowerCase().replace(/\s+/g, '-');
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : processedValue
     }));
     
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+    
+    // Check product ID availability in real-time
+    if (name === 'productId' && processedValue.trim() && !editingProduct) {
+      checkProductIdAvailability(processedValue);
+    } else if (name === 'productId' && !processedValue.trim()) {
+      setProductIdStatus({ available: null, message: '' });
+    }
+  };
+
+  const checkProductIdAvailability = async (productId) => {
+    if (!productId.trim()) return;
+    
+    setCheckingProductId(true);
+    try {
+      const response = await fetch(`/api/products/check-id?productId=${encodeURIComponent(productId)}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setProductIdStatus({
+          available: data.available,
+          message: data.available ? 'Product ID is available' : 'Product ID is already taken'
+        });
+      } else {
+        setProductIdStatus({
+          available: false,
+          message: 'Error checking product ID'
+        });
+      }
+    } catch (error) {
+      console.error('Error checking product ID:', error);
+      setProductIdStatus({
+        available: false,
+        message: 'Error checking product ID'
+      });
+    } finally {
+      setCheckingProductId(false);
+    }
+  };
+
+  const handleTagsChange = (e) => {
+    const value = e.target.value.toLowerCase(); // Convert to lowercase
+    
+    // Split by comma and clean up tags
+    const tags = value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+    
+    setFormData(prev => ({
+      ...prev,
+      tagsInput: value, // Store the raw input
+      tags: tags // Store the processed tags array
+    }));
+    
+    // Clear error when user starts typing
+    if (errors.tags) {
+      setErrors(prev => ({ ...prev, tags: '' }));
+    }
+  };
+
+  // Specifications management
+  const addSpecification = () => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: [...prev.specifications, { heading: '', details: [{ key: '', value: '' }], color: '' }]
+    }));
+  };
+
+  const removeSpecification = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateSpecificationHeading = (index, heading) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === index ? { ...spec, heading } : spec
+      )
+    }));
+  };
+
+  const updateSpecificationColor = (index, color) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === index ? { ...spec, color } : spec
+      )
+    }));
+  };
+
+  const addSpecificationDetail = (specIndex) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === specIndex 
+          ? { ...spec, details: [...spec.details, { key: '', value: '' }] }
+          : spec
+      )
+    }));
+  };
+
+  const removeSpecificationDetail = (specIndex, detailIndex) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === specIndex 
+          ? { ...spec, details: spec.details.filter((_, j) => j !== detailIndex) }
+          : spec
+      )
+    }));
+  };
+
+  const updateSpecificationDetail = (specIndex, detailIndex, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      specifications: prev.specifications.map((spec, i) => 
+        i === specIndex 
+          ? { 
+              ...spec, 
+              details: spec.details.map((detail, j) => 
+                j === detailIndex ? { ...detail, [field]: value } : detail
+              )
+            }
+          : spec
+      )
+    }));
+  };
+
+  // What's Inside management
+  const addWhatsInsideItem = () => {
+    setFormData(prev => ({
+      ...prev,
+      whatsInside: [...prev.whatsInside, '']
+    }));
+  };
+
+  const removeWhatsInsideItem = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      whatsInside: prev.whatsInside.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateWhatsInsideItem = (index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      whatsInside: prev.whatsInside.map((item, i) => i === index ? value : item)
+    }));
   };
 
   const handleImageUpload = async (e) => {
@@ -125,13 +298,34 @@ const AdminProducts = ({ category = 'gift' }) => {
   const validateForm = () => {
     const newErrors = {};
     
+    if (!formData.productId.trim()) newErrors.productId = 'Product ID is required';
     if (!formData.productName.trim()) newErrors.productName = 'Product name is required';
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     if (!formData.productDetails.trim()) newErrors.productDetails = 'Product details are required';
     if (!formData.productMRP || formData.productMRP <= 0) newErrors.productMRP = 'Valid MRP is required';
-    if (formData.offerPercentage < 0 || formData.offerPercentage > 100) {
-      newErrors.offerPercentage = 'Offer percentage must be between 0-100';
+    
+    // Check if product ID is available (only for new products)
+    if (!editingProduct && !productIdStatus.available && formData.productId.trim()) {
+      newErrors.productId = 'Product ID is not available or not checked yet';
     }
+    
+    // Validate offers based on offer type
+    if (formData.offerType === 'percentage') {
+      if (!formData.offerPercentage || formData.offerPercentage <= 0) {
+        newErrors.offerPercentage = 'Offer percentage is required when offer type is percentage';
+      } else if (formData.offerPercentage > 100) {
+        newErrors.offerPercentage = 'Offer percentage cannot exceed 100%';
+      }
+    }
+    
+    if (formData.offerType === 'price') {
+      if (!formData.offerPrice || formData.offerPrice <= 0) {
+        newErrors.offerPrice = 'Offer price is required when offer type is price';
+      } else if (parseFloat(formData.offerPrice) >= parseFloat(formData.productMRP)) {
+        newErrors.offerPrice = 'Offer price must be less than MRP';
+      }
+    }
+    
     if (formData.images.length === 0) newErrors.images = 'At least one product image is required';
     
     if ((formData.productType === 'customisable' || formData.productType === 'heavyCustomisable') && !formData.customTextHeading.trim()) {
@@ -160,7 +354,8 @@ const AdminProducts = ({ category = 'gift' }) => {
         body: JSON.stringify({
           ...formData,
           productMRP: parseFloat(formData.productMRP),
-          offerPercentage: parseFloat(formData.offerPercentage),
+          offerPercentage: formData.offerType === 'percentage' ? parseFloat(formData.offerPercentage) : 0,
+          offerPrice: formData.offerType === 'price' ? parseFloat(formData.offerPrice) : null,
           numberOfCustomImages: parseInt(formData.numberOfCustomImages) || 0
         })
       });
@@ -186,17 +381,25 @@ const AdminProducts = ({ category = 'gift' }) => {
   const handleEdit = (product) => {
     setEditingProduct(product);
     setFormData({
+      productId: product.productId || '',
       productName: product.productName,
       description: product.description,
       productDetails: product.productDetails,
+      specifications: product.specifications || [],
+      whatsInside: product.whatsInside || [],
       productCategory: product.productCategory,
       productMRP: product.productMRP.toString(),
-      offerPercentage: product.offerPercentage.toString(),
+      offerType: product.offerType || 'none',
+      offerPercentage: product.offerPercentage ? product.offerPercentage.toString() : '',
+      offerPrice: product.offerPrice ? product.offerPrice.toString() : '',
       productType: product.productType,
       customTextHeading: product.customTextHeading || '',
       numberOfCustomImages: product.numberOfCustomImages || 0,
-      images: product.images || []
+      images: product.images || [],
+      tags: product.tags || [],
+      tagsInput: (product.tags || []).join(', ')
     });
+    setProductIdStatus({ available: null, message: '' });
   };
 
   const handleDelete = async (productId) => {
@@ -221,6 +424,16 @@ const AdminProducts = ({ category = 'gift' }) => {
 
   const formatCurrency = (amount) => {
     return `Rs ${amount}`;
+  };
+
+  const calculateFinalPrice = (product) => {
+    if (product.offerType === 'percentage') {
+      return product.productMRP - (product.productMRP * product.offerPercentage / 100);
+    } else if (product.offerType === 'price') {
+      return product.offerPrice;
+    } else {
+      return product.productMRP;
+    }
   };
 
   const calculateOfferPrice = (mrp, offerPercentage) => {
@@ -261,6 +474,56 @@ const AdminProducts = ({ category = 'gift' }) => {
             {editingProduct ? 'Edit Product' : 'Add New Product'}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Product ID Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Product ID * {!editingProduct && <span className="text-xs text-gray-500">(unique identifier)</span>}
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="productId"
+                  value={formData.productId}
+                  onChange={handleInputChange}
+                  disabled={editingProduct} // Disable editing for existing products
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent ${
+                    editingProduct ? 'bg-gray-100 cursor-not-allowed' : 
+                    productIdStatus.available === true ? 'border-green-300 bg-green-50' :
+                    productIdStatus.available === false ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                  }`}
+                  placeholder="e.g., custom-wallet-001"
+                  required
+                />
+                {checkingProductId && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#8300FF]"></div>
+                  </div>
+                )}
+              </div>
+              
+              {productIdStatus.message && !editingProduct && (
+                <p className={`text-sm mt-1 ${
+                  productIdStatus.available ? 'text-green-600' : 'text-red-500'
+                }`}>
+                  {productIdStatus.message}
+                </p>
+              )}
+              
+              {editingProduct && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Product ID cannot be changed after creation
+                </p>
+              )}
+              
+              {errors.productId && (
+                <p className="text-red-500 text-sm mt-1">{errors.productId}</p>
+              )}
+              
+              <p className="text-xs text-gray-500 mt-1">
+                Use lowercase letters, numbers, and hyphens only. Spaces will be converted to hyphens.
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -333,6 +596,142 @@ const AdminProducts = ({ category = 'gift' }) => {
               )}
             </div>
 
+            {/* Specifications Section */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <label className="block text-sm font-medium text-gray-700">
+                  Product Specifications
+                </label>
+                <button
+                  type="button"
+                  onClick={addSpecification}
+                  className="bg-[#8300FF] text-white px-3 py-1 rounded-md text-sm hover:bg-[#6a00d4] transition-colors"
+                >
+                  + Add Specification
+                </button>
+              </div>
+              
+              {formData.specifications.map((spec, specIndex) => (
+                <div key={specIndex} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex justify-between items-start">
+                    <input
+                      type="text"
+                      value={spec.heading}
+                      onChange={(e) => updateSpecificationHeading(specIndex, e.target.value)}
+                      placeholder="Specification Heading (e.g., Material, Product Finish)"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeSpecification(specIndex)}
+                      className="ml-2 text-red-500 hover:text-red-700 px-2 py-1"
+                    >
+                      ×
+                    </button>
+                  </div>
+                  
+                  {/* Color Option */}
+                  <div className="flex items-center gap-3">
+                    <label className="text-sm font-medium text-gray-700">Color (Optional):</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="color"
+                        value={spec.color || '#ffffff'}
+                        onChange={(e) => updateSpecificationColor(specIndex, e.target.value)}
+                        className="w-8 h-8 border border-gray-300 rounded cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={spec.color || ''}
+                        onChange={(e) => updateSpecificationColor(specIndex, e.target.value)}
+                        placeholder="Enter color (e.g., #FF5733 or Red)"
+                        className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent text-sm w-48"
+                      />
+                      {spec.color && (
+                        <button
+                          type="button"
+                          onClick={() => updateSpecificationColor(specIndex, '')}
+                          className="text-gray-400 hover:text-gray-600 text-sm"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {spec.details.map((detail, detailIndex) => (
+                      <div key={detailIndex} className="flex gap-2">
+                        <input
+                          type="text"
+                          value={detail.key}
+                          onChange={(e) => updateSpecificationDetail(specIndex, detailIndex, 'key', e.target.value)}
+                          placeholder="Key (e.g., Wallet Size, Pen Type)"
+                          className="w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                        />
+                        <input
+                          type="text"
+                          value={detail.value}
+                          onChange={(e) => updateSpecificationDetail(specIndex, detailIndex, 'value', e.target.value)}
+                          placeholder="Value (e.g., 11 x 9 Cm, Ball Point)"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeSpecificationDetail(specIndex, detailIndex)}
+                          className="text-red-500 hover:text-red-700 px-2 py-1"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => addSpecificationDetail(specIndex)}
+                      className="text-[#8300FF] hover:text-[#6a00d4] text-sm"
+                    >
+                      + Add Detail
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* What's Inside Section */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <label className="block text-sm font-medium text-gray-700">
+                  What's Inside
+                </label>
+                <button
+                  type="button"
+                  onClick={addWhatsInsideItem}
+                  className="bg-[#8300FF] text-white px-3 py-1 rounded-md text-sm hover:bg-[#6a00d4] transition-colors"
+                >
+                  + Add Item
+                </button>
+              </div>
+              
+              {formData.whatsInside.map((item, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => updateWhatsInsideItem(index, e.target.value)}
+                    placeholder="e.g., 1x High-Quality Faux Leather Wallet (customized with name)"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeWhatsInsideItem(index)}
+                    className="text-red-500 hover:text-red-700 px-2 py-1"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -356,22 +755,74 @@ const AdminProducts = ({ category = 'gift' }) => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Offer Percentage (%)
+                  Offer Type *
                 </label>
-                <input
-                  type="number"
-                  name="offerPercentage"
-                  value={formData.offerPercentage}
+                <select
+                  name="offerType"
+                  value={formData.offerType}
                   onChange={handleInputChange}
-                  min="0"
-                  max="100"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
-                  placeholder="0"
-                />
-                {errors.offerPercentage && (
-                  <p className="text-red-500 text-sm mt-1">{errors.offerPercentage}</p>
-                )}
+                  required
+                >
+                  <option value="none">No Offer</option>
+                  <option value="percentage">Percentage Discount</option>
+                  <option value="price">Fixed Offer Price</option>
+                </select>
               </div>
+
+              {formData.offerType === 'percentage' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Offer Percentage (%) *
+                  </label>
+                  <input
+                    type="number"
+                    name="offerPercentage"
+                    value={formData.offerPercentage}
+                    onChange={handleInputChange}
+                    min="1"
+                    max="99"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                    placeholder="e.g., 20"
+                    required
+                  />
+                  {errors.offerPercentage && (
+                    <p className="text-red-500 text-sm mt-1">{errors.offerPercentage}</p>
+                  )}
+                  {formData.offerPercentage && formData.productMRP && (
+                    <p className="text-sm text-green-600 mt-1">
+                      Final Price: Rs {(formData.productMRP * (1 - formData.offerPercentage / 100)).toFixed(2)}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {formData.offerType === 'price' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Offer Price (Rs) *
+                  </label>
+                  <input
+                    type="number"
+                    name="offerPrice"
+                    value={formData.offerPrice}
+                    onChange={handleInputChange}
+                    min="1"
+                    step="0.01"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                    placeholder="e.g., 199.00"
+                    required
+                  />
+                  {errors.offerPrice && (
+                    <p className="text-red-500 text-sm mt-1">{errors.offerPrice}</p>
+                  )}
+                  {formData.offerPrice && formData.productMRP && (
+                    <p className="text-sm text-green-600 mt-1">
+                      You Save: Rs {(formData.productMRP - formData.offerPrice).toFixed(2)} ({((formData.productMRP - formData.offerPrice) / formData.productMRP * 100).toFixed(1)}% off)
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -425,6 +876,81 @@ const AdminProducts = ({ category = 'gift' }) => {
                 </div>
               </div>
             )}
+
+            {/* Tags Section */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Product Tags
+              </label>
+              <input
+                type="text"
+                value={formData.tagsInput || formData.tags.join(', ')}
+                onChange={handleTagsChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                placeholder="seasonal, trending, valentine, birthday, anniversary (separate with commas)"
+                style={{ textTransform: 'lowercase' }}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                Add tags to help categorize and find similar products. Separate multiple tags with commas. Tags will be converted to lowercase.
+              </p>
+              
+              {/* Common tag suggestions */}
+              <div className="mt-2">
+                <p className="text-xs text-gray-600 mb-2">Quick add common tags:</p>
+                <div className="flex flex-wrap gap-2">
+                  {['seasonal', 'trending', 'valentine', 'birthday', 'anniversary', 'wedding', 'christmas', 'mothers-day', 'fathers-day', 'graduation', 'baby-shower', 'new-year'].map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        if (!formData.tags.includes(tag)) {
+                          const newTags = [...formData.tags, tag];
+                          setFormData(prev => ({
+                            ...prev,
+                            tags: newTags,
+                            tagsInput: newTags.join(', ')
+                          }));
+                        }
+                      }}
+                      className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                    >
+                      + {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {formData.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <p className="text-xs text-gray-600 w-full mb-1">Current tags:</p>
+                  {formData.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#8300FF] text-white group"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newTags = formData.tags.filter((_, i) => i !== index);
+                          setFormData(prev => ({
+                            ...prev,
+                            tags: newTags,
+                            tagsInput: newTags.join(', ')
+                          }));
+                        }}
+                        className="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-white hover:bg-white hover:text-[#8300FF] rounded-full transition-colors"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {errors.tags && (
+                <p className="text-red-500 text-sm mt-1">{errors.tags}</p>
+              )}
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -517,6 +1043,7 @@ const AdminProducts = ({ category = 'gift' }) => {
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">Product</th>
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">Category</th>
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">Type</th>
+                    <th className="text-left py-3 px-2 font-semibold text-gray-700">Tags</th>
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">MRP</th>
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">Offer Price</th>
                     <th className="text-left py-3 px-2 font-semibold text-gray-700">Actions</th>
@@ -561,17 +1088,46 @@ const AdminProducts = ({ category = 'gift' }) => {
                            product.productType === 'customisable' ? 'Custom' : 'Heavy Custom'}
                         </span>
                       </td>
+                      <td className="py-3 px-2">
+                        <div className="flex flex-wrap gap-1">
+                          {product.tags && product.tags.length > 0 ? (
+                            product.tags.slice(0, 3).map((tag, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                              >
+                                {tag}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-gray-400 text-xs">No tags</span>
+                          )}
+                          {product.tags && product.tags.length > 3 && (
+                            <span className="text-xs text-gray-500">+{product.tags.length - 3} more</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="py-3 px-2 font-medium">
                         {formatCurrency(product.productMRP)}
                       </td>
                       <td className="py-3 px-2">
                         <div>
                           <div className="font-medium text-green-600">
-                            {formatCurrency(calculateOfferPrice(product.productMRP, product.offerPercentage))}
+                            {formatCurrency(calculateFinalPrice(product))}
                           </div>
-                          {product.offerPercentage > 0 && (
+                          {product.offerType === 'percentage' && product.offerPercentage > 0 && (
                             <div className="text-xs text-gray-500">
                               {product.offerPercentage}% off
+                            </div>
+                          )}
+                          {product.offerType === 'price' && product.offerPrice && (
+                            <div className="text-xs text-gray-500">
+                              {(((product.productMRP - product.offerPrice) / product.productMRP) * 100).toFixed(1)}% off
+                            </div>
+                          )}
+                          {product.offerType === 'none' && (
+                            <div className="text-xs text-gray-500">
+                              No offer
                             </div>
                           )}
                         </div>

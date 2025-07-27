@@ -11,7 +11,7 @@ function GiftMain({click}) {
           className='object-cover object-center' 
           priority
         />
-        <div className='z-10 lg:px-24 px-10 flex flex-col gap-14'>
+        <div className='z-10 px-10 lg:px-8 flex flex-col gap-14'>
           <div className='flex flex-col gap-6'>
           <p className='lg:text-4xl text-sm font-poppins font-semibold text-white'>Surprise your</p>
           <p className='font-satisfy lg:text-9xl text-6xl font-normal text-white'>Valentine</p>

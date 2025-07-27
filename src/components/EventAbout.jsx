@@ -5,7 +5,7 @@ import Image from 'next/image'
 const EventAbout = React.forwardRef((props, ref) => {
     return (
         <div ref={ref} className='relative w-screen h-screen'>
-            <div className='relative flex flex-col lg:w-3/5 w-screen lg:mt-0 lg:justify-center lg:pl-28 px-10 lg:h-full h-max'>
+            <div className='relative flex flex-col lg:w-3/5 w-screen lg:mt-0 lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-max'>
                 <div className='font-poppins'>
                     <p className='lg:text-5xl text-3xl font-medium text-[#7C2EF9] font-italiana'>About Us</p>
                     <p className='lg:w-8/12 pt-5 lg:text-xl text-xs'>We would love to be known as a happiness-quotient booster service company!</p>

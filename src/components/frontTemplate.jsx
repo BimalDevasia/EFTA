@@ -30,7 +30,7 @@ function frontTemplate() {
               alignment === "first" ? "lg:flex-row-reverse flex-col lg:gap-0 gap-5 " : "lg:flex-row flex-col lg:gap-0 gap-5"
             )}
           >
-            <div className=" lg:w-1/2 lg:h-screen w-screen   lg:px-28 px-10 flex items-center ">
+            <div className=" lg:w-1/2 lg:h-screen w-screen   px-10 lg:px-8 flex items-center ">
               <div className="relative">
                 <div className={cn("absolute top-0 h-1 bg-primary_color w-1/3 border-solid rounded-full border-primary_color",alignment === "second" ?"left-0":"right-0")}></div>
                 <p className="py-12 lg:text-xl text-xs font-normal font-poppins">

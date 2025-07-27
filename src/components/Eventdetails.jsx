@@ -4,7 +4,7 @@ import Image from 'next/image'
 function Eventdetails() {
   return (
     <div className='flex justify-center w-full lg:h-screen lg:mb-0 mb-[350px] lg:mt-20 overflow-hidden'>
-    <div className=' lg:px-24 px-8 h-auto flex gap-6 justify-center lg:flex-row flex-col-reverse '>
+    <div className=' px-10 lg:px-8 h-auto flex gap-6 justify-center lg:flex-row flex-col-reverse '>
         <div className='lg:w-[620px] w-full relative flex justify-center'>
         <Image 
           src="/marriage1.png" 

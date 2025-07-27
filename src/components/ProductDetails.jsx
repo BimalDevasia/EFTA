@@ -124,14 +124,14 @@ const ProductDetails = ({ product }) => {
         <div className="flex gap-4 items-end">
           <p className="">
             <SpecialText className="font-inter text-2xl font-medium text-black tracking-[-0.6px]">
-              ₹{product.offerPrice?.toFixed(2) || product.productMRP}
+              Rs {product.offerPrice?.toFixed(2) || product.productMRP}
             </SpecialText>
           </p>
           {product.offerPercentage > 0 && (
             <>
               <p>
                 <SpecialText className="font-inter text-lg font-normal text-[#828282] tracking-[-0.4px] line-through">
-                  ₹{product.productMRP}
+                  Rs {product.productMRP}
                 </SpecialText>
               </p>
               <p>

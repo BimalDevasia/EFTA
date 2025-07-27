@@ -111,7 +111,7 @@ function AboutUs() {
         
       </div>
      
-    <div className='relative flex flex-col   lg:w-3/5 w-full lg:mt-0  lg:justify-center lg:pl-28 px-10 lg:h-full h-max z-20' ref={containerRef}>
+    <div className='relative flex flex-col   lg:w-3/5 w-full lg:mt-0  lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-max z-20' ref={containerRef}>
       <div className='font-poppins'>
         <p className='lg:text-5xl  text-3xl font-medium text-primary_color'>About Us</p>
         <p className='lg:w-8/12 pt-5 lg:text-xl text-xs  '>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>

@@ -294,6 +294,7 @@ const AdminTestimony = () => {
                 )}
               </div>
 
+              <div>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -351,11 +352,10 @@ const AdminTestimony = () => {
                 </button>
               </div>
             </form>
-          </div>
-        )}
+          )}
 
-        {/* Testimonies List */}
-        <div className="bg-white rounded-lg shadow-md">
+          {/* Testimonies List */}
+          <div className="bg-white rounded-lg shadow-md">
           <div className="p-6 border-b border-gray-200">
             <h2 className="text-xl font-semibold">All Testimonies ({testimonies.length})</h2>
           </div>
@@ -446,6 +446,7 @@ const AdminTestimony = () => {
               ))}
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

@@ -82,8 +82,8 @@ function NormalCardCarousal({ excludeId = null, category = null, limit = 20 }) {
               <CarousalCard
                 id={gift._id}
                 name={gift.productName}
-                price={`₹${gift.offerPrice}`}
-                discountedPrice={gift.offerPercentage > 0 ? `₹${gift.productMRP}` : null}
+                price={`Rs ${gift.offerPrice}`}
+                discountedPrice={gift.offerPercentage > 0 ? `Rs ${gift.productMRP}` : null}
                 desc={gift.description}
                 image={gift.images && gift.images.length > 0 ? 
                   optimizeCloudinaryImage(gift.images[0].url, { width: 400, height: 290, crop: 'fill' }) : 

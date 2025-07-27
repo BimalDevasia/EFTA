@@ -21,8 +21,8 @@ export class WhatsAppService {
     items.forEach((item, index) => {
       message += `${index + 1}. ${item.name}\n`;
       message += `   Quantity: ${item.quantity}\n`;
-      message += `   Price: ₹${item.price} each\n`;
-      message += `   Total: ₹${item.total}\n`;
+      message += `   Price: Rs ${item.price} each\n`;
+      message += `   Total: Rs ${item.total}\n`;
       
       if (item.customization) {
         message += `   🎨 Customization: ${JSON.stringify(item.customization)}\n`;
@@ -31,9 +31,9 @@ export class WhatsAppService {
     });
     
     message += `💰 *Order Summary:*\n`;
-    message += `Subtotal (${totalItems} items): ₹${totalPrice}\n`;
-    message += `Delivery Charges: ₹${deliveryCharge}\n`;
-    message += `*Total Amount: ₹${finalTotal}*\n\n`;
+    message += `Subtotal (${totalItems} items): Rs ${totalPrice}\n`;
+    message += `Delivery Charges: Rs ${deliveryCharge}\n`;
+    message += `*Total Amount: Rs ${finalTotal}*\n\n`;
     
     message += `⏰ Expected Delivery: 5-7 business days\n`;
     message += `📞 For any queries, call: ${config.whatsapp.supportNumber}`;
@@ -95,10 +95,10 @@ export class WhatsAppService {
     
     message += `📦 *Items:*\n`;
     cartSummary.items.forEach((item, index) => {
-      message += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ₹${item.total}\n`;
+      message += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - Rs ${item.total}\n`;
     });
     
-    message += `\n💰 *Total: ₹${cartSummary.finalTotal}*\n\n`;
+    message += `\n💰 *Total: Rs ${cartSummary.finalTotal}*\n\n`;
     message += `📍 Delivery Address: ${customerDetails.address}\n`;
     message += `⏰ Expected Delivery: 5-7 business days\n\n`;
     message += `We'll keep you updated on your order status!\n`;
