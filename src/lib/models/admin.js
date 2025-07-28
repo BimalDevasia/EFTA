@@ -54,7 +54,7 @@ const adminSchema = new mongoose.Schema({
 });
 
 // Index for better query performance
-adminSchema.index({ email: 1 });
+// Note: email index is already created by unique: true
 adminSchema.index({ isActive: 1 });
 adminSchema.index({ deletedAt: 1 });
 

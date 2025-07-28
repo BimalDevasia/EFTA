@@ -4,325 +4,167 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
 import { ChevronDown, Search, Filter, X } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { FeaturedGiftCard } from "@/components/home/ExploreMoreGifts";
+import React, { useState, useEffect, Suspense } from "react";
+import UniversalProductCard from "@/components/UniversalProductCard";
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const ProductListPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white">
+        <Wrapper className="pt-32 pb-12 px-10 lg:px-8">
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8300FF]"></div>
+          </div>
+        </Wrapper>
+      </div>
+    }>
+      <ProductListContent />
+    </Suspense>
+  );
+};
+
+const ProductListContent = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
+
+  // Hidden filters for URL parameters (not shown in UI)
+  const [hiddenFilters, setHiddenFilters] = useState({
+    featured: false,
+    visible: false,
+    giftType: null
+  });
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    const typeParam = searchParams.get('type');
+    const searchParam = searchParams.get('search');
+    const priceParam = searchParams.get('price');
+    const featuredParam = searchParams.get('featured');
+    const visibleParam = searchParams.get('visible');
+
+    if (categoryParam) setSelectedCategory(categoryParam);
+    if (typeParam) setSelectedType(typeParam);
+    if (searchParam) setSearchTerm(searchParam);
+    if (priceParam) setPriceRange(priceParam);
+    
+    // Set hidden filters for backend filtering only
+    setHiddenFilters({
+      featured: featuredParam === 'true',
+      visible: visibleParam === 'true',
+      giftType: featuredParam === 'true' && visibleParam === 'true' ? 'personalisedGift' : null
+    });
+  }, [searchParams]);
 
   useEffect(() => {
     fetchAllProducts();
-  }, []);
+    fetchCategories();
+  }, [hiddenFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     filterProducts();
-  }, [products, searchTerm, selectedCategory, priceRange]);
+  }, [products, searchTerm, selectedCategory, selectedType, priceRange]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/products/categories');
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        // Convert categories to the format needed by the UI
+        const categoryOptions = [
+          { name: "All Categories", value: "all" },
+          ...(data.categoriesData || []).map(cat => ({
+            name: cat.displayName || cat.name,
+            value: cat.name
+          }))
+        ];
+        setCategories(categoryOptions);
+      } else {
+        console.error('Failed to fetch categories:', data.error);
+        // Fallback to default categories
+        setCategories([
+          { name: "All Categories", value: "all" },
+          { name: "Lamp", value: "lamp" },
+          { name: "Bulb", value: "bulb" },
+          { name: "Bundle", value: "bundle" },
+          { name: "Cake", value: "cake" },
+          { name: "Mug", value: "mug" },
+          { name: "Frame", value: "frame" },
+          { name: "Wallet", value: "wallet" },
+          { name: "Keychain", value: "keychain" },
+          { name: "T-Shirt", value: "tshirt" },
+          { name: "Cushion", value: "cushion" }
+        ]);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Fallback to default categories
+      setCategories([
+        { name: "All Categories", value: "all" },
+        { name: "Lamp", value: "lamp" },
+        { name: "Bulb", value: "bulb" },
+        { name: "Bundle", value: "bundle" },
+        { name: "Cake", value: "cake" },
+        { name: "Mug", value: "mug" },
+        { name: "Frame", value: "frame" },
+        { name: "Wallet", value: "wallet" },
+        { name: "Keychain", value: "keychain" },
+        { name: "T-Shirt", value: "tshirt" },
+        { name: "Cushion", value: "cushion" }
+      ]);
+    }
+  };
 
   const fetchAllProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/products');
-      const data = await response.json();
       
-      let allProducts = [];
+      // Build query parameters based on hidden filters
+      let queryParams = '';
+      const params = [];
       
-      if (response.ok) {
-        allProducts = data.products || [];
-      } else {
-        console.error('Failed to fetch products:', data.error);
+      if (hiddenFilters.giftType) {
+        params.push(`category=${encodeURIComponent(hiddenFilters.giftType)}`);
       }
       
-      // Add dummy products for demonstration
-      const dummyProducts = [
-        {
-          _id: 'dummy-1',
-          productName: 'Customized Birthday Cake',
-          productCategory: 'cake',
-          description: 'Delicious chocolate birthday cake with custom message and design',
-          productMRP: 1200,
-          offerPrice: 999,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['birthday', 'chocolate', 'custom'],
-          images: [
-            {
-              url: '/cake.png',
-              alt: 'Birthday Cake'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-2',
-          productName: 'Personalized Photo Frame',
-          productCategory: 'gift',
-          description: 'Beautiful wooden photo frame with custom engraving',
-          productMRP: 800,
-          offerPrice: 650,
-          offerPercentage: 19,
-          productType: 'customisable',
-          tags: ['photo', 'frame', 'personalized', 'wood'],
-          images: [
-            {
-              url: '/gift.png',
-              alt: 'Photo Frame'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-3',
-          productName: 'Custom T-Shirt Design',
-          productCategory: 'gift',
-          description: 'High-quality cotton t-shirt with your custom design or text',
-          productMRP: 599,
-          offerPrice: 449,
-          offerPercentage: 25,
-          productType: 'customisable',
-          tags: ['t-shirt', 'custom', 'clothing', 'cotton'],
-          images: [
-            {
-              url: '/t-shirt.png',
-              alt: 'Custom T-Shirt'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-4',
-          productName: 'Wedding Gift Bundle',
-          productCategory: 'bundle',
-          description: 'Complete wedding gift set with photo album, frame, and chocolates',
-          productMRP: 2500,
-          offerPrice: 1999,
-          offerPercentage: 20,
-          productType: 'non-customisable',
-          tags: ['wedding', 'bundle', 'gift set', 'album'],
-          images: [
-            {
-              url: '/gift.svg',
-              alt: 'Wedding Bundle'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-5',
-          productName: 'Chocolate Birthday Bundle',
-          productCategory: 'bundle',
-          description: 'Birthday special bundle with cake, chocolates, and greeting card',
-          productMRP: 1800,
-          offerPrice: 1499,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['birthday', 'chocolate', 'bundle', 'cake'],
-          images: [
-            {
-              url: '/chocolate.png',
-              alt: 'Chocolate Bundle'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-6',
-          productName: 'Anniversary Special Cake',
-          productCategory: 'cake',
-          description: 'Romantic heart-shaped cake perfect for anniversaries',
-          productMRP: 1500,
-          offerPrice: 1299,
-          offerPercentage: 13,
-          productType: 'customisable',
-          tags: ['anniversary', 'heart', 'romantic', 'special'],
-          images: [
-            {
-              url: '/love.svg',
-              alt: 'Anniversary Cake'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-7',
-          productName: 'Personalized Mug',
-          productCategory: 'gift',
-          description: 'Ceramic mug with custom photo and text printing',
-          productMRP: 399,
-          offerPrice: 299,
-          offerPercentage: 25,
-          productType: 'customisable',
-          tags: ['mug', 'personalized', 'ceramic', 'photo'],
-          images: [
-            {
-              url: '/gift.png',
-              alt: 'Personalized Mug'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-8',
-          productName: 'Corporate Gift Set',
-          productCategory: 'bundle',
-          description: 'Professional gift set with branded items for corporate events',
-          productMRP: 3000,
-          offerPrice: 2499,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['corporate', 'professional', 'branded', 'business'],
-          images: [
-            {
-              url: '/coperatefront.png',
-              alt: 'Corporate Gift'
-            }
-          ]
-        }
-      ];
+      if (hiddenFilters.featured) {
+        params.push('featured=true');
+      }
       
-      // Combine API products with dummy products
-      setProducts([...allProducts, ...dummyProducts]);
+      if (hiddenFilters.visible) {
+        params.push('visible=true');
+      }
+      
+      if (params.length > 0) {
+        queryParams = '?' + params.join('&');
+      }
+      
+      const response = await fetch(`/api/products${queryParams}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setProducts(data.products || []);
+      } else {
+        console.error('Failed to fetch products:', data.error);
+        setProducts([]);
+      }
       
     } catch (error) {
       console.error('Error fetching products:', error);
-      // If API fails, show only dummy products
-      const dummyProducts = [
-        {
-          _id: 'dummy-1',
-          productName: 'Customized Birthday Cake',
-          productCategory: 'cake',
-          description: 'Delicious chocolate birthday cake with custom message and design',
-          productMRP: 1200,
-          offerPrice: 999,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['birthday', 'chocolate', 'custom'],
-          images: [
-            {
-              url: '/cake.png',
-              alt: 'Birthday Cake'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-2',
-          productName: 'Personalized Photo Frame',
-          productCategory: 'gift',
-          description: 'Beautiful wooden photo frame with custom engraving',
-          productMRP: 800,
-          offerPrice: 650,
-          offerPercentage: 19,
-          productType: 'customisable',
-          tags: ['photo', 'frame', 'personalized', 'wood'],
-          images: [
-            {
-              url: '/gift.png',
-              alt: 'Photo Frame'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-3',
-          productName: 'Custom T-Shirt Design',
-          productCategory: 'gift',
-          description: 'High-quality cotton t-shirt with your custom design or text',
-          productMRP: 599,
-          offerPrice: 449,
-          offerPercentage: 25,
-          productType: 'customisable',
-          tags: ['t-shirt', 'custom', 'clothing', 'cotton'],
-          images: [
-            {
-              url: '/t-shirt.png',
-              alt: 'Custom T-Shirt'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-4',
-          productName: 'Wedding Gift Bundle',
-          productCategory: 'bundle',
-          description: 'Complete wedding gift set with photo album, frame, and chocolates',
-          productMRP: 2500,
-          offerPrice: 1999,
-          offerPercentage: 20,
-          productType: 'non-customisable',
-          tags: ['wedding', 'bundle', 'gift set', 'album'],
-          images: [
-            {
-              url: '/gift.svg',
-              alt: 'Wedding Bundle'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-5',
-          productName: 'Chocolate Birthday Bundle',
-          productCategory: 'bundle',
-          description: 'Birthday special bundle with cake, chocolates, and greeting card',
-          productMRP: 1800,
-          offerPrice: 1499,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['birthday', 'chocolate', 'bundle', 'cake'],
-          images: [
-            {
-              url: '/chocolate.png',
-              alt: 'Chocolate Bundle'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-6',
-          productName: 'Anniversary Special Cake',
-          productCategory: 'cake',
-          description: 'Romantic heart-shaped cake perfect for anniversaries',
-          productMRP: 1500,
-          offerPrice: 1299,
-          offerPercentage: 13,
-          productType: 'customisable',
-          tags: ['anniversary', 'heart', 'romantic', 'special'],
-          images: [
-            {
-              url: '/love.svg',
-              alt: 'Anniversary Cake'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-7',
-          productName: 'Personalized Mug',
-          productCategory: 'gift',
-          description: 'Ceramic mug with custom photo and text printing',
-          productMRP: 399,
-          offerPrice: 299,
-          offerPercentage: 25,
-          productType: 'customisable',
-          tags: ['mug', 'personalized', 'ceramic', 'photo'],
-          images: [
-            {
-              url: '/gift.png',
-              alt: 'Personalized Mug'
-            }
-          ]
-        },
-        {
-          _id: 'dummy-8',
-          productName: 'Corporate Gift Set',
-          productCategory: 'bundle',
-          description: 'Professional gift set with branded items for corporate events',
-          productMRP: 3000,
-          offerPrice: 2499,
-          offerPercentage: 17,
-          productType: 'customisable',
-          tags: ['corporate', 'professional', 'branded', 'business'],
-          images: [
-            {
-              url: '/coperatefront.png',
-              alt: 'Corporate Gift'
-            }
-          ]
-        }
-      ];
-      setProducts(dummyProducts);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -342,9 +184,14 @@ const ProductListPage = () => {
       );
     }
 
-    // Category filter
+    // Category filter (using productCategory field)
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(product => product.productCategory === selectedCategory);
+    }
+
+    // Type filter (using productType field for customization level)
+    if (selectedType !== 'all') {
+      filtered = filtered.filter(product => product.productType === selectedType);
     }
 
     // Price filter
@@ -372,6 +219,7 @@ const ProductListPage = () => {
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCategory('all');
+    setSelectedType('all');
     setPriceRange('all');
     setShowCategoryFilter(false);
   };
@@ -420,75 +268,145 @@ const ProductListPage = () => {
                 <button
                   onClick={() => {
                     setShowCategoryFilter(!showCategoryFilter);
-                    setShowPriceFilter(false);
                   }}
                   className={cn(
-                    "flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200",
-                    (selectedCategory !== 'all' || priceRange !== 'all')
+                    "flex items-center justify-center gap-2 px-3 py-2.5 rounded-full border transition-all duration-200 text-sm",
+                    (selectedCategory !== 'all' || priceRange !== 'all' || selectedType !== 'all')
                       ? "bg-[#8300FF] text-white border-[#8300FF]" 
-                      : "bg-white text-gray-700 border-gray-300 hover:border-[#8300FF]"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-[#8300FF] hover:text-[#8300FF]"
                   )}
                 >
                   <Filter className="w-4 h-4" />
+                  <span className="hidden sm:inline">Filter</span>
+                  {(selectedCategory !== 'all' || priceRange !== 'all' || selectedType !== 'all') && (
+                    <span className="bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold text-[10px]">
+                      {[selectedCategory !== 'all', priceRange !== 'all', selectedType !== 'all'].filter(Boolean).length}
+                    </span>
+                  )}
                 </button>
                 
                 {showCategoryFilter && (
-                  <div className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-lg border border-gray-200 z-10 min-w-[280px]">
+                  <div className="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-lg border border-gray-200 z-50 w-80">
                     <div className="p-4">
+                      {/* Header */}
+                      <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                        <h3 className="text-sm font-semibold text-gray-800">Filters</h3>
+                        <button
+                          onClick={() => setShowCategoryFilter(false)}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+
                       {/* Category Section */}
-                      <div className="mb-6">
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3">Category</h3>
-                        <div className="space-y-2">
-                          {categories.map((category) => (
-                            <button
+                      <div className="mb-4">
+                        <h4 className="text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Category</h4>
+                        
+                        {/* Category Search */}
+                        <div className="relative mb-2">
+                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
+                          <input
+                            type="text"
+                            placeholder="Search..."
+                            value={categorySearchTerm}
+                            onChange={(e) => setCategorySearchTerm(e.target.value)}
+                            className="w-full pl-7 pr-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#8300FF] focus:border-[#8300FF]"
+                          />
+                        </div>
+                        
+                        {/* Filtered Categories */}
+                        <div className="space-y-1 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                          {categories
+                            .filter(category => 
+                              category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
+                            )
+                            .map((category) => (
+                            <label
                               key={category.value}
-                              onClick={() => setSelectedCategory(category.value)}
-                              className={cn(
-                                "w-full text-left px-3 py-2 rounded-md transition-colors text-sm",
-                                selectedCategory === category.value
-                                  ? "bg-[#8300FF] text-white"
-                                  : "hover:bg-gray-100 text-gray-700"
-                              )}
+                              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-xs"
                             >
-                              {category.name}
-                            </button>
+                              <input
+                                type="radio"
+                                name="category"
+                                checked={selectedCategory === category.value}
+                                onChange={() => {
+                                  setSelectedCategory(category.value);
+                                  setCategorySearchTerm('');
+                                }}
+                                className="w-3 h-3 text-[#8300FF] border-gray-300 focus:ring-[#8300FF] focus:ring-1"
+                              />
+                              <span className="text-gray-700">{category.name}</span>
+                            </label>
                           ))}
                         </div>
+                        
+                        {/* No results message */}
+                        {categories.filter(category => 
+                          category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
+                        ).length === 0 && categorySearchTerm && (
+                          <div className="text-center py-2 text-gray-500 text-xs">
+                            No categories found
+                          </div>
+                        )}
                       </div>
 
                       {/* Price Range Section */}
                       <div className="mb-4">
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3">Price Range</h3>
-                        <div className="space-y-2">
+                        <h4 className="text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Price Range</h4>
+                        <div className="space-y-1">
                           {priceRanges.map((range) => (
-                            <button
+                            <label
                               key={range.value}
-                              onClick={() => setPriceRange(range.value)}
-                              className={cn(
-                                "w-full text-left px-3 py-2 rounded-md transition-colors text-sm",
-                                priceRange === range.value
-                                  ? "bg-[#8300FF] text-white"
-                                  : "hover:bg-gray-100 text-gray-700"
-                              )}
+                              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-xs"
                             >
-                              {range.name}
-                            </button>
+                              <input
+                                type="radio"
+                                name="priceRange"
+                                checked={priceRange === range.value}
+                                onChange={() => setPriceRange(range.value)}
+                                className="w-3 h-3 text-[#8300FF] border-gray-300 focus:ring-[#8300FF] focus:ring-1"
+                              />
+                              <span className="text-gray-700">{range.name}</span>
+                            </label>
                           ))}
                         </div>
                       </div>
 
-                      {/* Clear Filters Button */}
-                      {(selectedCategory !== 'all' || priceRange !== 'all') && (
-                        <div className="pt-3 border-t border-gray-200">
+                      {/* Product Type Section */}
+                      <div className="mb-4">
+                        <h4 className="text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Product Type</h4>
+                        <div className="space-y-1">
+                          {productTypes.map((type) => (
+                            <label
+                              key={type.value}
+                              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-xs"
+                            >
+                              <input
+                                type="radio"
+                                name="productType"
+                                checked={selectedType === type.value}
+                                onChange={() => setSelectedType(type.value)}
+                                className="w-3 h-3 text-[#8300FF] border-gray-300 focus:ring-[#8300FF] focus:ring-1"
+                              />
+                              <span className="text-gray-700">{type.name}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Clear All Filters Button */}
+                      {(selectedCategory !== 'all' || priceRange !== 'all' || selectedType !== 'all') && (
+                        <div className="pt-2 border-t border-gray-100">
                           <button
                             onClick={() => {
                               clearFilters();
-                              setShowCategoryFilter(false);
+                              setCategorySearchTerm('');
                             }}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm"
+                            className="w-full flex items-center justify-center gap-1 px-3 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-xs font-medium"
                           >
-                            <X className="w-4 h-4" />
-                            <span>Clear All Filters</span>
+                            <X className="w-3 h-3" />
+                            <span>Clear Filters</span>
                           </button>
                         </div>
                       )}
@@ -499,6 +417,55 @@ const ProductListPage = () => {
             </div>
           </div>
 
+          {/* Active Filters Chips */}
+          {(selectedCategory !== 'all' || priceRange !== 'all' || selectedType !== 'all') && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-gray-600">Filters:</span>
+              {selectedCategory !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#8300FF]/10 text-[#8300FF] rounded-full text-xs font-medium">
+                  {categories.find(cat => cat.value === selectedCategory)?.name}
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className="hover:bg-[#8300FF]/20 rounded-full p-0.5 ml-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {priceRange !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                  {priceRanges.find(range => range.value === priceRange)?.name}
+                  <button
+                    onClick={() => setPriceRange('all')}
+                    className="hover:bg-green-200 rounded-full p-0.5 ml-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              {selectedType !== 'all' && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                  {productTypes.find(type => type.value === selectedType)?.name}
+                  <button
+                    onClick={() => setSelectedType('all')}
+                    className="hover:bg-orange-200 rounded-full p-0.5 ml-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              )}
+              <button
+                onClick={() => {
+                  clearFilters();
+                  setCategorySearchTerm('');
+                }}
+                className="text-xs text-gray-500 hover:text-gray-700 underline"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+
           {/* Results Count */}
           <div className="text-center text-gray-600">
             <span className="font-medium">{filteredProducts.length}</span> products found
@@ -506,21 +473,32 @@ const ProductListPage = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <FeaturedGiftCard
-              key={product._id}
-              id={product._id}
-              name={product.productName}
-              price={`Rs ${product.offerPrice || product.productMRP}`}
-              discountedPrice={product.offerPercentage > 0 ? `Rs ${product.productMRP}` : null}
-              desc={product.description}
-              image={product.images && product.images.length > 0 ? 
-                product.images[0].url : 
-                null}
-              imageAlt={product.images && product.images.length > 0 ? product.images[0].alt || product.productName : product.productName}
-              isCustom={product.productType !== 'non-customisable'}
-            />
-          ))}
+          {filteredProducts.map((product) => {
+            // Calculate actual price like in other sections
+            const actualPrice = product.offerPrice || 
+              (product.offerPercentage > 0 ? 
+                Math.round(product.productMRP * (100 - product.offerPercentage) / 100) : 
+                product.productMRP);
+
+            return (
+              <UniversalProductCard
+                key={product._id}
+                id={product._id}
+                name={product.productName}
+                desc={product.description}
+                price={actualPrice}
+                originalPrice={product.offerPercentage > 0 ? product.productMRP : null}
+                offerPercentage={product.offerPercentage || 0}
+                productType={product.productType}
+                image={product.images && product.images.length > 0 ? 
+                  product.images[0].url : 
+                  null}
+                imageAlt={product.images && product.images.length > 0 ? 
+                  product.images[0].alt || product.productName : 
+                  product.productName}
+              />
+            );
+          })}
         </div>
         
         {filteredProducts.length === 0 && (
@@ -535,19 +513,19 @@ const ProductListPage = () => {
   );
 };
 
-const categories = [
-  { name: "All Categories", value: "all" },
-  { name: "Gifts", value: "gift" },
-  { name: "Bundles", value: "bundle" },
-  { name: "Cakes", value: "cake" },
-];
-
 const priceRanges = [
   { name: "All Prices", value: "all" },
   { name: "Under Rs 500", value: "under500" },
   { name: "Rs 500 - Rs 1,000", value: "500to1000" },
   { name: "Rs 1,000 - Rs 2,000", value: "1000to2000" },
   { name: "Above Rs 2,000", value: "above2000" },
+];
+
+const productTypes = [
+  { name: "All Types", value: "all" },
+  { name: "Customisable", value: "customisable" },
+  { name: "Heavy Customisable", value: "heavyCustomisable" },
+  { name: "Non-Customisable", value: "non-customisable" },
 ];
 
 export default ProductListPage;

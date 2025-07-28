@@ -19,7 +19,7 @@ const giftSchema = new mongoose.Schema({
   productCategory: {
     type: String,
     required: [true, 'Product Category is required'],
-    enum: ['gift', 'corporate-gifts', 'cakes'],
+    enum: ['gift'],
     trim: true
   },
   productMRP: {

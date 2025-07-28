@@ -55,11 +55,18 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
+  giftType: {
+    type: String,
+    required: [true, 'Gift type is required'],
+    enum: ['personalisedGift', 'coperateGift'],
+    default: 'personalisedGift'
+  },
   productCategory: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['gift', 'bundle', 'cake'],
-    lowercase: true
+    lowercase: true,
+    trim: true,
+    maxlength: [50, 'Product category cannot exceed 50 characters']
   },
   productMRP: {
     type: Number,
@@ -88,17 +95,6 @@ const ProductSchema = new mongoose.Schema({
     enum: ['non-customisable', 'customisable', 'heavyCustomisable'],
     default: 'non-customisable'
   },
-  customTextHeading: {
-    type: String,
-    default: '',
-    trim: true,
-    maxlength: [100, 'Custom text heading cannot exceed 100 characters']
-  },
-  numberOfCustomImages: {
-    type: Number,
-    default: 0,
-    min: [0, 'Number of custom images cannot be negative']
-  },
   images: [{
     url: {
       type: String,
@@ -117,6 +113,16 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  isVisible: {
+    type: Boolean,
+    default: true,
+    index: true
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
   stock: {
     type: Number,
     default: 0,
@@ -125,6 +131,18 @@ const ProductSchema = new mongoose.Schema({
   tags: [{
     type: String,
     trim: true
+  }],
+  colors: [{
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    hex: {
+      type: String,
+      required: true,
+      match: [/^#[0-9A-F]{6}$/i, 'Color hex must be a valid 6-digit hex color code']
+    }
   }],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
@@ -144,7 +162,7 @@ const ProductSchema = new mongoose.Schema({
 });
 
 // Indexes for better query performance
-ProductSchema.index({ productCategory: 1, isActive: 1 });
+ProductSchema.index({ giftType: 1, isActive: 1 });
 ProductSchema.index({ productName: 'text', description: 'text', tags: 'text' });
 ProductSchema.index({ createdAt: -1 });
 
@@ -165,10 +183,6 @@ ProductSchema.set('toObject', { virtuals: true });
 
 // Validation for customizable products and offers
 ProductSchema.pre('validate', function(next) {
-  if ((this.productType === 'customisable' || this.productType === 'heavyCustomisable') && !this.customTextHeading) {
-    this.invalidate('customTextHeading', 'Custom text heading is required for customizable products');
-  }
-  
   // Validate offer types
   if (this.offerType === 'percentage' && (!this.offerPercentage || this.offerPercentage <= 0)) {
     this.invalidate('offerPercentage', 'Offer percentage is required when offer type is percentage');

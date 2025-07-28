@@ -13,6 +13,7 @@ import { Equal } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import CategoryInput from "./CategoryInput";
 
 const schema = z
   .object({
@@ -41,6 +42,7 @@ const schema = z
       public_id: z.string().min(1, "Public ID is required"),
       alt: z.string().optional()
     })).min(1, "At least one product image is required"),
+    isVisible: z.boolean().optional(),
   })
   .refine(
     (data) => {
@@ -153,6 +155,7 @@ function AdminGift() {
       productType: "non-customisable",
       numberOfCustomImages: 0,
       images: [],
+      isVisible: true,
     },
   });
 
@@ -220,7 +223,7 @@ function AdminGift() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 px-5 flex flex-col gap-[26px] pt-5 border-l-2  border-solid">
         <div className="flex justify-between items-center">
           <p className="  text-nav_blue text-4xl font-poppins font-bold ">
-            Gifts Details
+            Personalized Gifts Details
           </p>
           <div className="flex gap-3">
             <button 
@@ -302,33 +305,17 @@ function AdminGift() {
               name="productCategory"
               control={control}
               render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem className="cursor-pointer" value="gift">
-                      Gift
-                    </SelectItem>
-                    <SelectItem
-                      className="cursor-pointer"
-                      value="corporate-gifts"
-                    >
-                      Corporate Gifts
-                    </SelectItem>
-                    <SelectItem className="cursor-pointer" value="cakes">
-                      Cakes
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <CategoryInput
+                  value={field.value || ''}
+                  onChange={field.onChange}
+                  error={errors.productCategory?.message}
+                  placeholder="Type or select a category (e.g., lamp, mug, frame)"
+                />
               )}
             />
-            {errors.productCategory && (
-              <p className="text-red-500">{errors.productCategory.message}</p>
-            )}
+            <p className="text-xs text-gray-500">
+              Start typing to see suggestions, or type a new category to add it to the list.
+            </p>
           </div>
         </div>
 
@@ -504,6 +491,38 @@ function AdminGift() {
           {errors.productType && (
             <p className="text-red-500">{errors.productType.message}</p>
           )}
+        </div>
+
+        {/* Product Visibility Toggle */}
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-base font-light">Product Visibility</p>
+          <Controller
+            name="isVisible"
+            control={control}
+            render={({ field }) => (
+              <div className="flex items-center space-x-3">
+                <button
+                  type="button"
+                  onClick={() => field.onChange(!field.value)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+                    field.value ? 'bg-[#8300FF]' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                      field.value ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className="font-poppins text-sm text-gray-700">
+                  {field.value ? 'Visible on frontend' : 'Hidden from frontend'}
+                </span>
+              </div>
+            )}
+          />
+          <p className="font-poppins text-xs text-gray-500">
+            Toggle to control whether this product appears on the website
+          </p>
         </div>
 
         {(productType === "customisable" ||

@@ -15,7 +15,7 @@ const CustomerTestimonies = ({
 
   useEffect(() => {
     fetchTestimonies();
-  }, [limit, randomize]);
+  }, [limit, randomize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTestimonies = async () => {
     try {

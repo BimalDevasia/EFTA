@@ -98,7 +98,7 @@ function Navbar() {
           <svg
             className={`w-20 h-16 transition-colors duration-300 ${
               selPage === "/"
-                ? shouldShowBackground ? "fill-[#1F76BD]" : "fill-[#1F76BD]"
+                ? shouldShowBackground ? "fill-[#F46782]" : "fill-[#F46782]"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
@@ -126,7 +126,7 @@ function Navbar() {
                   : ""
               } ${
                 selPage === "/"
-                  ? shouldShowBackground ? "border-[#1F76BD]" : "border-[#1F76BD]"
+                  ? shouldShowBackground ? "border-[#F46782]" : "border-[#F46782]"
                   : selPage === "/product"
                   ? pathSegments.length === 1
                     ? "border-black"
@@ -177,7 +177,7 @@ function Navbar() {
           <svg
             className={`w-16 h-12 transition-colors duration-300 ${
               selPage === "/"
-                ? shouldShowBackground ? "fill-[#1F76BD]" : "fill-[#1F76BD]"
+                ? shouldShowBackground ? "fill-[#F46782]" : "fill-[#F46782]"
                 : selPage === "/product"
                 ? pathSegments.length === 1
                   ? "fill-black"
@@ -197,7 +197,9 @@ function Navbar() {
         
         <BsFilterLeft
           className={`w-10 h-10 ${isOpen ? "opacity-0" : "opacity-100"} transition-all duration-300 ${
-            shouldShowBackground ? "text-[#1F76BD]" : "text-[#1F76BD]"
+            selPage === "/"
+              ? shouldShowBackground ? "text-[#F46782]" : "text-[#F46782]"
+              : shouldShowBackground ? "text-[#1F76BD]" : "text-[#1F76BD]"
           } cursor-pointer`}
           onClick={() => setIsOpen(true)}
           aria-label="Open navigation menu"
@@ -238,7 +240,9 @@ function Navbar() {
              <div className="w-full flex justify-between items-center">
             <Link href="/" aria-label="EFTA Home">
               <svg
-                className={`w-16 h-12 fill-[#1F76BD] `}
+                className={`w-16 h-12 ${
+                  selPage === "/" ? "fill-[#F46782]" : "fill-[#1F76BD]"
+                } `}
                 viewBox="0 0 121 54"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -252,7 +256,9 @@ function Navbar() {
 
            <RxCross2 
              ref={closeButtonRef}
-             className={`w-10 h-10 ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 text-[#1F76BD] cursor-pointer`}  
+             className={`w-10 h-10 ${isOpen ? "opacity-100" : "opacity-0"} transition-all duration-300 ${
+               selPage === "/" ? "text-[#F46782]" : "text-[#1F76BD]"
+             } cursor-pointer`}  
              onClick={handleMobileNavClose}
              aria-label="Close navigation menu"
              role="button"

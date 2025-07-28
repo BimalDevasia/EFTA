@@ -19,7 +19,13 @@ const ProductPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/gift/${params.productid}`);
+        
+        // Extract the actual product ID from the URL parameter
+        // URL format: /product/673a5b8c123456789-coffee-mug
+        // We need just the ID part before the first hyphen
+        const actualProductId = params.productid.split('-')[0];
+        
+        const response = await fetch(`/api/products/${actualProductId}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -29,7 +35,7 @@ const ProductPage = () => {
         }
         
         const data = await response.json();
-        setProduct(data.gift);
+        setProduct(data.product);
       } catch (err) {
         setError(err.message);
         console.error('Error fetching product:', err);
@@ -50,16 +56,16 @@ const ProductPage = () => {
       href: "/gifts",
     },
     {
-      name: product?.productCategory ? 
-        product.productCategory.charAt(0).toUpperCase() + product.productCategory.slice(1) : 
-        "Category",
-      href: `/gifts/${product?.productCategory || ''}`,
+      name: product?.giftType ? 
+        (product.giftType === 'personalisedGift' ? 'Personalised Gift' : 'Corporate Gift') : 
+        "Personalised Gift",
+      href: `/gifts/${product?.giftType === 'coperateGift' ? 'corporate' : 'personalised-gift'}`,
     },
   ];
 
   if (loading) {
     return (
-      <Wrapper className="pt-32 pb-[100px]">
+      <Wrapper className="pt-32 pb-[100px] px-8">
         <div className="flex justify-center items-center h-[400px]">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
         </div>
@@ -69,7 +75,7 @@ const ProductPage = () => {
 
   if (error || !product) {
     return (
-      <Wrapper className="pt-32 pb-[100px]">
+      <Wrapper className="pt-32 pb-[100px] px-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
             {error === 'Product not found' ? 'Product Not Found' : 'Something went wrong'}
@@ -102,23 +108,23 @@ const ProductPage = () => {
           )}
         </Head>
       )}
-      <Wrapper className="pt-32 pb-[100px] space-y-[100px]">
+      <Wrapper className="pt-32 pb-[100px] space-y-[100px] px-8">
         <div className="space-y-[30px]">
           <Breadcrumb links={links} />
           <ProductDetails product={product} />
         </div>
         <div>
           <div className="flex justify-between items-center">
-            <h2 className="pl-6">
-              <SpecialText>Similar Products</SpecialText>
+            <h2 className="text-2xl lg:text-3xl font-bold text-[#8B5CF6]">
+              Similar Products
             </h2>
-            <Link href="/products">
-              <SpecialText className="text-[24px]">View All</SpecialText>
+            <Link href="/products" className="text-lg lg:text-xl font-semibold text-[#8B5CF6] hover:text-[#7C3AED] transition-colors">
+              View All
             </Link>
           </div>
           <NormalCardCarousal 
             excludeId={product._id} 
-            category={product.productCategory}
+            category={product.giftType}
             limit={8}
           />
         </div>

@@ -1,139 +1,8 @@
-"use client";
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Link from "next/link";
-import { optimizeCloudinaryImage } from "@/lib/imageUtils";
-import { CarouselSkeletonLoader } from "@/components/ui/product-skeleton";
 
-function NormalCardCarousal({ excludeId = null, category = null, limit = 20 }) {
-  const [gifts, setGifts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchGifts = async () => {
-      try {
-        setLoading(true);
-        
-        // If excludeId is provided, use the similar products API for better matching
-        if (excludeId) {
-          const response = await fetch(`/api/products/similar?productId=${excludeId}&limit=${limit}`);
-          if (!response.ok) {
-            console.error('Similar products API failed, falling back to regular API');
-            // Fallback to regular API if similar products fails
-            const fallbackResponse = await fetch(`/api/products?limit=${limit}`);
-            if (!fallbackResponse.ok) throw new Error('Failed to fetch products');
-            const fallbackData = await fallbackResponse.json();
-            
-            // Filter out the current product
-            const filteredGifts = fallbackData.products.filter(gift => String(gift._id) !== String(excludeId));
-            setGifts(filteredGifts);
-          } else {
-            const data = await response.json();
-            setGifts(data.products || []);
-          }
-        } else {
-          // Build query parameters for regular product fetching
-          let queryParams = `?limit=${limit}`;
-          if (category === 'gift' || category === 'personalisedGift') {
-            // For featured gifts, we want personalised gift type that are visible and featured
-            queryParams += `&category=personalisedGift&visible=true&featured=true`;
-          } else if (category === 'coperateGift') {
-            queryParams += `&category=coperateGift`;
-          } else if (category) {
-            // For backward compatibility, treat other categories as giftType
-            queryParams += `&category=${encodeURIComponent(category)}`;
-          }
-          
-          const response = await fetch(`/api/products${queryParams}`);
-          if (!response.ok) throw new Error('Failed to fetch products');
-          const data = await response.json();
-          
-          setGifts(data.products || []);
-        }
-      } catch (err) {
-        setError(err.message);
-        console.error('Error fetching products:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGifts();
-  }, [excludeId, category, limit]);
-
-  if (loading) {
-    return (
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full"
-      >
-        <CarouselSkeletonLoader count={4} />
-      </Carousel>
-    );
-  }
-
-  if (error || !gifts.length) {
-    return (
-      <div className="text-center text-gray-500 py-8">
-        {error ? `Error: ${error}` : 'No products available at the moment'}
-      </div>
-    );
-  }
-
-  return (
-    <Carousel
-      opts={{
-        align: "start",
-      }}
-      className="w-full"
-    >
-      <CarouselContent className="py-6">
-        {gifts.map((gift) => {
-          // Calculate the actual display price
-          const actualPrice = gift.offerPrice || 
-            (gift.offerPercentage > 0 ? 
-              Math.round(gift.productMRP * (100 - gift.offerPercentage) / 100) : 
-              gift.productMRP);
-          
-          return (
-            <CarouselItem
-              key={gift._id}
-              className="basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-6 last-of-type:pr-6 first-of-type:pl-10"
-            >
-              <CarousalCard
-                id={gift._id}
-                name={gift.productName}
-                desc={gift.description}
-                price={actualPrice}
-                originalPrice={gift.offerPercentage > 0 ? gift.productMRP : null}
-                offerPercentage={gift.offerPercentage}
-                productType={gift.productType}
-                image={gift.images && gift.images.length > 0 ? 
-                  optimizeCloudinaryImage(gift.images[0].url, { width: 400, height: 360, crop: 'fill' }) : 
-                  null}
-                imageAlt={gift.images && gift.images.length > 0 ? gift.images[0].alt || gift.productName : gift.productName}
-              />
-            </CarouselItem>
-          );
-        })}
-      </CarouselContent>
-      <CarouselPrevious className="lg:left-0 left-5 -translate-x-1/2" disappear />
-      <CarouselNext className="lg:right-0 right-5  translate-x-1/2" disappear />
-    </Carousel>
-  );
-}
-
-const CarousalCard = ({
+const UniversalProductCard = ({
   id,
   name,
   desc,
@@ -200,6 +69,7 @@ const CarousalCard = ({
               )}
             </div>
             
+            {/* Enhanced Loading State with Spinner */}
             {imageLoading && !imageError && (
               <div className="absolute inset-0 bg-gray-100 rounded-[10.5px]">
                 <div className="w-full h-full bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse rounded-[10.5px]"></div>
@@ -220,6 +90,7 @@ const CarousalCard = ({
               onError={(e) => {
                 setImageLoading(false);
                 setImageError(true);
+                // Enhanced Cloudinary fallback logic
                 if (image && image.includes('cloudinary.com') && image.includes('/w_')) {
                   const originalUrl = image.replace(/\/w_\d+,h_\d+,c_\w+,q_\w+,f_\w+/, '');
                   e.target.src = originalUrl;
@@ -243,7 +114,7 @@ const CarousalCard = ({
               {truncateText(desc, 60)}
             </p>
 
-            {/* Price Container */}
+            {/* Price Container - Enhanced with Savings Display */}
             <div className="space-y-2 mt-auto">
               {/* Price */}
               <div className="flex items-center gap-2 flex-wrap">
@@ -261,6 +132,8 @@ const CarousalCard = ({
                   </span>
                 )}
               </div>
+              
+              {/* Savings Display - The key enhancement from Featured Section */}
               {originalPrice && originalPrice > price && (
                 <div className="text-[10px] text-green-600 font-medium">
                   You save ₹{originalPrice - price}
@@ -274,4 +147,4 @@ const CarousalCard = ({
   );
 };
 
-export default NormalCardCarousal;
+export default UniversalProductCard;

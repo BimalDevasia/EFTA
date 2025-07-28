@@ -1,13 +1,13 @@
 import React from 'react'
 import Image from 'next/image'
 import './homeFront.css'
-function offers() {
+function Offers() {
 
   const offers=[
     {title:"Luxury Gift Hampers",discount:"20",src:"/gift.png"},
   ]
   return (
-    <div className='px-10 lg:px-8 w-full min-h-screen overflow-hidden flex flex-col gap-8 items-center pb-10'>
+    <div className='px-10 lg:px-8 w-full overflow-hidden flex flex-col gap-8 items-center pb-10 py-16'>
       <div>
         <div className='text-3xl font-semibold font-poppins text-[#1F76BD] pb-10 '>Grab some Offers</div>
         <div className='grid lg:grid-rows-[repeat(2,170px)] grid-rows-[repeat(4,115px)] grid-cols-[repeat(2,155px)] lg:grid-cols-[repeat(5,232px)] gap-5'>
@@ -128,4 +128,4 @@ function offers() {
   )
 }
 
-export default offers
+export default Offers
