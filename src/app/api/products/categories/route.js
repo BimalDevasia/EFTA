@@ -3,7 +3,7 @@ import connectDB from '@/lib/mongoose';
 import ProductCategory from '@/lib/models/productCategory';
 import { verifyAdmin } from '@/lib/auth-helpers';
 
-// GET - Fetch all active product categories
+// GET - Fetch all active product categories (optimized)
 export async function GET(request) {
   try {
     await connectDB();
@@ -20,12 +20,16 @@ export async function GET(request) {
         { displayName: { $regex: search, $options: 'i' } }
       ];
     }
-    
-    // Get categories sorted by product count (most used first) and then alphabetically
-    const categories = await ProductCategory.find(query)
+
+    // Use lean() for better performance and limit fields
+    const categories = await ProductCategory.find(query, {
+      name: 1,
+      displayName: 1,
+      productCount: 1
+    })
       .sort({ productCount: -1, name: 1 })
-      .select('name displayName productCount')
-      .lean();
+      .lean()
+      .limit(50); // Limit to prevent excessive data transfer
     
     // Extract just the display names for the dropdown
     const categoryNames = categories.map(cat => cat.displayName);
@@ -33,30 +37,32 @@ export async function GET(request) {
     // Add some default categories if no categories exist yet
     if (categoryNames.length === 0) {
       const defaultCategories = [
-        { name: 'lamp', displayName: 'Lamp' },
-        { name: 'bulb', displayName: 'Bulb' },
-        { name: 'bundle', displayName: 'Bundle' },
-        { name: 'cake', displayName: 'Cake' },
-        { name: 'mug', displayName: 'Mug' },
-        { name: 'frame', displayName: 'Frame' },
-        { name: 'wallet', displayName: 'Wallet' },
-        { name: 'keychain', displayName: 'Keychain' },
-        { name: 'tshirt', displayName: 'T-Shirt' },
-        { name: 'cushion', displayName: 'Cushion' }
+        'Lamp', 'Bulb', 'Bundle', 'Cake', 'Mug', 
+        'Frame', 'Wallet', 'Keychain', 'T-Shirt', 'Cushion'
       ];
       
       return NextResponse.json({
         success: true,
-        categories: defaultCategories.map(cat => cat.displayName),
-        categoriesData: defaultCategories
+        categories: defaultCategories,
+        categoriesData: defaultCategories.map(name => ({ 
+          name: name.toLowerCase(), 
+          displayName: name,
+          productCount: 0 
+        }))
       });
     }
     
-    return NextResponse.json({
+    // Set cache headers for better performance
+    const response = NextResponse.json({
       success: true,
       categories: categoryNames,
       categoriesData: categories
     });
+    
+    // Cache for 5 minutes
+    response.headers.set('Cache-Control', 'public, max-age=300, s-maxage=300');
+    
+    return response;
     
   } catch (error) {
     console.error('Error fetching categories:', error);

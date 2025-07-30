@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import ModalProvider from "@/components/ModalProvider";
 import { Toaster } from "react-hot-toast";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import Script from "next/script";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -51,27 +53,33 @@ export default function RootLayout({ children }) {
       <link rel="icon" href="./logo.svg" />
       </head>
       <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable} overflow-x-hidden`}>
-        <div className="w-full overflow-x-hidden">
-        <ConditionalNavbar/>
-        {children}
-        <ModalProvider />
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-            success: {
-              duration: 3000,
-              theme: {
-                primary: '#4aed88',
-              },
-            },
-          }}
+        <Script
+          src="/js/chunkErrorHandler.js"
+          strategy="beforeInteractive"
         />
-        </div>
+        <ErrorBoundary>
+          <div className="w-full overflow-x-hidden">
+          <ConditionalNavbar/>
+          {children}
+          <ModalProvider />
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+              success: {
+                duration: 3000,
+                theme: {
+                  primary: '#4aed88',
+                },
+              },
+            }}
+          />
+          </div>
+        </ErrorBoundary>
       </body>
     </html>
   );

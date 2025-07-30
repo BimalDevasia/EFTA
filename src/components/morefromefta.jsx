@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 function Morefromefta() {
   return (
@@ -31,7 +32,7 @@ function Morefromefta() {
                 T-shirt, ID cards, Cap, Notepad.... and a lot <br />
                 more with best price with EFTA. <br />
                 Show your Brand everywhere.</div>
-                <p className='text-base text-[#1F76BD] font-poppins font-semibold '> Know more</p>
+                <Link href='/eventpg' className='text-base text-[#1F76BD] font-poppins font-semibold cursor-pointer'> Know more</Link>
             </div>
         </div>
         <div className='flex w-full lg:gap-0 gap-4 mb-10 '>
@@ -42,7 +43,7 @@ function Morefromefta() {
                 T-shirt, ID cards, Cap, Notepad.... and a lot <br />
                 more with best price with EFTA. <br />
                 Show your Brand everywhere.</div>
-                <p className='text-base text-[#1F76BD] font-poppins font-semibold '> Know more</p>
+                <Link href='/courses' className='text-base text-[#1F76BD] font-poppins font-semibold cursor-pointer'> Know more</Link>
             </div>
             <div className='flex justify-end w-2/5'>
                 <Image 

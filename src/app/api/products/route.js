@@ -12,6 +12,7 @@ export async function GET(request) {
     
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    const giftType = searchParams.get('giftType');
     const tags = searchParams.get('tags');
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
@@ -22,9 +23,18 @@ export async function GET(request) {
     
     let query = {};
     
-    // Filter by category (now giftType)
-    if (category && category !== 'all') {
+    // Filter by giftType
+    if (giftType && giftType !== 'all') {
+      query.giftType = giftType;
+    }
+    
+    // Filter by product category
+    if (category && category !== 'all' && !giftType) {
+      // If no giftType specified, treat category as giftType for backward compatibility
       query.giftType = category;
+    } else if (category && category !== 'all' && giftType) {
+      // If both specified, use category as productCategory
+      query.productCategory = category;
     }
     
     // Filter by visibility

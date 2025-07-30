@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import './homeFront.css'
 function Offers() {
 
@@ -36,7 +37,9 @@ function Offers() {
                   <p className='lg:text-2xl text-xs font-medium font-poppins'>LOVE AT FIRST BITE</p>
                   <p className='lg:text-[16px]  text-[8px] font-medium font-poppins'>Taste the Best Homemade cakes from EFTA CAKES. Celebrate the best Moments with some sweetness. </p>
                 </div>
-                <button className='bg-white shadow-white-button py-4 px-12 rounded-[100px] text-primary_color font-semibold text-[20px] w-52 font-poppins'>Order Now</button>
+                <Link href="/products?giftType=personalisedGift&category=cake&visible=true&hideCategoryFilter=true">
+                  <button className='bg-white shadow-white-button py-4 px-12 rounded-[100px] text-primary_color font-semibold text-[20px] w-52 font-poppins'>Order Now</button>
+                </Link>
 
               </div>
               <Image 

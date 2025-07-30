@@ -12,7 +12,7 @@ const FeaturedGiftSection = () => {
           <h2 className="lg:pl-6">
             <SpecialText className="text-3xl">Featured Gifts</SpecialText>
           </h2>
-          <Link href="/products?category=personalisedGift&featured=true&visible=true">
+          <Link href="/products?giftType=personalisedGift&featured=true&visible=true&hideCategoryFilter=true&title=Featured%20Gifts">
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>

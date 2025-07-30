@@ -1,5 +1,16 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+// Cache for categories to avoid repeated API calls
+let categoriesCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Default categories for immediate display
+const DEFAULT_CATEGORIES = [
+  'Lamp', 'Bulb', 'Bundle', 'Cake', 'Mug', 'Frame', 
+  'Wallet', 'Keychain', 'T-Shirt', 'Cushion'
+];
 
 const CategoryInput = ({ 
   value, 
@@ -8,48 +19,68 @@ const CategoryInput = ({
   placeholder = "Enter or select a category",
   className = ""
 }) => {
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState(DEFAULT_CATEGORIES);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
 
-  // Fetch existing categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/products/categories', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        
-        if (response.ok) {
-          console.log('CategoryInput: Fetched categories:', data.categories);
-          setSuggestions(data.categories || []);
-        } else {
-          console.error('Failed to fetch categories:', data.error);
-          // Set some default categories if API fails
-          const defaultCategories = ['Lamp', 'Bulb', 'Bundle', 'Cake', 'Mug', 'Frame', 'Wallet', 'Keychain', 'T-Shirt', 'Cushion'];
-          setSuggestions(defaultCategories);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        // Set some default categories if network fails
-        const defaultCategories = ['Lamp', 'Bulb', 'Bundle', 'Cake', 'Mug', 'Frame', 'Wallet', 'Keychain', 'T-Shirt', 'Cushion'];
-        setSuggestions(defaultCategories);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
+  // Check if cache is still valid
+  const isCacheValid = useCallback(() => {
+    return categoriesCache && 
+           cacheTimestamp && 
+           (Date.now() - cacheTimestamp) < CACHE_DURATION;
   }, []);
+
+  // Fetch existing categories with caching
+  const fetchCategories = useCallback(async () => {
+    // Return cached data if valid
+    if (isCacheValid()) {
+      setSuggestions(categoriesCache);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/products/categories', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        const categories = data.categories || DEFAULT_CATEGORIES;
+        
+        // Update cache
+        categoriesCache = categories;
+        cacheTimestamp = Date.now();
+        
+        setSuggestions(categories);
+        console.log('CategoryInput: Fetched and cached categories:', categories.length);
+      } else {
+        console.error('Failed to fetch categories:', data.error);
+        setSuggestions(DEFAULT_CATEGORIES);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setSuggestions(DEFAULT_CATEGORIES);
+    } finally {
+      setLoading(false);
+    }
+  }, [isCacheValid]);
+
+  // Fetch categories on mount, but only if cache is invalid
+  useEffect(() => {
+    if (isCacheValid()) {
+      setSuggestions(categoriesCache);
+    } else {
+      fetchCategories();
+    }
+  }, [fetchCategories, isCacheValid]);
 
   // Filter suggestions based on input
   useEffect(() => {
@@ -64,22 +95,20 @@ const CategoryInput = ({
     }
   }, [value, suggestions]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const inputValue = e.target.value;
-    console.log('CategoryInput: Value changed to:', inputValue);
     onChange(inputValue);
     setShowSuggestions(true);
-  };
+  }, [onChange]);
 
-  const handleSuggestionClick = (suggestion) => {
-    console.log('CategoryInput: Suggestion clicked:', suggestion);
+  const handleSuggestionClick = useCallback((suggestion) => {
     onChange(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
-  };
+  }, [onChange]);
 
-  // Function to create a new category
-  const createNewCategory = async (categoryName) => {
+  // Function to create a new category (optimized)
+  const createNewCategory = useCallback(async (categoryName) => {
     try {
       const response = await fetch('/api/products/categories', {
         method: 'POST',
@@ -88,60 +117,76 @@ const CategoryInput = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: categoryName,
-          displayName: categoryName
+          name: categoryName.toLowerCase().trim(),
+          displayName: categoryName.trim()
         })
       });
       
       const data = await response.json();
       if (response.ok) {
         console.log('CategoryInput: New category created:', data.category);
-        // Refresh categories list
-        setSuggestions(prev => [...prev, categoryName].sort());
+        
+        // Update cache immediately
+        const newCategory = categoryName.trim();
+        const updatedCategories = [...(categoriesCache || suggestions), newCategory].sort();
+        categoriesCache = updatedCategories;
+        cacheTimestamp = Date.now();
+        setSuggestions(updatedCategories);
+        
+        return true;
       } else {
         console.error('Failed to create category:', data.error);
+        return false;
       }
     } catch (error) {
       console.error('Error creating category:', error);
+      return false;
     }
-  };
+  }, [suggestions]);
 
-  const handleNewCategoryAdd = (categoryName) => {
+  const handleNewCategoryAdd = useCallback((categoryName) => {
     console.log('CategoryInput: Adding new category:', categoryName);
+    const trimmedName = categoryName.trim();
+    
     // Add to local suggestions immediately for better UX
     setSuggestions(prev => {
-      if (!prev.some(cat => cat.toLowerCase() === categoryName.toLowerCase())) {
-        return [...prev, categoryName].sort();
+      const exists = prev.some(cat => cat.toLowerCase() === trimmedName.toLowerCase());
+      if (!exists) {
+        const updated = [...prev, trimmedName].sort();
+        // Update cache too
+        categoriesCache = updated;
+        cacheTimestamp = Date.now();
+        return updated;
       }
       return prev;
     });
     
     // Create in database (fire and forget for better UX)
-    createNewCategory(categoryName);
+    createNewCategory(trimmedName);
     
     // Set the value and hide suggestions
-    onChange(categoryName);
+    onChange(trimmedName);
     setShowSuggestions(false);
-  };
+  }, [onChange, createNewCategory]);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape') {
       setShowSuggestions(false);
     }
-  };
+  }, []);
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     setShowSuggestions(true);
-  };
+  }, []);
 
-  const handleBlur = (e) => {
+  const handleBlur = useCallback((e) => {
     // Delay hiding suggestions to allow for click events
     setTimeout(() => {
       if (!suggestionsRef.current?.contains(e.relatedTarget)) {
         setShowSuggestions(false);
       }
     }, 150);
-  };
+  }, []);
 
   return (
     <div className="relative">
@@ -205,4 +250,4 @@ const CategoryInput = ({
   );
 };
 
-export default CategoryInput;
+export default React.memo(CategoryInput);

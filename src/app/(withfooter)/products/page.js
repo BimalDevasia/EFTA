@@ -38,44 +38,146 @@ const ProductListContent = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [categorySearchTerm, setCategorySearchTerm] = useState('');
+  const [pageTitle, setPageTitle] = useState('Products');
+  const [urlParamsProcessed, setUrlParamsProcessed] = useState(false);
+  const [skipClientFiltering, setSkipClientFiltering] = useState(false);
 
   // Hidden filters for URL parameters (not shown in UI)
   const [hiddenFilters, setHiddenFilters] = useState({
     featured: false,
     visible: false,
-    giftType: null
+    giftType: null,
+    category: null
   });
 
-  // Initialize filters from URL parameters
-  useEffect(() => {
-    const categoryParam = searchParams.get('category');
-    const typeParam = searchParams.get('type');
-    const searchParam = searchParams.get('search');
-    const priceParam = searchParams.get('price');
-    const featuredParam = searchParams.get('featured');
-    const visibleParam = searchParams.get('visible');
+  // UI control flags
+  const [hideCategoryFilter, setHideCategoryFilter] = useState(false);
 
-    if (categoryParam) setSelectedCategory(categoryParam);
-    if (typeParam) setSelectedType(typeParam);
-    if (searchParam) setSearchTerm(searchParam);
-    if (priceParam) setPriceRange(priceParam);
-    
-    // Set hidden filters for backend filtering only
-    setHiddenFilters({
-      featured: featuredParam === 'true',
-      visible: visibleParam === 'true',
-      giftType: featuredParam === 'true' && visibleParam === 'true' ? 'personalisedGift' : null
-    });
+  // Flag to track if we are loading from URL params or doing client-side filtering
+  // (already declared above)
+
+  // Initialize filters from URL parameters and fetch products in a single effect
+  useEffect(() => {
+    const fetchProductsAndSetupPage = async () => {
+      try {
+        setLoading(true);
+        setUrlParamsProcessed(false);
+        
+        // 1. Extract URL parameters
+        const categoryParam = searchParams.get('category');
+        const giftTypeParam = searchParams.get('giftType');
+        const typeParam = searchParams.get('type');
+        const searchParam = searchParams.get('search');
+        const priceParam = searchParams.get('price');
+        const featuredParam = searchParams.get('featured');
+        const visibleParam = searchParams.get('visible');
+        const hideCategoryFilterParam = searchParams.get('hideCategoryFilter');
+        const titleParam = searchParams.get('title');
+
+        console.log('🔍 DEBUG - URL params:', { 
+          category: categoryParam, 
+          giftType: giftTypeParam,
+          featured: featuredParam,
+          visible: visibleParam,
+          title: titleParam
+        });
+
+        // 2. Set UI state based on URL parameters
+        if (typeParam) setSelectedType(typeParam);
+        if (searchParam) setSearchTerm(searchParam);
+        if (priceParam) setPriceRange(priceParam);
+
+        // 3. Set page title
+        if (titleParam) {
+          setPageTitle(decodeURIComponent(titleParam));
+        } else if (featuredParam === 'true') {
+          setPageTitle('Featured Gifts');
+        } else if (categoryParam === 'cake') {
+          setPageTitle('Cakes');
+        } else {
+          setPageTitle('Products');
+        }
+
+        // Set category filter visibility
+        setHideCategoryFilter(hideCategoryFilterParam === 'true');
+
+        // Set category in UI only if not hidden and provided
+        if (categoryParam && hideCategoryFilterParam !== 'true') {
+          setSelectedCategory(categoryParam);
+        }
+        
+        // 4. Build API query parameters directly from URL parameters
+        const apiQueryParams = new URLSearchParams();
+        
+        // Add all relevant URL parameters to the API query
+        if (giftTypeParam) apiQueryParams.set('giftType', giftTypeParam);
+        if (categoryParam && hideCategoryFilterParam === 'true') apiQueryParams.set('category', categoryParam);
+        if (featuredParam === 'true') apiQueryParams.set('featured', 'true');
+        if (visibleParam === 'true') apiQueryParams.set('visible', 'true');
+        
+        // 5. Set hidden filters for UI state
+        const newHiddenFilters = {
+          featured: featuredParam === 'true',
+          visible: visibleParam === 'true',
+          giftType: giftTypeParam,
+          category: categoryParam && hideCategoryFilterParam === 'true' ? categoryParam : null
+        };
+        // If API is filtering for featured or cake, skip client filtering
+        const shouldSkipClientFiltering = (featuredParam === 'true') || (categoryParam === 'cake');
+        setSkipClientFiltering(shouldSkipClientFiltering);
+        console.log('🔍 DEBUG - API query params:', apiQueryParams.toString());
+        console.log('🔍 DEBUG - Setting hidden filters:', newHiddenFilters, 'skipClientFiltering:', shouldSkipClientFiltering);
+        setHiddenFilters(newHiddenFilters);
+
+        // 6. Fetch products with the constructed query
+        const queryString = apiQueryParams.toString();
+        const apiUrl = `/api/products${queryString ? `?${queryString}` : ''}`;
+        
+        console.log('🔍 DEBUG - Fetching products from:', apiUrl);
+        
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        if (response.ok) {
+          console.log(`🔍 DEBUG - Found ${data.products?.length || 0} products`);
+          // Set the fetched products
+          setProducts(data.products || []);
+          
+          // Set filtered products directly here rather than waiting for useEffect
+          setFilteredProducts(data.products || []);
+        } else {
+          console.error('Failed to fetch products:', data.error);
+          setProducts([]);
+          setFilteredProducts([]);
+        }
+        
+        // 7. Fetch categories
+        await fetchCategories();
+        
+        // Mark URL parameters as processed
+        setUrlParamsProcessed(true);
+        
+      } catch (error) {
+        console.error('Error in setup and fetch:', error);
+        setProducts([]);
+        setFilteredProducts([]);
+        setUrlParamsProcessed(true);  // Mark as processed even on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductsAndSetupPage();
   }, [searchParams]);
 
+  // This effect only runs for client-side filtering after initial load
   useEffect(() => {
-    fetchAllProducts();
-    fetchCategories();
-  }, [hiddenFilters]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    filterProducts();
-  }, [products, searchTerm, selectedCategory, selectedType, priceRange]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Only run client-side filtering if URL params have been processed and not skipping
+    if (urlParamsProcessed && !skipClientFiltering) {
+      console.log('🔍 DEBUG - Client-side filterProducts triggered');
+      filterProducts();
+    }
+  }, [urlParamsProcessed, skipClientFiltering, searchTerm, selectedCategory, selectedType, priceRange, products]);
 
   const fetchCategories = async () => {
     try {
@@ -128,52 +230,26 @@ const ProductListContent = () => {
     }
   };
 
-  const fetchAllProducts = async () => {
-    try {
-      setLoading(true);
-      
-      // Build query parameters based on hidden filters
-      let queryParams = '';
-      const params = [];
-      
-      if (hiddenFilters.giftType) {
-        params.push(`category=${encodeURIComponent(hiddenFilters.giftType)}`);
-      }
-      
-      if (hiddenFilters.featured) {
-        params.push('featured=true');
-      }
-      
-      if (hiddenFilters.visible) {
-        params.push('visible=true');
-      }
-      
-      if (params.length > 0) {
-        queryParams = '?' + params.join('&');
-      }
-      
-      const response = await fetch(`/api/products${queryParams}`);
-      const data = await response.json();
-      
-      if (response.ok) {
-        setProducts(data.products || []);
-      } else {
-        console.error('Failed to fetch products:', data.error);
-        setProducts([]);
-      }
-      
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filterProducts = () => {
-    let filtered = products;
+    console.log('🔍 DEBUG - filterProducts() called with:', {
+      products: products.length,
+      searchTerm,
+      selectedCategory,
+      hiddenFilters,
+      selectedType,
+      priceRange,
+      urlParamsProcessed
+    });
+    
+    let filtered = [...products]; // Create a copy to avoid mutation issues
+    
+    // If we have no products yet or URL params haven't been processed yet, or skipping client filtering, don't do any filtering
+    if (filtered.length === 0 || !urlParamsProcessed || skipClientFiltering) {
+      console.log('🔍 DEBUG - No products to filter or URL params still processing or skipping client filtering');
+      return;
+    }
 
-    // Search filter
+    // Search filter - apply text search if present
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -184,12 +260,12 @@ const ProductListContent = () => {
       );
     }
 
-    // Category filter (using productCategory field)
-    if (selectedCategory !== 'all') {
+    // Apply UI category filter only if not already filtered by URL parameters
+    if (selectedCategory !== 'all' && !hiddenFilters.category) {
       filtered = filtered.filter(product => product.productCategory === selectedCategory);
     }
 
-    // Type filter (using productType field for customization level)
+    // Apply product type filter (customization level)
     if (selectedType !== 'all') {
       filtered = filtered.filter(product => product.productType === selectedType);
     }
@@ -213,7 +289,13 @@ const ProductListContent = () => {
       });
     }
 
-    setFilteredProducts(filtered);
+    console.log(`🔍 DEBUG - Filtered products: ${filtered.length} (from ${products.length})`);
+    // Only update if we actually have products to show
+    if (filtered.length > 0 || products.length === 0) {
+      setFilteredProducts(filtered);
+    } else {
+      console.warn('⚠️ Filter removed all products. Check filter criteria.');
+    }
   };
 
   const clearFilters = () => {
@@ -245,7 +327,7 @@ const ProductListContent = () => {
             <Breadcrumb
               links={[
                 { name: "Home", href: "/" },
-                { name: "Products", href: "/products" },
+                { name: pageTitle, href: "/products" },
               ]}
             />
             
@@ -300,56 +382,58 @@ const ProductListContent = () => {
                       </div>
 
                       {/* Category Section */}
-                      <div className="mb-4">
-                        <h4 className="text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Category</h4>
-                        
-                        {/* Category Search */}
-                        <div className="relative mb-2">
-                          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
-                          <input
-                            type="text"
-                            placeholder="Search..."
-                            value={categorySearchTerm}
-                            onChange={(e) => setCategorySearchTerm(e.target.value)}
-                            className="w-full pl-7 pr-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#8300FF] focus:border-[#8300FF]"
-                          />
-                        </div>
-                        
-                        {/* Filtered Categories */}
-                        <div className="space-y-1 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                          {categories
-                            .filter(category => 
-                              category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
-                            )
-                            .map((category) => (
-                            <label
-                              key={category.value}
-                              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-xs"
-                            >
-                              <input
-                                type="radio"
-                                name="category"
-                                checked={selectedCategory === category.value}
-                                onChange={() => {
-                                  setSelectedCategory(category.value);
-                                  setCategorySearchTerm('');
-                                }}
-                                className="w-3 h-3 text-[#8300FF] border-gray-300 focus:ring-[#8300FF] focus:ring-1"
-                              />
-                              <span className="text-gray-700">{category.name}</span>
-                            </label>
-                          ))}
-                        </div>
-                        
-                        {/* No results message */}
-                        {categories.filter(category => 
-                          category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
-                        ).length === 0 && categorySearchTerm && (
-                          <div className="text-center py-2 text-gray-500 text-xs">
-                            No categories found
+                      {!hideCategoryFilter && (
+                        <div className="mb-4">
+                          <h4 className="text-xs font-medium text-gray-600 mb-2 uppercase tracking-wide">Category</h4>
+                          
+                          {/* Category Search */}
+                          <div className="relative mb-2">
+                            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3" />
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              value={categorySearchTerm}
+                              onChange={(e) => setCategorySearchTerm(e.target.value)}
+                              className="w-full pl-7 pr-2 py-1.5 border border-gray-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#8300FF] focus:border-[#8300FF]"
+                            />
                           </div>
-                        )}
-                      </div>
+                          
+                          {/* Filtered Categories */}
+                          <div className="space-y-1 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                            {categories
+                              .filter(category => 
+                                category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
+                              )
+                              .map((category) => (
+                              <label
+                                key={category.value}
+                                className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer text-xs"
+                              >
+                                <input
+                                  type="radio"
+                                  name="category"
+                                  checked={selectedCategory === category.value}
+                                  onChange={() => {
+                                    setSelectedCategory(category.value);
+                                    setCategorySearchTerm('');
+                                  }}
+                                  className="w-3 h-3 text-[#8300FF] border-gray-300 focus:ring-[#8300FF] focus:ring-1"
+                                />
+                                <span className="text-gray-700">{category.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                          
+                          {/* No results message */}
+                          {categories.filter(category => 
+                            category.name.toLowerCase().includes(categorySearchTerm.toLowerCase())
+                          ).length === 0 && categorySearchTerm && (
+                            <div className="text-center py-2 text-gray-500 text-xs">
+                              No categories found
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       {/* Price Range Section */}
                       <div className="mb-4">
@@ -418,10 +502,10 @@ const ProductListContent = () => {
           </div>
 
           {/* Active Filters Chips */}
-          {(selectedCategory !== 'all' || priceRange !== 'all' || selectedType !== 'all') && (
+          {((selectedCategory !== 'all' && !hideCategoryFilter) || priceRange !== 'all' || selectedType !== 'all') && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-gray-600">Filters:</span>
-              {selectedCategory !== 'all' && (
+              {selectedCategory !== 'all' && !hideCategoryFilter && (
                 <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#8300FF]/10 text-[#8300FF] rounded-full text-xs font-medium">
                   {categories.find(cat => cat.value === selectedCategory)?.name}
                   <button
@@ -465,6 +549,16 @@ const ProductListContent = () => {
               </button>
             </div>
           )}
+
+          {/* Page Title */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{pageTitle}</h1>
+            {hiddenFilters.featured && (
+              <p className="text-gray-600 text-sm">
+                Our handpicked collection of premium personalized gifts
+              </p>
+            )}
+          </div>
 
           {/* Results Count */}
           <div className="text-center text-gray-600">
