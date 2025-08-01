@@ -32,7 +32,8 @@ const bannerSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['home', 'gifts', 'courses', 'events', 'corporate'],
-    unique: true // Each page can have only one banner
+    unique: true, // Each page can have only one banner
+    index: true // Index already defined here, no need for separate index
   },
   buttonText: {
     type: String,
@@ -50,8 +51,7 @@ const bannerSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Create index for pageType
-bannerSchema.index({ pageType: 1 });
+// Index is already created in the schema definition
 
 // Check if model exists before creating a new one
 const Banner = mongoose.models.Banner || mongoose.model('Banner', bannerSchema);

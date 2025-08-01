@@ -7,7 +7,6 @@ import Wrapper from "../Wrapper";
 const FeaturedCorporateGiftSection = () => {
   const [hasFeaturedGifts, setHasFeaturedGifts] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [debug, setDebug] = useState(null);
 
   // Check if there are any featured corporate gifts
   useEffect(() => {
@@ -16,12 +15,6 @@ const FeaturedCorporateGiftSection = () => {
         const response = await fetch('/api/products?giftType=coperateGift&featured=true&visible=true&limit=1');
         const data = await response.json();
         setHasFeaturedGifts(data.products && data.products.length > 0);
-        setDebug({
-          success: data.success,
-          count: data.products ? data.products.length : 0,
-          sample: data.products && data.products.length > 0 ? 
-            {name: data.products[0].productName, id: data.products[0]._id} : null
-        });
       } catch (error) {
         console.error('Error checking for featured corporate gifts:', error);
         setHasFeaturedGifts(false);
@@ -33,26 +26,23 @@ const FeaturedCorporateGiftSection = () => {
     checkFeaturedGifts();
   }, []);
 
+  // Don't render the section if there are no featured corporate gifts
+  if (!isLoading && !hasFeaturedGifts) {
+    return null;
+  }
+
   return (
     <section className="py-10">
       <Wrapper>
         <div className="flex justify-between items-center px-10 lg:px-8">
           <h2 className="lg:pl-6">
-            <SpecialText className="text-3xl">
-              Featured Corporate Gifts {isLoading ? '(Loading...)' : debug && !hasFeaturedGifts ? '(Debug: No gifts found)' : ''}
-            </SpecialText>
+            <SpecialText className="text-3xl">Featured Corporate Gifts</SpecialText>
           </h2>
           <Link href="/products?giftType=coperateGift&featured=true&visible=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>
-        {/* Debug info */}
-        {debug && (
-          <div className="text-xs text-gray-500 px-8 mb-2">
-            API status: {debug.success ? 'Success' : 'Failed'}, Products: {debug.count}
-            {debug.sample && `, Sample: ${debug.sample.name} (${debug.sample.id})`}
-          </div>
-        )}
+        {/* Directly use 'coperateGift' as the giftType parameter */}
         <NormalCardCarousal category="coperateGift" />
       </Wrapper>
     </section>

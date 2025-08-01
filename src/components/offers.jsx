@@ -50,80 +50,78 @@ function Offers() {
                 className='z-10 lg:pl-5 lg:w-auto lg:h-auto w-40 h-48 lg:relative absolute right-[-15px] bottom-7'
               />
             </div>
-            <div className='relative col-span-2 bg-[#EC5601] rounded-[8px] overflow-hidden '>
-
-              {offers.map((offer,index)=>(
-                <div key={index} className=' w-1/2 h-full justify-center items-center flex flex-col gap-3'>
-
-              <div className=' absolute right-[-80px]  rounded-full bg-[#FF6C6D] w-[350px] h-[350px] flex justify-center items-center z-0'>
-              <div className=' rounded-full bg-[#FF6C6D] w-[350px] h-[350px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FF8687] w-[300px] h-[300px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FFA3A4] w-[250px] h-[250px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FFBDBD] w-[200px] h-[200px] flex justify-center items-center'></div>
-              </div>
-              </div>
-              </div>
-             
-              </div>
-
-                  <div className='text-2xl font-bold font-poppins text-white pl-8 z-10'>{offer.title}</div>
-                  <div className='text-5xl font-bold text-white font-poppins z-10'> <span className='text_stroke text-transparent text-5xl font-poppins font-bold'>{offer.discount}%</span> off</div>
-                  <Image 
-                    src={offer.src} 
-                    alt={offer.title} 
-                    width={200} 
-                    height={170} 
-                    className='absolute right-0 max-h-full' 
-                  />
+            <Link href="/products?giftType=personalisedGift&category=hamper&visible=true&hideCategoryFilter=true" legacyBehavior>
+              <a className='relative col-span-2 bg-[#EC5601] rounded-[8px] overflow-hidden cursor-pointer block group' style={{ textDecoration: 'none' }}>
+                {offers.map((offer,index)=>(
+                  <div key={index} className='w-1/2 h-full justify-center items-center flex flex-col gap-3'>
+                    <div className=' absolute right-[-80px]  rounded-full bg-[#FF6C6D] w-[350px] h-[350px] flex justify-center items-center z-0'>
+                      <div className=' rounded-full bg-[#FF6C6D] w-[350px] h-[350px] flex justify-center items-center'>
+                        <div className=' rounded-full bg-[#FF8687] w-[300px] h-[300px] flex justify-center items-center'>
+                          <div className=' rounded-full bg-[#FFA3A4] w-[250px] h-[250px] flex justify-center items-center'>
+                            <div className=' rounded-full bg-[#FFBDBD] w-[200px] h-[200px] flex justify-center items-center'></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='text-2xl font-bold font-poppins text-white pl-8 z-10'>{offer.title}</div>
+                    <div className='text-5xl font-bold text-white font-poppins z-10'> <span className='text_stroke text-transparent text-5xl font-poppins font-bold'>{offer.discount}%</span> off</div>
+                    <Image 
+                      src={offer.src} 
+                      alt={offer.title} 
+                      width={200} 
+                      height={170} 
+                      className='absolute right-0 max-h-full' 
+                    />
+                  </div>
+                ))}
+              </a>
+            </Link>
+            <Link href="/products?category=decorative&visible=true&hideCategoryFilter=true" legacyBehavior>
+              <a className='relative bg-[#FF01FF] rounded-[8px] overflow-hidden flex cursor-pointer block group' style={{ textDecoration: 'none' }}>
+                <div className=' absolute right-[-40px] bottom-[-60px] rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center z-0'>
+                  <div className=' rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center'>
+                    <div className=' rounded-full bg-[#FF8687] w-[180px] h-[180px] flex justify-center items-center'>
+                      <div className=' rounded-full bg-[#FFA3A4] w-[160px] h-[160px] flex justify-center items-center'>
+                        <div className=' rounded-full bg-[#FFBDBD] w-[140px] h-[140px] flex justify-center items-center'></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-               ))}
-              
-              </div>
-            <div className=' relative bg-[#FF01FF] rounded-[8px] overflow-hidden flex'>
-            <div className=' absolute right-[-40px] bottom-[-60px] rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center z-0'>
-              <div className=' rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FF8687] w-[180px] h-[180px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FFA3A4] w-[160px] h-[160px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#FFBDBD] w-[140px] h-[140px] flex justify-center items-center'></div>
-              </div>
-              </div>
-              </div>
-             
-              </div>
-              <div className='w-1/2 flex flex-col justify-end p-4 h-full'>
-                <p className='z-10 text-white text-2xl font-poppins font-bold'>Wall <br /> Hangings</p>
-              </div>
-              <Image 
-                src="/hanging.png" 
-                alt="Wall hanging decoration"  
-                width={120} 
-                height={140} 
-                className='absolute right-1 w-[120px] h-[140px] z-10'
-              />
-            </div>
-            <div className='relative bg-[#7A61FF] rounded-[8px] overflow-hidden p-4 z-0 '>
-
-            <div className='text-2xl font-bold text-white font-poppins '>
-              <p className='z-10'> Chocolate  <br />Treat</p>
-            </div>
-            <div className=' absolute right-[-30px] bottom-[-40px] rounded-full bg-[#8871FF] w-[180px] h-[180px] flex justify-center items-center -z-30'>
-              <div className=' rounded-full bg-[#8871FF] w-[180px] h-[180px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#9683FF] w-[160px] h-[160px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#A493FF] w-[140px] h-[140px] flex justify-center items-center'>
-              <div className=' rounded-full bg-[#BDB1FF] w-[120px] h-[120px] flex justify-center items-center'></div>
-              </div>
-              </div>
-              </div>
-             
-              </div>
-            <Image 
-              src="/chocolate.png" 
-              alt="Chocolate treat" 
-              width={100} 
-              height={100} 
-              className='absolute right-0 top-5' 
-            />
-            </div>
+                <div className='w-1/2 flex flex-col justify-end p-4 h-full'>
+                  <p className='z-10 text-white text-2xl font-poppins font-bold'>Wall <br /> Hangings</p>
+                </div>
+                <Image 
+                  src="/hanging.png" 
+                  alt="Wall hanging decoration"  
+                  width={120} 
+                  height={140} 
+                  className='absolute right-1 w-[120px] h-[140px] z-10'
+                />
+              </a>
+            </Link>
+            <Link href="/products?category=chocolate&visible=true&hideCategoryFilter=true" legacyBehavior>
+              <a className='relative bg-[#7A61FF] rounded-[8px] overflow-hidden p-4 z-0 cursor-pointer block group' style={{ textDecoration: 'none' }}>
+                <div className='text-2xl font-bold text-white font-poppins '>
+                  <p className='z-10'> Chocolate  <br />Treat</p>
+                </div>
+                <div className=' absolute right-[-30px] bottom-[-40px] rounded-full bg-[#8871FF] w-[180px] h-[180px] flex justify-center items-center -z-30'>
+                  <div className=' rounded-full bg-[#8871FF] w-[180px] h-[180px] flex justify-center items-center'>
+                    <div className=' rounded-full bg-[#9683FF] w-[160px] h-[160px] flex justify-center items-center'>
+                      <div className=' rounded-full bg-[#A493FF] w-[140px] h-[140px] flex justify-center items-center'>
+                        <div className=' rounded-full bg-[#BDB1FF] w-[120px] h-[120px] flex justify-center items-center'></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Image 
+                  src="/chocolate.png" 
+                  alt="Chocolate treat" 
+                  width={100} 
+                  height={100} 
+                  className='absolute right-0 top-5' 
+                />
+              </a>
+            </Link>
 
         </div>
         </div>

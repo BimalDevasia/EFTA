@@ -44,9 +44,11 @@ function NormalCardCarousal({ excludeId = null, category = null, limit = 20 }) {
           let queryParams = `?limit=${limit}`;
           if (category === 'gift' || category === 'personalisedGift') {
             // For featured gifts, we want personalised gift type that are visible and featured
-            queryParams += `&category=personalisedGift&visible=true&featured=true`;
+            queryParams += `&giftType=personalisedGift&visible=true&featured=true`;
           } else if (category === 'coperateGift') {
-            queryParams += `&category=coperateGift`;
+            // For corporate gifts, we want corporate gift type that are visible and featured
+            console.log('Fetching corporate gifts with params:', queryParams + '&giftType=coperateGift&visible=true&featured=true');
+            queryParams += `&giftType=coperateGift&visible=true&featured=true`;
           } else if (category) {
             // For backward compatibility, treat other categories as giftType
             queryParams += `&category=${encodeURIComponent(category)}`;

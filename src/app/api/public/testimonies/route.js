@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongoose';
 import Testimony from '@/lib/models/testimony';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Get active testimonies for public display
 export async function GET(req) {
   try {

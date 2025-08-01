@@ -94,6 +94,12 @@ const ProductListContent = () => {
           setPageTitle('Featured Gifts');
         } else if (categoryParam === 'cake') {
           setPageTitle('Cakes');
+        } else if (categoryParam === 'hamper') {
+          setPageTitle('Hamper');
+        } else if (categoryParam === 'decorative') {
+          setPageTitle('Decoratives');
+        } else if (categoryParam === 'chocolate') {
+          setPageTitle('Chocolate');
         } else {
           setPageTitle('Products');
         }
@@ -325,10 +331,10 @@ const ProductListContent = () => {
           {/* Breadcrumb, Search and Filter Section */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <Breadcrumb
-              links={[
-                { name: "Home", href: "/" },
-                { name: pageTitle, href: "/products" },
-              ]}
+                links={[
+                  { name: "Home", href: "/" },
+                  { name: pageTitle === "Hamper" ? "Hamper" : pageTitle === "Decoratives" ? "Decoratives" : pageTitle === "Chocolate" ? "Chocolate" : pageTitle, href: pageTitle === "Hamper" ? "/products?category=hamper" : pageTitle === "Decoratives" ? "/products?category=decorative" : pageTitle === "Chocolate" ? "/products?category=chocolate" : "/products" },
+                ]}
             />
             
             {/* Search and Filter Controls */}

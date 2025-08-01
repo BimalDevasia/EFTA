@@ -5,7 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CategoryInput from './CategoryInput';
 
-const AdminProducts = ({ category = 'gift' }) => {
+const AdminProducts = ({ category, categoryId }) => {
+  // Use categoryId from dynamic route if provided
+  const effectiveCategory = categoryId || category || 'gift';
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,9 +52,11 @@ const AdminProducts = ({ category = 'gift' }) => {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      // Map category to gift type
-      const giftType = category === 'corporate' ? 'coperateGift' : 'personalisedGift';
-      const response = await fetch(`/api/products?category=${giftType}`);
+      // Map category to correct API param
+      let apiCategory = effectiveCategory;
+      if (effectiveCategory === 'corporate') apiCategory = 'coperateGift';
+      if (effectiveCategory === 'gift') apiCategory = 'personalisedGift';
+      const response = await fetch(`/api/products?category=${apiCategory}`);
       const data = await response.json();
       
       if (response.ok) {
@@ -65,7 +69,7 @@ const AdminProducts = ({ category = 'gift' }) => {
     } finally {
       setLoading(false);
     }
-  }, [category]);
+  }, [effectiveCategory]);
 
   useEffect(() => {
     fetchProducts();

@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import { connectDB } from '@/lib/mongoose';
 import Admin from '@/lib/models/admin';
 
+export const dynamic = 'force-dynamic';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key';
 
 // GET - Verify token and get admin info

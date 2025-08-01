@@ -3,6 +3,8 @@ import Product from "@/lib/models/product";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
   try {
     // Connect to database
