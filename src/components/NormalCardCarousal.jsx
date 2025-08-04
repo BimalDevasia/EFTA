@@ -45,10 +45,13 @@ function NormalCardCarousal({ excludeId = null, category = null, limit = 20 }) {
           if (category === 'gift' || category === 'personalisedGift') {
             // For featured gifts, we want personalised gift type that are visible and featured
             queryParams += `&giftType=personalisedGift&visible=true&featured=true`;
-          } else if (category === 'coperateGift') {
+          } else if (category === 'corporateGift') {
             // For corporate gifts, we want corporate gift type that are visible and featured
-            console.log('Fetching corporate gifts with params:', queryParams + '&giftType=coperateGift&visible=true&featured=true');
-            queryParams += `&giftType=coperateGift&visible=true&featured=true`;
+            console.log('Fetching corporate gifts with params:', queryParams + '&giftType=corporateGift&visible=true&featured=true');
+            queryParams += `&giftType=corporateGift&visible=true&featured=true`;
+            
+            // Debug corporate gifts fetch
+            console.log('Corporate gifts URL:', `/api/products${queryParams}`);
           } else if (category) {
             // For backward compatibility, treat other categories as giftType
             queryParams += `&category=${encodeURIComponent(category)}`;

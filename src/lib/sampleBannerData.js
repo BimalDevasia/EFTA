@@ -44,7 +44,7 @@ const sampleBanners = [
     pageType: "corporate",
     buttonText: "Shop Now",
     image: {
-      url: "./coperatefront.png",
+      url: "./corporatefront.png",
       public_id: "sample_corporate_banner",
       alt: "Corporate banner"
     },

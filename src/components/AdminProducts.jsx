@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CategoryInput from './CategoryInput';
 
-const AdminProducts = ({ category, categoryId }) => {
+const AdminProducts = ({ categoryId, hideHeading = false }) => {
   // Use categoryId from dynamic route if provided
-  const effectiveCategory = categoryId || category || 'gift';
+  const effectiveCategory = categoryId || 'gift';
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,22 +50,34 @@ const AdminProducts = ({ category, categoryId }) => {
   const router = useRouter();
 
   const fetchProducts = useCallback(async () => {
+    if (!effectiveCategory) return; // Do not fetch if category is not set
+
     try {
       setLoading(true);
       // Map category to correct API param
       let apiCategory = effectiveCategory;
-      if (effectiveCategory === 'corporate') apiCategory = 'coperateGift';
-      if (effectiveCategory === 'gift') apiCategory = 'personalisedGift';
-      const response = await fetch(`/api/products?category=${apiCategory}`);
+      if (effectiveCategory === 'corporate') {
+        apiCategory = 'corporateGift';
+      }
+      if (effectiveCategory === 'gift') {
+        apiCategory = 'personalisedGift';
+      }
+      
+      const response = await fetch(`/api/products?giftType=${apiCategory}`);
       const data = await response.json();
+      console.log('API response status:', response.status);
+      console.log('API response data:', data);
       
       if (response.ok) {
+        console.log(`Fetched ${data.products?.length || 0} products for ${apiCategory}`);
         setProducts(data.products || []);
       } else {
         console.error('Failed to fetch products:', data.error);
+        setProducts([]); // Clear products on error
       }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]); // Clear products on error
     } finally {
       setLoading(false);
     }
@@ -392,9 +404,12 @@ const AdminProducts = ({ category, categoryId }) => {
       const url = editingProduct ? `/api/products/${editingProduct._id}` : '/api/products';
       const method = editingProduct ? 'PUT' : 'POST';
       
+      // Log the effective category before submitting
+      console.log(`AdminProducts: Submit - effectiveCategory: ${effectiveCategory}`);
+      
       const submitData = {
         ...formData,
-        giftType: category === 'corporate' ? 'coperateGift' : 'personalisedGift', // Set giftType based on category
+        giftType: effectiveCategory === 'corporate' ? 'corporateGift' : 'personalisedGift', // Set giftType based on category
         productMRP: parseFloat(formData.productMRP),
         offerPercentage: formData.offerType === 'percentage' ? parseFloat(formData.offerPercentage) : 0,
         offerPrice: formData.offerType === 'price' ? parseFloat(formData.offerPrice) : null,
@@ -442,6 +457,8 @@ const AdminProducts = ({ category, categoryId }) => {
   };
 
   const handleEdit = (product) => {
+    console.log('AdminProducts: handleEdit - product:', product);
+    console.log('AdminProducts: handleEdit - giftType:', product.giftType);
     setEditingProduct(product);
     setFormData({
       productId: product.productId || '',
@@ -808,11 +825,13 @@ const AdminProducts = ({ category, categoryId }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-[36px] text-[#8300FF] font-bold">
-          {category === 'gift' ? 'Personalized Gifts' : 
-           category === 'corporate' ? 'Corporate Products' : 
-           category.charAt(0).toUpperCase() + category.slice(1)} Management
-        </h1>
+        {!hideHeading && (
+          <h1 className="text-[36px] text-[#8300FF] font-bold">
+            {effectiveCategory === 'gift' ? 'Personalized Gifts' : 
+             effectiveCategory === 'corporate' ? 'Corporate Products' : 
+             effectiveCategory.charAt(0).toUpperCase() + effectiveCategory.slice(1)} Management
+          </h1>
+        )}
         <button
           onClick={() => {
             setShowAddForm(!showAddForm);

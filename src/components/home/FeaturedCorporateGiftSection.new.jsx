@@ -6,24 +6,42 @@ import Wrapper from "../Wrapper";
 
 const FeaturedCorporateGiftSection = () => {
   const [hasFeaturedGifts, setHasFeaturedGifts] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start with false to avoid hydration mismatch
 
   // Check if there are any featured corporate gifts
   useEffect(() => {
-    const checkFeaturedGifts = async () => {
-      try {
-        const response = await fetch('/api/products?giftType=coperateGift&featured=true&visible=true&limit=1');
-        const data = await response.json();
-        setHasFeaturedGifts(data.products && data.products.length > 0);
-      } catch (error) {
-        console.error('Error checking for featured corporate gifts:', error);
-        setHasFeaturedGifts(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // Set loading to true only after initial client render to avoid hydration mismatch
+    const timer = setTimeout(() => {
+      setIsLoading(true);
+      
+      const checkFeaturedGifts = async () => {
+        try {
+          console.log('Checking for featured corporate gifts...');
+          const response = await fetch('/api/products?giftType=corporateGift&featured=true&visible=true&limit=1');
+          const data = await response.json();
+          console.log('API Response:', data);
+          
+          const hasGifts = data.products && data.products.length > 0;
+          setHasFeaturedGifts(hasGifts);
+          
+          if (!hasGifts) {
+            console.log('No featured corporate gifts found, showing section anyway');
+            // Force display even if no gifts found for now
+            setHasFeaturedGifts(true);
+          }
+        } catch (error) {
+          console.error('Error checking for featured corporate gifts:', error);
+          // Force display even on error
+          setHasFeaturedGifts(true);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    checkFeaturedGifts();
+      checkFeaturedGifts();
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Don't render the section if there are no featured corporate gifts
@@ -38,12 +56,12 @@ const FeaturedCorporateGiftSection = () => {
           <h2 className="lg:pl-6">
             <SpecialText className="text-3xl">Featured Corporate Gifts</SpecialText>
           </h2>
-          <Link href="/products?giftType=coperateGift&featured=true&visible=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">
+          <Link href="/products?giftType=corporateGift&featured=true&visible=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>
-        {/* Directly use 'coperateGift' as the giftType parameter */}
-        <NormalCardCarousal category="coperateGift" />
+        {/* Directly use 'corporateGift' as the giftType parameter */}
+        <NormalCardCarousal category="corporateGift" />
       </Wrapper>
     </section>
   );

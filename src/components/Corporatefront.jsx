@@ -2,11 +2,11 @@ import React from 'react'
 import Image from 'next/image'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import "./homeFront.css"
-function Coperatefront({click}) {
+function Corporatefront({click}) {
   return (
     <div className='relative h-svh w-screen lg:mb-5 mb-10 items-center flex '>
         <Image 
-          src="/coperatefront.png" 
+          src="/corporatefront.png" 
           alt="Corporate front background" 
           fill
           className='object-cover object-center' 
@@ -25,4 +25,4 @@ function Coperatefront({click}) {
   )
 }
 
-export default Coperatefront
+export default Corporatefront

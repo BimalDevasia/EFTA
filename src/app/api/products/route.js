@@ -25,13 +25,22 @@ export async function GET(request) {
     
     // Filter by giftType
     if (giftType && giftType !== 'all') {
-      query.giftType = giftType;
+      // Special handling for corporateGift to include both spellings
+      if (giftType === 'corporateGift') {
+        query.giftType = { $in: ['corporateGift', 'coperateGift'] };
+      } else {
+        query.giftType = giftType;
+      }
     }
     
     // Filter by product category
     if (category && category !== 'all' && !giftType) {
       // If no giftType specified, treat category as giftType for backward compatibility
-      query.giftType = category;
+      if (category === 'corporate') {
+        query.giftType = { $in: ['corporateGift', 'coperateGift'] };
+      } else {
+        query.giftType = category;
+      }
     } else if (category && category !== 'all' && giftType) {
       // If both specified, use category as productCategory
       query.productCategory = category;
@@ -62,6 +71,7 @@ export async function GET(request) {
       ];
     }
     
+    // Debug log the actual MongoDB query
     const products = await Product.find(query)
       .sort({ createdAt: -1 })
       .limit(limit)

@@ -32,7 +32,7 @@ const migrateProductFields = async () => {
       
       // Map old values to new values
       if (product.type === 'corporate') {
-        newGiftType = 'coperateGift';
+        newGiftType = 'corporateGift';
       } else if (product.type === 'personalised gift') {
         newGiftType = 'personalisedGift';
       }

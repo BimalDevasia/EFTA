@@ -59,7 +59,7 @@ const ProductPage = () => {
       name: product?.giftType ? 
         (product.giftType === 'personalisedGift' ? 'Personalised Gift' : 'Corporate Gift') : 
         "Personalised Gift",
-      href: `/gifts/${product?.giftType === 'coperateGift' ? 'corporate' : 'personalised-gift'}`,
+      href: `/gifts/${product?.giftType === 'corporateGift' ? 'corporate' : 'personalised-gift'}`,
     },
   ];
 

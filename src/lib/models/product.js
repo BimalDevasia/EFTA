@@ -58,7 +58,7 @@ const ProductSchema = new mongoose.Schema({
   giftType: {
     type: String,
     required: [true, 'Gift type is required'],
-    enum: ['personalisedGift', 'coperateGift'],
+    enum: ['personalisedGift', 'corporateGift', 'coperateGift'], // Include both spellings for backward compatibility
     default: 'personalisedGift'
   },
   productCategory: {

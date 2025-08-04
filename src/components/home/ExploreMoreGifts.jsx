@@ -22,8 +22,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
         if (category) {
           queryParams += `&category=${encodeURIComponent(category)}`;
         } else {
-          // Default to gift categories for explore more section
-          queryParams += `&category=personalisedGift`;
+          // Default to personalized gift type for explore more section
+          queryParams += `&giftType=personalisedGift`;
         }
         
         // Add visible filter to only show published products
@@ -60,7 +60,9 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
             <h2 className="lg:pl-6">
               <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
             </h2>
-            <Link href="/products">
+            <Link href={category 
+              ? `/products?category=${encodeURIComponent(category)}&visible=true&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
+              : `/products?giftType=personalisedGift&visible=true&title=Personalized%20Gifts`}>
               <SpecialText className="text-sm lg:text-base">View All</SpecialText>
             </Link>
           </div>
@@ -97,7 +99,9 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
           <h2 className="lg:pl-6">
             <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
           </h2>
-          <Link href="/products">
+          <Link href={category 
+            ? `/products?category=${encodeURIComponent(category)}&visible=true&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
+            : `/products?giftType=personalisedGift&visible=true&title=Personalized%20Gifts`}>
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>

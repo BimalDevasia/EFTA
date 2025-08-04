@@ -123,15 +123,14 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <button
+              <div
                 className={cn(
                   "text-[20px] text-[#00000063] font-bold",
                   pathname.startsWith("/admin/product") && "text-[#8300FF]"
                 )}
-                href="/admin/products"
               >
                 Products
-              </button>
+              </div>
               <div className="pl-4 flex flex-col gap-1 py-5 space-y-4">
                 <Link
                   className={cn(
@@ -145,11 +144,28 @@ const Sidebar = () => {
                 <Link
                   className={cn(
                     "text-[#00000063] font-semibold",
-                    pathname === "/admin/product/corporate" && "text-[#8300FF]"
+                    (pathname === "/admin/product/corporate" || pathname === "/admin/product/corporate/") && "text-[#8300FF]"
                   )}
                   href="/admin/product/corporate"
+                  onClick={(e) => {
+                    console.log('Sidebar: Clicked on Corporate Products');
+                    console.log('Current pathname:', pathname);
+                    console.log('Target pathname:', "/admin/product/corporate");
+                    // Force navigation to ensure it works
+                    e.preventDefault();
+                    window.location.href = "/admin/product/corporate";
+                  }}
                 >
                   Corporate Products
+                </Link>
+                <Link
+                  className={cn(
+                    "text-[#00000063] font-semibold",
+                    pathname === "/admin/product/corporate-test" && "text-[#8300FF]"
+                  )}
+                  href="/admin/product/corporate-test"
+                >
+                  Corporate Test Page
                 </Link>
               </div>
             </li>
