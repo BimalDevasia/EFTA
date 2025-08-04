@@ -13,15 +13,43 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const giftType = searchParams.get('giftType');
+    const productType = searchParams.get('productType');
     const tags = searchParams.get('tags');
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
     const visible = searchParams.get('visible');
+    const showHidden = searchParams.get('showHidden'); // Admin-only parameter
     const limit = parseInt(searchParams.get('limit')) || 50;
     const page = parseInt(searchParams.get('page')) || 1;
     const skip = (page - 1) * limit;
     
+    // Check if request is from admin by checking for admin parameter
+    // This is a simple approach - in production you'd want proper JWT verification
+    const isAdminRequest = searchParams.get('adminAccess') === 'true';
+    
     let query = {};
+    
+    // SECURITY: Always filter by visibility for non-admin requests
+    // Only show visible products to regular users
+    if (!isAdminRequest) {
+      query.isVisible = true;
+      console.log('🔒 API: Non-admin request - filtering to visible products only');
+    } else {
+      console.log('👨‍💼 API: Admin request detected - can access all products');
+      // Admin requests can specify visibility
+      if (showHidden === 'true') {
+        // Admin requesting hidden items only
+        query.isVisible = false;
+        console.log('👨‍💼 API: Admin requesting hidden products only');
+      } else if (visible !== null && visible !== undefined) {
+        // Admin with explicit visibility parameter
+        query.isVisible = visible === 'true';
+        console.log(`👨‍💼 API: Admin with explicit visibility: ${visible}`);
+      } else {
+        console.log('👨‍💼 API: Admin without visibility filter - showing all products');
+      }
+      // If no visibility parameter for admin, show all items (both visible and hidden)
+    }
     
     // Filter by giftType
     if (giftType && giftType !== 'all') {
@@ -30,6 +58,17 @@ export async function GET(request) {
         query.giftType = { $in: ['corporateGift', 'coperateGift'] };
       } else {
         query.giftType = giftType;
+      }
+    }
+    
+    // Filter by productType (customisable, heavyCustomisable, non-customisable)
+    if (productType && productType !== 'all') {
+      // Handle multiple productTypes (comma-separated)
+      if (productType.includes(',')) {
+        const productTypes = productType.split(',').map(type => type.trim());
+        query.productType = { $in: productTypes };
+      } else {
+        query.productType = productType;
       }
     }
     
@@ -44,11 +83,6 @@ export async function GET(request) {
     } else if (category && category !== 'all' && giftType) {
       // If both specified, use category as productCategory
       query.productCategory = category;
-    }
-    
-    // Filter by visibility
-    if (visible !== null && visible !== undefined) {
-      query.isVisible = visible === 'true';
     }
     
     // Filter by featured status

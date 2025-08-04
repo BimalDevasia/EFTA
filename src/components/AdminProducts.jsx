@@ -63,7 +63,7 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         apiCategory = 'personalisedGift';
       }
       
-      const response = await fetch(`/api/products?giftType=${apiCategory}`);
+      const response = await fetch(`/api/products?giftType=${apiCategory}&adminAccess=true`);
       const data = await response.json();
       console.log('API response status:', response.status);
       console.log('API response data:', data);

@@ -17,7 +17,7 @@ const FeaturedCorporateGiftSection = () => {
       
       const checkFeaturedGifts = async () => {
         try {
-          const response = await fetch('/api/products?giftType=corporateGift&featured=true&visible=true&limit=1');
+          const response = await fetch('/api/products?giftType=corporateGift&featured=true&limit=1');
           const data = await response.json();
           setHasFeaturedGifts(data.products && data.products.length > 0);
           setDebug({
@@ -53,7 +53,7 @@ const FeaturedCorporateGiftSection = () => {
               </span>
             </SpecialText>
           </h2>
-          <Link href="/products?giftType=corporateGift&featured=true&visible=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">
+          <Link href="/products?giftType=corporateGift&featured=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>

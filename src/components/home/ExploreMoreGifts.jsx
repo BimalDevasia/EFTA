@@ -26,9 +26,6 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
           queryParams += `&giftType=personalisedGift`;
         }
         
-        // Add visible filter to only show published products
-        queryParams += `&visible=true`;
-        
         const response = await fetch(`/api/products${queryParams}`);
         if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
@@ -61,8 +58,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
               <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
             </h2>
             <Link href={category 
-              ? `/products?category=${encodeURIComponent(category)}&visible=true&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
-              : `/products?giftType=personalisedGift&visible=true&title=Personalized%20Gifts`}>
+              ? `/products?category=${encodeURIComponent(category)}&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
+              : `/products?giftType=personalisedGift&title=Personalized%20Gifts`}>
               <SpecialText className="text-sm lg:text-base">View All</SpecialText>
             </Link>
           </div>
@@ -100,8 +97,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
             <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
           </h2>
           <Link href={category 
-            ? `/products?category=${encodeURIComponent(category)}&visible=true&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
-            : `/products?giftType=personalisedGift&visible=true&title=Personalized%20Gifts`}>
+            ? `/products?category=${encodeURIComponent(category)}&title=${encodeURIComponent(category.charAt(0).toUpperCase() + category.slice(1))}` 
+            : `/products?giftType=personalisedGift&title=Personalized%20Gifts`}>
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>

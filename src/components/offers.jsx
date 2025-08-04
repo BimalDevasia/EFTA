@@ -37,7 +37,7 @@ function Offers() {
                   <p className='lg:text-2xl text-xs font-medium font-poppins'>LOVE AT FIRST BITE</p>
                   <p className='lg:text-[16px]  text-[8px] font-medium font-poppins'>Taste the Best Homemade cakes from EFTA CAKES. Celebrate the best Moments with some sweetness. </p>
                 </div>
-                <Link href="/products?giftType=personalisedGift&category=cake&visible=true&hideCategoryFilter=true">
+                <Link href="/products?giftType=personalisedGift&category=cake&hideCategoryFilter=true">
                   <button className='bg-white shadow-white-button py-4 px-12 rounded-[100px] text-primary_color font-semibold text-[20px] w-52 font-poppins'>Order Now</button>
                 </Link>
 
@@ -50,7 +50,7 @@ function Offers() {
                 className='z-10 lg:pl-5 lg:w-auto lg:h-auto w-40 h-48 lg:relative absolute right-[-15px] bottom-7'
               />
             </div>
-            <Link href="/products?giftType=personalisedGift&category=hamper&visible=true&hideCategoryFilter=true" legacyBehavior>
+            <Link href="/products?giftType=personalisedGift&category=hamper&hideCategoryFilter=true" legacyBehavior>
               <a className='relative col-span-2 bg-[#EC5601] rounded-[8px] overflow-hidden cursor-pointer block group' style={{ textDecoration: 'none' }}>
                 {offers.map((offer,index)=>(
                   <div key={index} className='w-1/2 h-full justify-center items-center flex flex-col gap-3'>
@@ -76,7 +76,7 @@ function Offers() {
                 ))}
               </a>
             </Link>
-            <Link href="/products?category=decorative&visible=true&hideCategoryFilter=true" legacyBehavior>
+            <Link href="/products?category=decorative&hideCategoryFilter=true" legacyBehavior>
               <a className='relative bg-[#FF01FF] rounded-[8px] overflow-hidden flex cursor-pointer block group' style={{ textDecoration: 'none' }}>
                 <div className=' absolute right-[-40px] bottom-[-60px] rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center z-0'>
                   <div className=' rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center'>
@@ -99,7 +99,7 @@ function Offers() {
                 />
               </a>
             </Link>
-            <Link href="/products?category=chocolate&visible=true&hideCategoryFilter=true" legacyBehavior>
+            <Link href="/products?category=chocolate&hideCategoryFilter=true" legacyBehavior>
               <a className='relative bg-[#7A61FF] rounded-[8px] overflow-hidden p-4 z-0 cursor-pointer block group' style={{ textDecoration: 'none' }}>
                 <div className='text-2xl font-bold text-white font-poppins '>
                   <p className='z-10'> Chocolate  <br />Treat</p>

@@ -2,6 +2,7 @@
 import React,{ useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function Portrait() {
 
@@ -34,7 +35,12 @@ function Portrait() {
           Have some beautiful moments. <br />
           
           </div>
-          <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold text-sm lg:text-base lg:w-52 w-28'>View All</button>
+          <Link 
+            href="/products?giftType=personalisedGift&productType=customisable,heavyCustomisable"
+            className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold text-sm lg:text-base lg:w-52 w-28 cursor-pointer hover:bg-opacity-90 transition-all duration-200 inline-flex items-center justify-center'
+          >
+            View All
+          </Link>
         </div>
 
 

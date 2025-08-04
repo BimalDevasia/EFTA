@@ -1,6 +1,7 @@
 'use client'
 import React,{ useState, useEffect ,forwardRef} from 'react'
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const Corperategift=forwardRef((props,ref)=> {
 
@@ -27,7 +28,9 @@ const Corperategift=forwardRef((props,ref)=> {
   <div ref={ref} className='px-10 lg:px-8 w-full  h-auto flex justify-center  flex-col items-center overflow-hidden  lg:py-32 py-12'>
   <div className='flex justify-between w-full items-center pb-6 text-[#1F76BD]'>
         <p className='font-poppins font-semibold text-3xl'>Corporate  Gifts</p>
-        <p className='font-poppins font-semibold text-sm lg:text-base'>View All</p>
+        <Link href="/products?giftType=corporateGift">
+          <p className='font-poppins font-semibold text-sm lg:text-base cursor-pointer hover:underline'>View All</p>
+        </Link>
     </div>
       <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 px-10 lg:px-8'>
         <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10'>
@@ -40,7 +43,12 @@ const Corperategift=forwardRef((props,ref)=> {
           more with best price with EFTA. <br />
           Show your Brand everywhere.
           </div>
-          <button className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold text-sm lg:text-base lg:w-52 w-28'>View All</button>
+          <Link 
+            href="/products?giftType=corporateGift"
+            className='bg-primary_color shadow-button_shadow lg:py-4 px-6  py-2 lg:px-12 rounded-[100px] text-white font-semibold text-sm lg:text-base lg:w-52 w-28 cursor-pointer hover:bg-opacity-90 transition-all duration-200 inline-flex items-center justify-center'
+          >
+            View All
+          </Link>
         </div>
 
         <div className='lg:w-[60%] w-full lg:h-full h-[200px] flex gap-4 '>
