@@ -4,7 +4,8 @@ import Link from 'next/link'
 
 function Morefromefta() {
   return (
-    <div className='px-10 lg:px-8 w-full h-auto  flex flex-col gap-20 '>
+    <div className='w-full h-auto flex flex-col gap-20'>
+      <div className='w-full max-w-[1255px] mx-auto px-10 lg:px-8'>
         <div className='w-full flex justify-center font-poppins text-xl sm:text-2xl lg:text-3xl font-semibold text-[#1F76BD]'>
                 More form EFTA
         </div>
@@ -60,6 +61,7 @@ function Morefromefta() {
                 />
             </div>
         </div>
+      </div>
     </div>
   )
 }

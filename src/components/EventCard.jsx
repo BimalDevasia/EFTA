@@ -23,7 +23,7 @@ const EventCard = React.forwardRef((props, ref) => {
     },[Items.length])
 
   return (
-    <div ref={ref} className='lg:pl-16 w-screen overflow-hidden flex lg:gap-5  gap-2 px-10 lg:px-8 lg:flex-nowrap flex-wrap '>
+    <div ref={ref} className='w-screen overflow-hidden flex lg:gap-5  gap-2 px-10 lg:px-8 lg:flex-nowrap flex-wrap '>
         {
             Items.slice(0,isMobile).map((item,index)=>(
                 <div key={index} 

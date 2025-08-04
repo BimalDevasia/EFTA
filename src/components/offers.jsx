@@ -8,8 +8,8 @@ function Offers() {
     {title:"Luxury Gift Hampers",discount:"20",src:"/gift.png"},
   ]
   return (
-    <div className='px-10 lg:px-8 w-full overflow-hidden flex flex-col gap-8 items-center pb-10 py-16'>
-      <div>
+    <div className='w-full overflow-hidden flex flex-col gap-8 items-center pb-10 py-16'>
+      <div className='w-full max-w-[1255px] mx-auto px-10 lg:px-8'>
         <div className='text-3xl font-semibold font-poppins text-[#1F76BD] pb-10 '>Grab some Offers</div>
         <div className='grid lg:grid-rows-[repeat(2,170px)] grid-rows-[repeat(4,115px)] grid-cols-[repeat(2,155px)] lg:grid-cols-[repeat(5,232px)] gap-5'>
             <div className='relative row-span-2 lg:col-span-3 col-span-2 bg-[#F85556] rounded-[8px] flex overflow-hidden'> 
@@ -124,7 +124,7 @@ function Offers() {
             </Link>
 
         </div>
-        </div>
+      </div>
     </div>
   )
 }

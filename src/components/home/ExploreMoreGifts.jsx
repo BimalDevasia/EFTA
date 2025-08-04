@@ -52,8 +52,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
   if (loading) {
     return (
       <section className="py-10">
-        <Wrapper>
-          <div className="flex justify-between items-center lg:px-0 px-10 mb-8">
+        <Wrapper className="px-10 lg:px-8">
+          <div className="flex justify-between items-center mb-8">
             <h2 className="lg:pl-6">
               <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
             </h2>
@@ -80,7 +80,7 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
   if (error || !gifts.length) {
     return (
       <section className="py-10">
-        <Wrapper>
+        <Wrapper className="px-10 lg:px-8">
           <div className="text-center text-gray-500 py-8">
             {error ? `Error: ${error}` : 'No gifts available at the moment'}
           </div>
@@ -91,8 +91,8 @@ const ExploreMoreGifts = ({ excludeId = null, category = null }) => {
 
   return (
     <section className="py-10">
-      <Wrapper>
-        <div className="flex justify-between items-center lg:px-0 px-10 mb-8">
+      <Wrapper className="px-10 lg:px-8">
+        <div className="flex justify-between items-center mb-8">
           <h2 className="lg:pl-6">
             <SpecialText className="text-3xl">Explore more Gifts</SpecialText>
           </h2>

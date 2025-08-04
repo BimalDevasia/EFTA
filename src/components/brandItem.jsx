@@ -22,12 +22,13 @@ function BrandItem() {
   }, [items.length]);
 
   return (
-    <div className='px-10 lg:px-8 w-screen  h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20 '>
-      <div className='lg:w-full w-full max-w-[1255px] bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 px-10 lg:px-8'>
-        <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10 '>
-        <div className='text-3xl font-poppins break-normal font-light'>
-          CREATE YOUR <span className='lg:text-6xl text-3xl font-caveat break-words font-bold'>BRAND ITEMS </span> FROM EFTA
-          </div>
+    <div className='w-screen h-auto flex justify-center lg:flex-row flex-col items-center overflow-hidden mb-20'>
+      <div className='w-full max-w-[1255px] mx-auto px-10 lg:px-8'>
+        <div className='w-full bg-[#FFBDCB59] lg:h-[450px] h-auto rounded-2xl flex lg:flex-row flex-col lg:gap-4 gap-10 justify-center py-9 px-10 lg:px-8'>
+          <div className='lg:w-2/5 w-full  h-full rounded-[8px]  px-2 flex flex-col justify-around lg:gap-0 gap-10 '>
+          <div className='text-3xl font-poppins break-normal font-light'>
+            CREATE YOUR <span className='lg:text-6xl text-3xl font-caveat break-words font-bold'>BRAND ITEMS </span> FROM EFTA
+            </div>
           <div className='font-poppins font-medium text-base'>
           Create your Brand showing materials like <br />
         T-shirt, ID cards, Cap, Notepad.... and a lot <br />
@@ -94,6 +95,7 @@ function BrandItem() {
 
         </div>
        
+      </div>
       </div>
     </div>
   )
