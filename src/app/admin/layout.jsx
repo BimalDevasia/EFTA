@@ -158,15 +158,7 @@ const Sidebar = () => {
                 >
                   Corporate Products
                 </Link>
-                <Link
-                  className={cn(
-                    "text-[#00000063] font-semibold",
-                    pathname === "/admin/product/corporate-test" && "text-[#8300FF]"
-                  )}
-                  href="/admin/product/corporate-test"
-                >
-                  Corporate Test Page
-                </Link>
+
               </div>
             </li>
             <li>

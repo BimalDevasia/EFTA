@@ -848,11 +848,26 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
 
       {showAddForm && (
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">
-            {editingProduct ? 'Edit Product' : 'Add New Product'}
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Product ID Field */}
+          <div className="border-b border-gray-200 pb-4 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {editingProduct ? 'Edit Product' : 'Add New Product'}
+            </h2>
+            <p className="text-sm text-gray-600">
+              {editingProduct 
+                ? 'Update the product information below and save your changes.'
+                : `Create a new ${effectiveCategory === 'gift' ? 'personalized gift' : effectiveCategory === 'corporate' ? 'corporate gift' : effectiveCategory} product by filling out the form below.`
+              }
+            </p>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Information Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Basic Information
+              </h3>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Product ID * {!editingProduct && <span className="text-xs text-gray-500">(unique identifier)</span>}
@@ -982,8 +997,16 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                 Start typing to see suggestions, or type a new category to add it to the list.
               </p>
             </div>
+            </div>
 
-            {/* Specifications Section */}
+            {/* Product Specifications Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Product Specifications
+              </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <label className="block text-sm font-medium text-gray-700">
@@ -1130,6 +1153,16 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                 </div>
               ))}
             </div>
+            </div>
+
+            {/* Pricing & Offers Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+                Pricing & Offers
+              </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -1239,6 +1272,16 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                 </select>
               </div>
             </div>
+            </div>
+
+            {/* Product Categorization Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Product Tags & Categorization  
+              </h3>
 
             {/* Tags Section */}
             <div>
@@ -1314,6 +1357,16 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                 <p className="text-red-500 text-sm mt-1">{errors.tags}</p>
               )}
             </div>
+            </div>
+
+            {/* Media & Visibility Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Product Images & Settings
+              </h3>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1416,6 +1469,7 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                 Featured products will be highlighted and promoted on the website
               </p>
             </div>
+            </div>
 
             <div className="flex gap-3">
               <button
@@ -1445,12 +1499,22 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         </div>
       )}
 
-      {/* Products List Section */}
+      {/* Products Management Section */}
       {!showAddForm && (
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">All Products ({filteredProducts.length})</h2>
+            <div>
+              <h2 className="text-xl font-bold text-gray-800 mb-1">
+                {effectiveCategory === 'gift' ? 'Personalized Gift Products' : 
+                 effectiveCategory === 'corporate' ? 'Corporate Gift Products' : 
+                 `${effectiveCategory.charAt(0).toUpperCase() + effectiveCategory.slice(1)} Products`}
+              </h2>
+              <p className="text-sm text-gray-600">
+                Manage your product inventory • {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} 
+                {searchTerm || categoryFilter !== 'all' || featuredFilter !== 'all' || visibilityFilter !== 'all' ? ' (filtered)' : ' total'}
+              </p>
+            </div>
             
             {/* Search Bar */}
             <div className="relative w-80">
