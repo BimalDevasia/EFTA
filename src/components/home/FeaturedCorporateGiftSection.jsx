@@ -49,7 +49,6 @@ const FeaturedCorporateGiftSection = () => {
               Featured Corporate Gifts
               {/* Move loading indicator to a separate element to avoid hydration issues */}
               <span className="text-sm ml-2 text-gray-500 font-normal">
-                {isLoading && '(Loading...)'}
                 {!isLoading && debug && !hasFeaturedGifts && '(No gifts found)'}
               </span>
             </SpecialText>
@@ -58,13 +57,6 @@ const FeaturedCorporateGiftSection = () => {
             <SpecialText className="text-sm lg:text-base">View All</SpecialText>
           </Link>
         </div>
-        {/* Debug info */}
-        {debug && (
-          <div className="text-xs text-gray-500 px-8 mb-2">
-            API status: {debug.success ? 'Success' : 'Failed'}, Products: {debug.count}
-            {debug.sample && `, Sample: ${debug.sample.name} (${debug.sample.id})`}
-          </div>
-        )}
         <NormalCardCarousal category="corporateGift" />
       </Wrapper>
     </section>
