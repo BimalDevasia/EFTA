@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { AuthProvider, useAuth } from "@/lib/auth";
 
 const AdminLayout = ({ children }) => {
@@ -22,6 +22,23 @@ const AuthGuard = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    setIsClient(true); // Mark that we're on the client side
+    
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 1024); // Consider anything below 1024px as mobile/tablet
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   React.useEffect(() => {
     if (!loading && !isAuthenticated && pathname !== '/admin/login') {
@@ -29,11 +46,53 @@ const AuthGuard = ({ children }) => {
     }
   }, [isAuthenticated, loading, router, pathname]);
 
-  // Show loading while checking authentication
-  if (loading) {
+  // Show loading while checking authentication or client-side rendering
+  if (loading || !isClient) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8300FF]"></div>
+      </div>
+    );
+  }
+
+  // Check mobile BEFORE authentication checks (except login page)
+  if (isClient && isMobile && pathname !== '/admin/login') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+        <div className="text-center max-w-md mx-auto">
+          <div className="mb-6">
+            <svg 
+              className="w-20 h-20 mx-auto text-[#8300FF]" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" 
+              />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">
+            Admin Access Restricted
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">
+            Please open this page on a laptop or desktop computer to access the admin panel.
+          </p>
+          <div className="bg-[#8300FF] bg-opacity-10 rounded-lg p-4 mb-4">
+            <p className="text-[#8300FF] font-semibold">
+              Admin features are optimized for larger screens and require desktop access.
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="bg-[#8300FF] text-white px-6 py-3 rounded-lg hover:bg-[#6b00cc] transition-colors"
+          >
+            Back to Home
+          </button>
+        </div>
       </div>
     );
   }
@@ -147,14 +206,6 @@ const Sidebar = () => {
                     (pathname === "/admin/product/corporate" || pathname === "/admin/product/corporate/") && "text-[#8300FF]"
                   )}
                   href="/admin/product/corporate"
-                  onClick={(e) => {
-                    console.log('Sidebar: Clicked on Corporate Products');
-                    console.log('Current pathname:', pathname);
-                    console.log('Target pathname:', "/admin/product/corporate");
-                    // Force navigation to ensure it works
-                    e.preventDefault();
-                    window.location.href = "/admin/product/corporate";
-                  }}
                 >
                   Corporate Products
                 </Link>
