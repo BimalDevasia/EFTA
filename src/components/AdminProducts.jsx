@@ -824,27 +824,15 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        {!hideHeading && (
+      {!hideHeading && (
+        <div className="flex justify-between items-center">
           <h1 className="text-[36px] text-[#8300FF] font-bold">
-            {effectiveCategory === 'gift' ? 'Personalized Gifts' : 
-             effectiveCategory === 'corporate' ? 'Corporate Products' : 
+            {effectiveCategory === 'gift' ? 'Personalized Gifts Management' : 
+             effectiveCategory === 'corporate' ? 'Corporate Gift Products Management' : 
              effectiveCategory.charAt(0).toUpperCase() + effectiveCategory.slice(1)} Management
           </h1>
-        )}
-        <button
-          onClick={() => {
-            setShowAddForm(!showAddForm);
-            if (!showAddForm) {
-              setEditingProduct(null);
-              resetForm();
-            }
-          }}
-          className="bg-[#8300FF] text-white px-4 py-2 rounded-md hover:bg-[#6b00cc] transition-colors"
-        >
-          {showAddForm ? 'Cancel' : (editingProduct ? 'Cancel Edit' : 'Add Product')}
-        </button>
-      </div>
+        </div>
+      )}
 
       {showAddForm && (
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
@@ -1506,8 +1494,8 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-xl font-bold text-gray-800 mb-1">
-                {effectiveCategory === 'gift' ? 'Personalized Gift Products' : 
-                 effectiveCategory === 'corporate' ? 'Corporate Gift Products' : 
+                {effectiveCategory === 'gift' ? 'Personalized Gifts Management' : 
+                 effectiveCategory === 'corporate' ? 'Corporate Gift Products Management' : 
                  `${effectiveCategory.charAt(0).toUpperCase() + effectiveCategory.slice(1)} Products`}
               </h2>
               <p className="text-sm text-gray-600">
@@ -1516,8 +1504,26 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
               </p>
             </div>
             
-            {/* Search Bar */}
-            <div className="relative w-80">
+            <div className="flex items-center gap-4">
+              {/* Add Product Button */}
+              <button
+                onClick={() => {
+                  setShowAddForm(!showAddForm);
+                  if (!showAddForm) {
+                    setEditingProduct(null);
+                    resetForm();
+                  }
+                }}
+                className="bg-[#8300FF] text-white px-4 py-2 rounded-md hover:bg-[#6b00cc] transition-colors flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                {showAddForm ? 'Cancel' : (editingProduct ? 'Cancel Edit' : 'Add Product')}
+              </button>
+              
+              {/* Search Bar */}
+              <div className="relative w-80">
               <input
                 type="text"
                 placeholder="Search by name, ID, category, or tags..."
@@ -1544,6 +1550,7 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
                   </svg>
                 </button>
               )}
+            </div>
             </div>
           </div>
           

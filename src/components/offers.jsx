@@ -76,7 +76,7 @@ function Offers() {
                 ))}
               </a>
             </Link>
-            <Link href="/products?category=decorative&hideCategoryFilter=true" legacyBehavior>
+            <Link href="/products?giftType=personalisedGift&category=decorative&hideCategoryFilter=true" legacyBehavior>
               <a className='relative bg-[#FF01FF] rounded-[8px] overflow-hidden flex cursor-pointer block group' style={{ textDecoration: 'none' }}>
                 <div className=' absolute right-[-40px] bottom-[-60px] rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center z-0'>
                   <div className=' rounded-full bg-[#FF6C6D] w-[200px] h-[200px] flex justify-center items-center'>
@@ -99,7 +99,7 @@ function Offers() {
                 />
               </a>
             </Link>
-            <Link href="/products?category=chocolate&hideCategoryFilter=true" legacyBehavior>
+            <Link href="/products?giftType=personalisedGift&category=chocolate&hideCategoryFilter=true" legacyBehavior>
               <a className='relative bg-[#7A61FF] rounded-[8px] overflow-hidden p-4 z-0 cursor-pointer block group' style={{ textDecoration: 'none' }}>
                 <div className='text-2xl font-bold text-white font-poppins '>
                   <p className='z-10'> Chocolate  <br />Treat</p>
