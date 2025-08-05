@@ -63,7 +63,7 @@ const DynamicWrapper = ({
         ssr: false // Disable SSR for dynamic components that might have chunk issues
       }
     );
-  }, [component, loading, retryKey]);
+  }, [component, loading]);
 
   const handleRetry = React.useCallback(() => {
     setRetryKey(prev => prev + 1);

@@ -182,7 +182,7 @@ const ProductListContent = () => {
       console.log('🔍 DEBUG - Client-side filterProducts triggered');
       filterProducts();
     }
-  }, [urlParamsProcessed, skipClientFiltering, searchTerm, selectedCategory, selectedType, priceRange, products]);
+  }, [urlParamsProcessed, skipClientFiltering, searchTerm, selectedCategory, selectedType, priceRange, products, filterProducts]);
 
   const fetchCategories = async () => {
     try {

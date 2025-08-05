@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Head from "next/head";
 import Breadcrumb from "@/components/Breadcrumb";
-import NormalCardCarousal from "@/components/NormalCardCarousal";
+import SimilarProducts from "@/components/SimilarProducts";
 import ProductDetails from "@/components/ProductDetails";
 import Wrapper from "@/components/Wrapper";
 import { SpecialText } from "@/components/typography";
@@ -131,7 +131,7 @@ const ProductPage = () => {
               View All
             </Link>
           </div>
-          <NormalCardCarousal 
+          <SimilarProducts 
             excludeId={product._id} 
             category={product.giftType}
             limit={8}

@@ -116,10 +116,10 @@ function Navbar() {
           </svg>
         </Link>
         <div className="lg:flex items-center gap-8 mr-8">
-          {items.slice(selPage === "/" ? 0 : 1).map((item, index) => (
-            <div
+          {items.map((item, index) => (
+            <Link
               key={index}
-              onClick={() => setSelPage(item.path)}
+              href={item.path}
               className={` relative text-xl ${
                 selPage === item.path
                   ? "border-x-2 border-t-2 rounded-t-2xl"
@@ -140,11 +140,10 @@ function Navbar() {
                     ? "text-black"
                     : "text-[#1F76BD]"
                   : shouldShowBackground ? "text-[#1F76BD]" : "text-white"
-              } font-semibold font-poppins px-4 py-2`}
+              } font-semibold font-poppins px-4 py-2 block cursor-pointer`}
             >
-              <div></div>
-              <Link href={item.path}>{item.id}</Link>
-            </div>
+              {item.id}
+            </Link>
           ))}
           <Link href="/cart" className="cursor-pointer relative">
           <PiShoppingCartSimpleFill
