@@ -94,7 +94,7 @@ function AboutUs() {
 
 
   return (
-    <div className=' relative w-full h-screen'>
+    <div className='relative w-full lg:h-screen md:min-h-[500px] min-h-[450px] pb-8 lg:pb-0'>
        <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-full font-italiana overflow-hidden lg:text-9xl z-50 pointer-events-none'>
         <div ref={item1} className='flex gap-32 z-50'>
         <div>EVENTS</div>
@@ -111,12 +111,12 @@ function AboutUs() {
         
       </div>
      
-    <div className='relative flex flex-col   lg:w-3/5 w-full lg:mt-0  lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-max z-20' ref={containerRef}>
+    <div className='relative flex flex-col lg:w-3/5 w-full lg:mt-0 mt-10 lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-auto py-8 lg:py-0 z-20' ref={containerRef}>
       <div className='font-poppins'>
         <p className='lg:text-5xl  text-3xl font-medium text-primary_color'>About Us</p>
         <p className='lg:w-8/12 pt-5 lg:text-xl text-xs  '>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>
         </div>
-      <div className='lg:absolute bottom-12 lg:text-3xl lg:mt-0 mt-5 text-base font-medium text-primary_color'><p>We Offer:</p>
+      <div className='lg:absolute lg:bottom-12 lg:text-3xl lg:mt-0 mt-8 text-base font-medium text-primary_color'><p>We Offer:</p>
       <div className='flex flex-wrap gap-3 font-poppins pt-5' >
             {visibleItems.map((item, index) => (
                 <div key={index} className='lg:px-9 lg:py-2 lg:h-11 px-4 py-1 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs flex items-center ' >
@@ -131,7 +131,7 @@ function AboutUs() {
         </div>
       </div>
     </div>
-    <div className='absolute  right-0 lg:top-1/2 lg:mt-0 mt-56 translate-y-[-50%] lg:w-6/12 lg:h-[70%] h-[295px] w-[90%] rounded-l-full bg-no-repeat bg-cover bg-center z-10' style={{backgroundImage:`url('./about.png')`}}>
+    <div className='absolute right-0 lg:top-1/2 top-auto bottom-0 lg:translate-y-[-50%] lg:w-6/12 lg:h-[70%] h-[295px] w-[90%] rounded-l-full bg-no-repeat bg-cover bg-center z-10' style={{backgroundImage:`url('./about.png')`}}>
 
 </div>
 
