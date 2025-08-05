@@ -11,7 +11,8 @@ export class WhatsAppService {
     message += `Name: ${customerDetails.name}\n`;
     message += `Phone: ${customerDetails.phone}\n`;
     message += `Email: ${customerDetails.email}\n`;
-    message += `Address: ${customerDetails.address}\n\n`;
+    message += `Address: ${customerDetails.address}\n`;
+    message += `Pincode: ${customerDetails.pincode}\n\n`;
     
     message += `🛒 *Order Details:*\n`;
     message += `Order ID: #ORD${Date.now()}\n`;

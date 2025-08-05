@@ -553,21 +553,6 @@ const ProductListContent = () => {
             </div>
           )}
 
-          {/* Page Title */}
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{pageTitle}</h1>
-            {hiddenFilters.featured && (
-              <p className="text-gray-600 text-sm">
-                Our handpicked collection of premium personalized gifts
-              </p>
-            )}
-          </div>
-
-          {/* Results Count */}
-          <div className="text-center text-gray-600">
-            <span className="font-medium">{filteredProducts.length}</span> products found
-          </div>
-
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => {

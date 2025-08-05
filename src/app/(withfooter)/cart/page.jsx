@@ -237,21 +237,32 @@ function Checkout({ setShowCheckout }) {
     name: "",
     email: "",
     phone: "",
-    address: ""
+    address: "",
+    pincode: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getCartSummary, clearCart } = useCart();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCustomerDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Special handling for pincode to allow only numbers
+    if (name === 'pincode') {
+      const numericValue = value.replace(/\D/g, '').slice(0, 6);
+      setCustomerDetails(prev => ({
+        ...prev,
+        [name]: numericValue
+      }));
+    } else {
+      setCustomerDetails(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const validateForm = () => {
-    const { name, phone, address } = customerDetails;
+    const { name, phone, address, pincode } = customerDetails;
     if (!name.trim()) {
       toast.error("Please enter your name");
       return false;
@@ -262,6 +273,10 @@ function Checkout({ setShowCheckout }) {
     }
     if (!address.trim()) {
       toast.error("Please enter delivery address");
+      return false;
+    }
+    if (!pincode.trim() || !/^\d{6}$/.test(pincode.trim())) {
+      toast.error("Please enter a valid 6-digit pincode");
       return false;
     }
     return true;
@@ -357,6 +372,17 @@ function Checkout({ setShowCheckout }) {
           onChange={handleInputChange}
           required
           rows={3}
+        />
+        <Input 
+          label="Pincode *" 
+          name="pincode"
+          type="text"
+          value={customerDetails.pincode}
+          onChange={handleInputChange}
+          required
+          maxLength={6}
+          inputMode="numeric"
+          placeholder="Enter 6-digit pincode"
         />
         
         <div className="flex justify-between items-center max-w-[490px] w-full pt-6">

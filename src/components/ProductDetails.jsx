@@ -258,7 +258,7 @@ const ProductDetails = ({ product }) => {
               )}
 
               {/* What's Inside Box */}
-              {product.whatsInside && product.whatsInside.length > 0 ? (
+              {product.whatsInside && product.whatsInside.length > 0 && (
                 <div className="space-y-4">
                   <h4 className="text-black text-lg font-semibold">Inside Box</h4>
                   <div className="space-y-2">
@@ -268,16 +268,6 @@ const ProductDetails = ({ product }) => {
                         <span className="text-black font-medium text-sm">1</span>
                       </div>
                     ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <h4 className="text-black text-lg font-semibold">Inside Box</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between py-1">
-                      <span className="text-gray-600 text-sm">Lamp</span>
-                      <span className="text-black font-medium text-sm">1</span>
-                    </div>
                   </div>
                 </div>
               )}
