@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 const Cardcomponent=({ className,item ,title,reverse })=> {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Animation loop effect
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(prev => (prev - 1 + 3) % 3);
-    }, 1500); // Change every 1.5 seconds
+    }, 1500);
 
     return () => clearInterval(interval);
   }, []);
@@ -26,18 +26,18 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
 
   const getImageOffset = (imageIndex, currentIndex, alignment) => {
     const offsets = [
-      alignment === "first" ? "lg:left-2 left-4" : "lg:right-2 right-4",   // Position 1
-      alignment === "first" ? "lg:left-8 left-10" : "lg:right-8 right-10", // Position 2
-      alignment === "first" ? "lg:left-16 left-24" : "lg:right-16 right-24" // Position 3
+      alignment === "first" ? "md:left-2 left-4" : "md:right-2 right-4",   // Position 1 - original desktop positioning
+      alignment === "first" ? "md:left-8 left-10" : "md:right-8 right-10", // Position 2 - original desktop positioning
+      alignment === "first" ? "md:left-16 left-24" : "md:right-16 right-24" // Position 3 - original desktop positioning
     ];
     
     const adjustedIndex = (imageIndex - currentIndex + 3) % 3;
     return offsets[adjustedIndex];
   };
   return (    
-    <div className={cn("w-full h-auto px-10 lg:px-8  flex flex-col items-center ",className)}>
+    <div className={cn("w-full h-auto px-10 md:px-8  flex flex-col items-center ",className)}>
 
-        <div className='lg:max-w-[1255px]'>
+        <div className='md:max-w-[1255px]'>
        {title&&
         <div className='w-full text-3xl font-semibold text-[#1F76BD] font-poppins pb-5  flex justify-center'>
         {title}
@@ -47,31 +47,43 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
             let alignment = index % 2 === 0 ? "second" : "first";
             if(reverse){alignment = index % 2 === 0 ? "first" : "second";}
             return(
-            <div key={index} className= {cn("max-w-full  max-h-screen flex lg:flex-row flex-col justify-center   ",alignment==="first"?"lg:flex-row-reverse":"lg:flex-row")}>
+            <div key={index} className= {cn("max-w-full  max-h-screen flex md:flex-row flex-col justify-center   ",alignment==="first"?"md:flex-row-reverse":"md:flex-row")}>
 
 
-               <div className={cn("lg:w-2/3 w-full flex lg:px-6 relative z-10",alignment==="first"?"justify-end ":"")}>    {/* outer design */}
-               <div className=" lg:w-[75%] lg:h-screen w-full   flex flex-col  justify-center bg-white relative z-10">
-                <p className='lg:text-[63px] text-[32px] font-italiana font-normal w-full text-center '>{items.title}</p>
-                <p className="lg:py-12 py-5 lg:text-xl text-xs font-normal font-poppins text-center px-8">
+               <div className={cn("md:w-2/3 w-full flex md:px-6 relative z-10",alignment==="first"?"justify-end ":"")}>    {/* outer design */}
+               <div className=" md:w-[75%] md:h-screen w-full   flex flex-col  justify-center bg-white relative z-10">
+                <p className='font-italiana font-normal w-full text-center' 
+                   style={{fontSize: 'clamp(32px, 32px + (63 - 32) * ((100vw - 768px) / (1024 - 768)), 63px)'}}>
+                  {items.title}
+                </p>
+                <p className="font-normal font-poppins text-center px-8"
+                   style={{
+                     fontSize: 'clamp(12px, 12px + (20 - 12) * ((100vw - 768px) / (1024 - 768)), 20px)',
+                     padding: 'clamp(20px, 20px + (48 - 20) * ((100vw - 768px) / (1024 - 768)), 48px) 0'
+                   }}>
                   {items.desc}
                 </p>
                 </div>
                </div>
 
                
-                 <div className='relative lg:w-1/3 lg:h-screen h-[400px] w-full z-20' >
+                 <div className='relative md:w-1/3 md:h-screen h-[400px] w-full z-20 md:flex md:items-center flex justify-center' >
+                   <div className='relative md:w-full w-[400px] md:h-full' >
                     <Image 
                       src={items.image1} 
                       alt={`${items.title} image 1`} 
                       width={512} 
                       height={351} 
                       className={cn(
-                        "absolute lg:w-[400px] lg:h-[275px] w-[255.87px] h-[175.6px] rounded-3xl transition-all duration-1000 ease-in-out",
+                        "absolute rounded-3xl transition-all duration-1000 ease-in-out",
                         getImagePosition(0, currentImageIndex).position,
                         getImagePosition(0, currentImageIndex).zIndex,
                         getImageOffset(0, currentImageIndex, alignment)
                       )}
+                      style={{
+                        width: 'clamp(255.87px, 255.87px + (400 - 255.87) * ((100vw - 768px) / (1024 - 768)), 400px)',
+                        height: 'clamp(175.6px, 175.6px + (275 - 175.6) * ((100vw - 768px) / (1024 - 768)), 275px)'
+                      }}
                       loading="lazy"
                       sizes="(max-width: 768px) 256px, 400px"
                     />
@@ -81,11 +93,15 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
                       width={512} 
                       height={351} 
                       className={cn(
-                        "absolute lg:w-[400px] lg:h-[275px] w-[255.87px] h-[175.6px] rounded-3xl transition-all duration-1000 ease-in-out",
+                        "absolute rounded-3xl transition-all duration-1000 ease-in-out",
                         getImagePosition(1, currentImageIndex).position,
                         getImagePosition(1, currentImageIndex).zIndex,
                         getImageOffset(1, currentImageIndex, alignment)
                       )}
+                      style={{
+                        width: 'clamp(255.87px, 255.87px + (400 - 255.87) * ((100vw - 768px) / (1024 - 768)), 400px)',
+                        height: 'clamp(175.6px, 175.6px + (275 - 175.6) * ((100vw - 768px) / (1024 - 768)), 275px)'
+                      }}
                       loading="lazy" 
                       sizes="(max-width: 768px) 256px, 400px"
                     />
@@ -95,14 +111,19 @@ const Cardcomponent=({ className,item ,title,reverse })=> {
                       width={512} 
                       height={351} 
                       className={cn(
-                        "absolute lg:w-[400px] lg:h-[275px] w-[255.87px] h-[175.6px] rounded-3xl transition-all duration-1000 ease-in-out",
+                        "absolute rounded-3xl transition-all duration-1000 ease-in-out",
                         getImagePosition(2, currentImageIndex).position,
                         getImagePosition(2, currentImageIndex).zIndex,
                         getImageOffset(2, currentImageIndex, alignment)
                       )}
+                      style={{
+                        width: 'clamp(255.87px, 255.87px + (400 - 255.87) * ((100vw - 768px) / (1024 - 768)), 400px)',
+                        height: 'clamp(175.6px, 175.6px + (275 - 175.6) * ((100vw - 768px) / (1024 - 768)), 275px)'
+                      }}
                       loading="lazy"
                       sizes="(max-width: 768px) 256px, 400px"
                     />
+                   </div>
                 </div>  
                
 
