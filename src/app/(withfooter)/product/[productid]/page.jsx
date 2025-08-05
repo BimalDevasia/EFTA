@@ -8,6 +8,7 @@ import ProductDetails from "@/components/ProductDetails";
 import Wrapper from "@/components/Wrapper";
 import { SpecialText } from "@/components/typography";
 import Link from "next/link";
+import { ProductDetailSkeleton } from "@/components/ui/product-skeleton";
 
 const ProductPage = () => {
   const params = useParams();
@@ -66,8 +67,16 @@ const ProductPage = () => {
   if (loading) {
     return (
       <Wrapper className="pt-32 pb-[100px] px-8">
-        <div className="flex justify-center items-center h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        <div className="space-y-[30px]">
+          {/* Breadcrumb skeleton */}
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="animate-pulse bg-gray-200 h-4 w-12 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-4 w-2 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-4 w-20 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-4 w-2 rounded"></div>
+            <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
+          </div>
+          <ProductDetailSkeleton />
         </div>
       </Wrapper>
     );

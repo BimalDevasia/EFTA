@@ -7,15 +7,14 @@ import { ChevronDown, Search, Filter, X } from "lucide-react";
 import React, { useState, useEffect, Suspense } from "react";
 import UniversalProductCard from "@/components/UniversalProductCard";
 import { useSearchParams, useRouter } from 'next/navigation';
+import { ProductListSkeleton } from "@/components/ui/product-skeleton";
 
 const ProductListPage = () => {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-white">
         <Wrapper className="pt-32 pb-12 px-10 lg:px-8">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8300FF]"></div>
-          </div>
+          <ProductListSkeleton count={12} />
         </Wrapper>
       </div>
     }>
@@ -316,9 +315,7 @@ const ProductListContent = () => {
     return (
       <div className="min-h-screen bg-white">
         <Wrapper className="pt-32 pb-12 px-10 lg:px-8">
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8300FF]"></div>
-          </div>
+          <ProductListSkeleton count={12} />
         </Wrapper>
       </div>
     );
