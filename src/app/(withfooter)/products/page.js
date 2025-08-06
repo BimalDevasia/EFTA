@@ -175,16 +175,8 @@ const ProductListContent = () => {
     fetchProductsAndSetupPage();
   }, [searchParams]);
 
-  // This effect only runs for client-side filtering after initial load
-  useEffect(() => {
-    // Only run client-side filtering if URL params have been processed and not skipping
-    if (urlParamsProcessed && !skipClientFiltering) {
-      console.log('🔍 DEBUG - Client-side filterProducts triggered');
-      filterProducts();
-    }
-  }, [urlParamsProcessed, skipClientFiltering, searchTerm, selectedCategory, selectedType, priceRange, products, filterProducts]);
-
   const fetchCategories = async () => {
+    // Fetch categories for filtering
     try {
       const response = await fetch('/api/products/categories');
       const data = await response.json();
@@ -302,6 +294,15 @@ const ProductListContent = () => {
       console.warn('⚠️ Filter removed all products. Check filter criteria.');
     }
   };
+
+  // This effect only runs for client-side filtering after initial load
+  useEffect(() => {
+    // Only run client-side filtering if URL params have been processed and not skipping
+    if (urlParamsProcessed && !skipClientFiltering) {
+      console.log('🔍 DEBUG - Client-side filterProducts triggered');
+      filterProducts();
+    }
+  }, [urlParamsProcessed, skipClientFiltering, searchTerm, selectedCategory, selectedType, priceRange, products]);
 
   const clearFilters = () => {
     setSearchTerm('');
