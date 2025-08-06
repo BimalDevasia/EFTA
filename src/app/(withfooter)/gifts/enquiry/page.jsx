@@ -2,6 +2,7 @@
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { WhatsAppService, WhatsAppButton, CUSTOMER_SUPPORT_PHONE } from "@/lib/whatsapp";
 import {
   Select,
   SelectContent,
@@ -22,6 +23,47 @@ const countryCodesArray = Object.values(myCountryCodesObject);
 console.log(countryCodesArray);
 
 const EnquiryPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    countryCode: '+91',
+    phone: '',
+    message: ''
+  });
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleWhatsAppChat = () => {
+    let message = "Hi! I'm interested in EFTA Gifts services.\n\n";
+    
+    if (formData.name || formData.email || formData.phone || formData.message) {
+      message += "Here are my details:\n";
+      if (formData.name) message += `Name: ${formData.name}\n`;
+      if (formData.email) message += `Email: ${formData.email}\n`;
+      if (formData.phone) message += `Phone: ${formData.countryCode}${formData.phone}\n`;
+      if (formData.message) message += `Message: ${formData.message}\n`;
+      message += "\n";
+    }
+    
+    message += "Please get back to me with more information about your services.";
+    
+    // Generate WhatsApp link that opens in app
+    const whatsappLink = WhatsAppService.generateWhatsAppLink(CUSTOMER_SUPPORT_PHONE, message);
+    
+    // Create and click a temporary link element to open WhatsApp
+    const link = document.createElement('a');
+    link.href = whatsappLink;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Wrapper className="pt-40 pb-20">
       <div className="">
@@ -51,23 +93,42 @@ const EnquiryPage = () => {
                 <Input
                   className="w-full max-w-[auto] bg-white rounded-[4px] placeholder:text-[#DBDBDB]"
                   label="Name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                 />
                 <Input
                   className="w-full max-w-[auto] bg-white rounded-[4px] placeholder:text-[#DBDBDB]"
                   label="Email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                 />
                 <div className="w-full border-[#DBDBDB] border rounded-[4px] flex">
-                  <MobileCountryCodeSelect />
+                  <MobileCountryCodeSelect 
+                    value={formData.countryCode}
+                    onValueChange={(value) => handleInputChange('countryCode', value)}
+                  />
                   <input
                     className={cn(
                       "px-[19px] py-[22px] w-full placeholder:text-[#DBDBDB]"
                     )}
                     placeholder="234-567-8909"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
                   />
                 </div>
+                <textarea
+                  className="w-full bg-white border-[#DBDBDB] border rounded-[4px] px-[19px] py-[22px] placeholder:text-[#DBDBDB] min-h-[100px] resize-none"
+                  placeholder="Tell us about your requirements..."
+                  value={formData.message}
+                  onChange={(e) => handleInputChange('message', e.target.value)}
+                />
               </div>
               <div className="w-fit mx-auto">
-                <button className="w-fit bg-[#FF9F00] text-white text-[20px] font-semibold rounded-[100vmin] py-2 px-8 inline-flex items-center justify-center gap-2">
+                <button 
+                  type="button"
+                  onClick={handleWhatsAppChat}
+                  className="w-fit bg-[#FF9F00] text-white text-[20px] font-semibold rounded-[100vmin] py-2 px-8 inline-flex items-center justify-center gap-2 hover:bg-[#e68a00] transition-colors"
+                >
                   <span>Chat with us</span>
                   <img
                     src="/whatsapp-icon.svg"
@@ -102,10 +163,9 @@ function Input({ label, className, ...props }) {
   );
 }
 
-function MobileCountryCodeSelect() {
-  const [selectedCode, setSelectedCode] = useState("+91");
+function MobileCountryCodeSelect({ value, onValueChange }) {
   return (
-    <Select value={selectedCode} onValueChange={setSelectedCode}>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-[100px] bg-[#D9D9D9] text-[#1E1E1E] font-semibold self-stretch h-auto border-none rounded-s-[4px]">
         <SelectValue placeholder="Select country code" />
       </SelectTrigger>

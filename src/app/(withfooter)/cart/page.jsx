@@ -302,12 +302,15 @@ function Checkout({ setShowCheckout }) {
         orderNumber
       });
       
-      // Send to WhatsApp
-      WhatsAppService.sendToWhatsApp(BUSINESS_PHONE, message);
+      // Generate WhatsApp link that opens in app
+      const whatsappLink = WhatsAppService.generateWhatsAppLink(BUSINESS_PHONE, message);
+      
+      // Open WhatsApp directly - this will open in app if available, web otherwise
+      window.open(whatsappLink, '_blank');
       
       // Show success message
-      toast.success("Order placed successfully! You'll be redirected to WhatsApp.", {
-        duration: 4000
+      toast.success("Redirecting to WhatsApp...", {
+        duration: 3000
       });
       
       // Optional: Clear cart after successful order
@@ -318,7 +321,7 @@ function Checkout({ setShowCheckout }) {
       
     } catch (error) {
       console.error("Error placing order:", error);
-      toast.error("Failed to place order. Please try again.");
+      toast.error("Failed to generate WhatsApp link. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

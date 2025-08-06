@@ -42,7 +42,8 @@ export class WhatsAppService {
     return message;
   }
 
-  // Send message via WhatsApp Web (opens in browser)
+  // LEGACY: Send message via WhatsApp Web (opens in browser) - DEPRECATED
+  // This method opens WhatsApp Web which may not be preferred by users
   static sendToWhatsApp(phoneNumber, message) {
     // Remove +91 country code if present and format number
     const cleanNumber = phoneNumber.replace(/^\+91/, '').replace(/\D/g, '');
@@ -56,6 +57,22 @@ export class WhatsAppService {
     
     // Open in new tab
     window.open(whatsappURL, '_blank');
+  }
+
+  // RECOMMENDED: Generate direct WhatsApp link that opens in WhatsApp app
+  // This method creates a wa.me link that automatically opens in WhatsApp app when available
+  // Usage: const link = WhatsAppService.generateWhatsAppLink(phone, message);
+  // Then create <a href={link}>Send Hello</a> or programmatically open the link
+  static generateWhatsAppLink(phoneNumber, message) {
+    // Remove +91 country code if present and format number
+    const cleanNumber = phoneNumber.replace(/^\+91/, '').replace(/\D/g, '');
+    const formattedNumber = `91${cleanNumber}`;
+    
+    // Encode message for URL
+    const encodedMessage = encodeURIComponent(message);
+    
+    // WhatsApp official wa.me link that opens in app when available, web otherwise
+    return `https://wa.me/${formattedNumber}?text=${encodedMessage}`;
   }
 
   // Alternative: Send via WhatsApp API (if you have WhatsApp Business API)
