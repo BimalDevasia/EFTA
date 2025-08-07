@@ -1,6 +1,5 @@
 import React from 'react'
 import Image from 'next/image'
-import "./homeFront.css"
 import { MdKeyboardArrowDown } from "react-icons/md";
 function Coursesfront({click}) {
   return (

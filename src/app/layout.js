@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
       <head>
       <link rel="icon" href="./logo.svg" />
       </head>
-      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${caveat.variable} ${satisfy.variable} ${instrumentSerif.variable} overflow-x-hidden`}>
+      <body className={`${inter.variable} ${poppins.variable} ${italiana.variable} ${satisfy.variable} overflow-x-hidden`}>
         <Script
           src="/js/chunkErrorHandler.js"
           strategy="beforeInteractive"

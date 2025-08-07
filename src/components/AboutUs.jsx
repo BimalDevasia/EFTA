@@ -1,9 +1,6 @@
 "use client"
-import React from 'react'
-import { useState, useRef,useEffect,useMemo,useCallback } from 'react';
-import "./homeFront.css"
-import gsap from 'gsap';
-import { wrap } from "@motionone/utils";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import Image from 'next/image';
 
 
 
@@ -21,24 +18,28 @@ function AboutUs() {
   const xPercentRef = useRef(0);
   const directionRef = useRef(-1);
 
+  // Optimized animation using CSS transform instead of GSAP
   const animation = useCallback(() => {
-      if (xPercentRef.current <= -100) {
-        xPercentRef.current = 0;
-      }
-      if (xPercentRef.current > 0) {
-        xPercentRef.current = -100;
-      }
-  
-      gsap.set(item1.current, { xPercent: xPercentRef.current });
-      gsap.set(item2.current, { xPercent: xPercentRef.current });
- 
-      xPercentRef.current += 0.15 * directionRef.current;
+    if (!item1.current || !item2.current) return;
     
-      requestAnimationFrame(animation);
+    if (xPercentRef.current <= -100) {
+      xPercentRef.current = 0;
+    }
+    if (xPercentRef.current > 0) {
+      xPercentRef.current = -100;
+    }
+
+    // Use native CSS transforms instead of GSAP for better performance
+    item1.current.style.transform = `translateX(${xPercentRef.current}%)`;
+    item2.current.style.transform = `translateX(${xPercentRef.current}%)`;
+
+    xPercentRef.current += 0.15 * directionRef.current;
+  
+    requestAnimationFrame(animation);
   }, []);
 
   useEffect(() => {
-    if(window.innerWidth>=1024){
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
       requestAnimationFrame(animation);
     }
   }, [animation]);
@@ -46,50 +47,40 @@ function AboutUs() {
 
 
 
+  // Optimized services calculation with memoization and reduced DOM operations
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const containerWidth = containerRef.current.clientWidth;
-    let cumulativeWidth = 0;
-    let itemsInFirstTwoLines = [];
-
-    for (let i = 0; i < memoizedItems.length; i++) {
-      const tempDiv = document.createElement('div');
-      tempDiv.style.display = 'inline-block';
-      tempDiv.style.visibility = 'hidden';
-      tempDiv.style.position = 'absolute';
-      tempDiv.textContent = memoizedItems[i];
-      document.body.appendChild(tempDiv);
-      const buttonWidth = tempDiv.offsetWidth + 96;
-      document.body.removeChild(tempDiv);
-
-      if (cumulativeWidth + buttonWidth > containerWidth && itemsInFirstTwoLines.length === 0) {
-        cumulativeWidth = 0;
-        itemsInFirstTwoLines.push(i);
+    const calculateVisibleItems = () => {
+      const containerWidth = containerRef.current.clientWidth;
+      const estimatedButtonWidth = 150; // Estimated width per button
+      const buttonsPerLine = Math.floor(containerWidth / estimatedButtonWidth);
+      const maxItemsToShow = Math.max(buttonsPerLine * 2 - 1, 3); // Show 2 lines minus 1 for "+X more"
+      
+      if (memoizedItems.length <= maxItemsToShow) {
+        setVisibleItems(memoizedItems);
+        setRemainingCount(0);
+      } else {
+        setVisibleItems(memoizedItems.slice(0, maxItemsToShow));
+        setRemainingCount(memoizedItems.length - maxItemsToShow);
       }
+    };
 
-      cumulativeWidth += buttonWidth;
+    calculateVisibleItems();
 
-      if (cumulativeWidth > containerWidth * 1.4) {
-        break;
-      }
+    // Debounced resize handler
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(calculateVisibleItems, 150);
+    };
 
-      itemsInFirstTwoLines.push(i);
-    }
-
-    const itemsToShow = itemsInFirstTwoLines.length;
-    const newVisibleItems = memoizedItems.length > itemsToShow ? memoizedItems.slice(0, itemsToShow - 1) : memoizedItems;
-    const newRemainingCount = memoizedItems.length > itemsToShow ? memoizedItems.length - itemsToShow + 1 : 0;
-
-    
-    if (
-      newVisibleItems.length !== visibleItems.length ||
-      newRemainingCount !== remainingCount
-    ) {
-      setVisibleItems(newVisibleItems);
-      setRemainingCount(newRemainingCount);
-    }
-  }, [memoizedItems,remainingCount, visibleItems.length]);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, [memoizedItems]);
 
 
 
@@ -142,8 +133,15 @@ function AboutUs() {
       
       {/* Right image section */}
       <div className='lg:w-2/5 w-full lg:flex lg:items-center lg:justify-center order-1 lg:order-2 relative'>
-        <div className='lg:relative lg:w-full lg:h-[70vh] xl:h-[80vh] h-[300px] sm:h-[400px] md:h-[500px] lg:max-w-none max-w-[90%] mx-auto lg:mx-0 rounded-l-full lg:rounded-l-none lg:rounded-r-3xl bg-no-repeat bg-cover bg-center' 
-             style={{backgroundImage:`url('./about.png')`}}>
+        <div className='lg:relative lg:w-full lg:h-[70vh] xl:h-[80vh] h-[300px] sm:h-[400px] md:h-[500px] lg:max-w-none max-w-[90%] mx-auto lg:mx-0 rounded-l-full lg:rounded-l-none lg:rounded-r-3xl overflow-hidden'>
+          <Image
+            src="/about.png"
+            alt="About EFTA"
+            fill
+            className="object-cover object-center"
+            priority
+            sizes="(max-width: 1024px) 90vw, 40vw"
+          />
         </div>
       </div>
     </div>
