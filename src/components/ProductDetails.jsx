@@ -17,13 +17,49 @@ const ProductDetails = ({ product }) => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const { addItem } = useCart();
 
+  const handleShare = () => {
+    const currentPageUrl = window.location.href;
+    const shareText = `🎁 Check out this amazing product from EFTA!\n\n${product.productName}\n\nPrice: ₹${finalPrice.toFixed(0)}${
+      finalPrice < product.productMRP ? ` (was ₹${product.productMRP})` : ''
+    }\n\n${product.description ? product.description.substring(0, 100) + '...' : ''}\n\nView details: ${currentPageUrl}`;
+    
+    if (navigator.share && navigator.share.canShare && navigator.share.canShare({ url: currentPageUrl })) {
+      navigator.share({
+        title: `${product.productName} - EFTA Gifts`,
+        text: shareText,
+        url: currentPageUrl,
+      }).catch((error) => {
+        // If native share fails, fallback to clipboard
+        console.log('Share failed, falling back to clipboard:', error);
+        navigator.clipboard.writeText(currentPageUrl).then(() => {
+          toast.success('Product link copied to clipboard!');
+        }).catch(() => {
+          toast.error('Failed to share product');
+        });
+      });
+    } else {
+      // Fallback to clipboard for browsers that don't support native share
+      navigator.clipboard.writeText(currentPageUrl).then(() => {
+        toast.success('Product link copied to clipboard!');
+      }).catch(() => {
+        toast.error('Failed to copy link');
+      });
+    }
+  };
+
   const handleAddToCart = () => {
     if (count < 1) {
       toast.error("Please select at least 1 item");
       return;
     }
 
-    addItem(product, count, customization);
+    // Ensure the product has the calculated final price
+    const productWithPrice = {
+      ...product,
+      calculatedFinalPrice: finalPrice // Add the calculated price
+    };
+
+    addItem(productWithPrice, count, customization);
     toast.success(`${product.productName} added to cart!`);
     setCount(1); // Reset quantity after adding
   };
@@ -51,10 +87,13 @@ const ProductDetails = ({ product }) => {
     ? optimizeCloudinaryImage(product.images[currentImageIndex].url, { width: 600, height: 600, crop: 'fit' })
     : "/product-image.png";
 
-  const finalPrice = product.offerPrice || 
-    (product.offerPercentage > 0 ? 
-      Math.round(product.productMRP * (100 - product.offerPercentage) / 100) : 
-      product.productMRP);
+  // Calculate final price based on offer type
+  let finalPrice = product.productMRP;
+  if (product.offerType === 'percentage') {
+    finalPrice = product.productMRP - (product.productMRP * product.offerPercentage / 100);
+  } else if (product.offerType === 'price') {
+    finalPrice = product.offerPrice;
+  }
 
   // Get customization label
   const getCustomizationLabel = (type) => {
@@ -135,13 +174,16 @@ const ProductDetails = ({ product }) => {
           <span className="text-black text-2xl lg:text-3xl font-bold">
             ₹{finalPrice}
           </span>
-          {product.offerPercentage > 0 && (
+          {(product.offerType === 'percentage' || product.offerType === 'price') && finalPrice < product.productMRP && (
             <>
               <span className="text-gray-500 text-lg line-through">
                 ₹{product.productMRP}
               </span>
               <span className="text-green-600 text-base font-semibold bg-green-50 px-2 py-1 rounded">
-                {Math.round(product.offerPercentage)}% OFF
+                {product.offerType === 'percentage' 
+                  ? `${Math.round(product.offerPercentage)}% OFF`
+                  : `₹${product.productMRP - finalPrice} OFF`
+                }
               </span>
             </>
           )}
@@ -163,7 +205,11 @@ const ProductDetails = ({ product }) => {
             </div>
             Shop Now
           </button>
-          <button className="bg-[#4CAF50] hover:bg-[#45A049] text-white w-12 h-12 rounded-full flex items-center justify-center transition-colors">
+          <button 
+            onClick={handleShare}
+            className="bg-[#4CAF50] hover:bg-[#45A049] text-white w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+            title="Share this product"
+          >
             <ShareIcon className="w-5 h-5" />
           </button>
         </div>

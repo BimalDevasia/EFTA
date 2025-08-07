@@ -42,6 +42,41 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
   const buttonText = banner?.buttonText || (pageType === 'courses' || pageType === 'events' ? "Enquiry" : "Shop Now");
   const description = banner?.description;
 
+  // Handle WhatsApp enquiry for courses and events
+  const handleEnquiry = async (pageType) => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    try {
+      // Dynamic import of WhatsApp service to avoid SSR issues
+      const { WhatsAppService, BUSINESS_PHONE } = await import('@/lib/whatsapp');
+      
+      let message = '';
+      
+      if (pageType === 'courses') {
+        message = `🎨 *Enquiry about Courses - EFTA*\n\nHi! I'm interested in learning more about your courses and training programs. Could you please provide me with details about:\n\n• Available courses\n• Course schedules\n• Fees and registration process\n• Certification details\n\nThank you!`;
+      } else if (pageType === 'events') {
+        message = `🎉 *Event Planning Enquiry - EFTA*\n\nHi! I'm interested in your event planning services. Could you please provide me with details about:\n\n• Available event packages\n• Pricing and customization options\n• Venue arrangements\n• Catering and decoration services\n\nThank you!`;
+      }
+      
+      const whatsappLink = WhatsAppService.generateWhatsAppLink(BUSINESS_PHONE, message);
+      window.open(whatsappLink, '_blank');
+    } catch (error) {
+      console.error('Error loading WhatsApp service:', error);
+    }
+  };
+
+  // Determine the link destination based on page type
+  const getLinkDestination = () => {
+    if (pageType === 'gifts') {
+      return '/products?giftType=personalisedGift';
+    } else if (pageType === 'corporate') {
+      return '/products?giftType=corporateGift';
+    } else {
+      return '/gifts';
+    }
+  };
+
   // If no pageType is provided, use defaults immediately
   if (!pageType) {
     return (
@@ -72,9 +107,11 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
             )}
           </div>
           
-          <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
-            Shop Now
-          </button>
+          <Link href="/products?giftType=personalisedGift">
+            <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
+              Shop Now
+            </button>
+          </Link>
           
           {onClick && (
             <p 
@@ -130,13 +167,22 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
           )}
         </div>
         
-        <Link href="/gifts">
-          <button className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] ${
-            pageType === 'gifts' ? 'bg-primary_color' : 'bg-gift_blue'
-          }`}>
+        {(pageType === 'courses' || pageType === 'events') ? (
+          <button 
+            onClick={() => handleEnquiry(pageType)}
+            className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] bg-gift_blue`}
+          >
             {buttonText}
           </button>
-        </Link>
+        ) : (
+          <Link href={getLinkDestination()}>
+            <button className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] ${
+              pageType === 'gifts' ? 'bg-primary_color' : pageType === 'corporate' ? 'bg-gift_blue' : 'bg-gift_blue'
+            }`}>
+              {buttonText}
+            </button>
+          </Link>
+        )}
         
         {onClick && (
           <p 

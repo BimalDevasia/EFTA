@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const Breadcrumb = ({ links}) => {
   return (
-    <nav className="p-4">
+    <nav className="p-3 lg:p-4">
       <ul className="flex space-x-2 items-center">
         {links.map((link, index) => (
           <Fragment key={index}>
@@ -14,7 +14,7 @@ const Breadcrumb = ({ links}) => {
               <Link href={link.href}>
                 <span
                   className={cn(
-                    "text-xl font-semibold font-poppins text-[#0000005C]",
+                    "text-[16px] lg:text-xl font-semibold font-poppins text-[#0000005C]",
                     index === links.length - 1 && "text-[#1F76BD]"
                   )}
                 >

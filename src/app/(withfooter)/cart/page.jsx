@@ -5,12 +5,12 @@ import QuantityCounter from "@/components/QuantityCounter";
 import { SpecialText } from "@/components/typography";
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
-import { useModal } from "@/stores/useModal";
 import { useCart } from "@/stores/useCart";
 import { WhatsAppService, BUSINESS_PHONE } from "@/lib/whatsapp";
 import React, { useState } from "react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 const links = [
   {
@@ -28,13 +28,13 @@ const CartPage = () => {
 
   if (totalItems === 0 && !showCheckout) {
     return (
-      <Wrapper className="pt-32 pb-[100px]">
+      <Wrapper className="pt-32 pb-[100px] px-8 lg:px-8">
         <div className="text-center space-y-6">
-          <h1 className="text-3xl font-bold text-gray-800">Your Cart is Empty</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">Your Cart is Empty</h1>
           <p className="text-gray-600">Add some beautiful gifts to your cart!</p>
           <a
             href="/gifts"
-            className="inline-block bg-primary_color text-white px-8 py-3 rounded-full font-semibold hover:bg-primary_color/90 transition-colors"
+            className="inline-block bg-primary_color text-white px-6 lg:px-8 py-3 rounded-full font-semibold hover:bg-primary_color/90 transition-colors"
           >
             Continue Shopping
           </a>
@@ -44,16 +44,14 @@ const CartPage = () => {
   }
 
   return (
-    <Wrapper className="pt-32 pb-[100px]">
+    <Wrapper className="pt-32 pb-[100px] px-8 lg:px-8">
       {showCheckout ? <Checkout setShowCheckout={setShowCheckout} /> : <CartDetails setShowCheckout={setShowCheckout} />}
     </Wrapper>
   );
 };
 
 function CartDetails({ setShowCheckout }) {
-  const { openModal } = useModal();
   const { items, removeItem, updateQuantity, totalPrice } = useCart();
-  const [address, setAddress] = useState("1234 Main St, Anytown, USA");
 
   const handlePlaceOrder = () => {
     setShowCheckout(true);
@@ -62,24 +60,11 @@ function CartDetails({ setShowCheckout }) {
   return (
     <div>
       <Breadcrumb links={links} />
-      <div className="grid grid-cols-1 lg:grid-cols-[auto_365px] gap-8">
-        <div className="space-y-9">
-          <div className="flex justify-between items-center px-6 py-5 shadow-cart-summary">
-            <div>
-              Deliver to : <span className="font-medium">{address}</span>
-            </div>
-            <div>
-              <button
-                onClick={() => openModal("address")}
-                className="text-[#8300FF] text-[16px] font-medium"
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-          <div className="px-8 shadow-cart-summary">
-            <div className=" py-9">
-              <div className="space-y-9">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_365px] gap-6 lg:gap-8">
+        <div className="space-y-6 lg:space-y-9">
+          <div className="px-4 lg:px-8 shadow-cart-summary">
+            <div className="py-6 lg:py-9">
+              <div className="space-y-6 lg:space-y-9">
                 {items.map((item, index) => (
                   <CartItem 
                     key={`${item.id}-${index}`} 
@@ -91,10 +76,10 @@ function CartDetails({ setShowCheckout }) {
               </div>
             </div>
             <hr />
-            <div className="px-4 py-8 w-full">
+            <div className="px-4 py-6 lg:py-8 w-full">
               <button 
                 onClick={handlePlaceOrder}
-                className="bg-[#FB641B] text-white text-[20px] font-semibold py-5 px-10 rounded-[100vmin] ml-auto block hover:bg-[#e55a1a] transition-colors"
+                className="bg-[#FB641B] text-white text-[16px] lg:text-[18px] font-semibold py-3 lg:py-4 px-6 lg:px-8 rounded-[100vmin] ml-auto block hover:bg-[#e55a1a] transition-colors w-full lg:w-auto"
               >
                 Place Order
               </button>
@@ -110,12 +95,26 @@ function CartDetails({ setShowCheckout }) {
 }
 
 function CartItem({ item, onUpdateQuantity, onRemove }) {
-  const [count, setCount] = useState(item.quantity);
+  // Ensure count is always a valid number between 1-100
+  const [count, setCount] = useState(() => {
+    const initialQuantity = parseInt(item.quantity) || 1;
+    return Math.max(1, Math.min(100, initialQuantity));
+  });
   const { id, name, description, price, originalPrice, image, customization, offerPercentage } = item;
 
+  // Sync local count with item quantity when it changes
+  React.useEffect(() => {
+    const newQuantity = parseInt(item.quantity) || 1;
+    const validQuantity = Math.max(1, Math.min(100, newQuantity));
+    setCount(validQuantity);
+  }, [item.quantity]);
+
   const handleQuantityChange = (newCount) => {
-    setCount(newCount);
-    onUpdateQuantity(id, newCount, customization);
+    // Ensure newCount is a valid number and within range
+    const parsedCount = parseInt(newCount) || 1;
+    const validCount = Math.max(1, Math.min(100, parsedCount));
+    setCount(validCount);
+    onUpdateQuantity(id, validCount, customization);
   };
 
   const handleRemove = () => {
@@ -126,44 +125,45 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
   const discountPercentage = offerPercentage > 0 ? Math.round(offerPercentage) : null;
 
   return (
-    <div className="flex gap-8">
-      <div>
+    <div className="flex flex-col sm:flex-row gap-4 lg:gap-8">
+      <Link href={`/gifts/${id}`} className="flex-shrink-0">
         <Image
-          className="w-[135px] h-[131px] object-cover rounded-[5px]"
+          className="w-full sm:w-[135px] h-[200px] sm:h-[131px] object-cover rounded-[5px] cursor-pointer hover:opacity-80 transition-opacity"
           src={image || "/product-image.png"}
           alt={name}
           width={135}
           height={131}
         />
-      </div>
-      <div className="flex justify-between flex-1">
-        <div>
+      </Link>
+      <div className="flex flex-col sm:flex-row sm:justify-between flex-1 gap-4">
+        <div className="flex-1">
           <div className="">
-            <h3 className="mb-4 text-[26px] font-medium">{name}</h3>
-            <p className="mb-6 text-[#828282] text-[16px]">{description}</p>
+            <Link href={`/gifts/${id}`}>
+              <h3 className="mb-3 text-[16px] lg:text-[18px] font-semibold cursor-pointer hover:text-blue-600 transition-colors line-clamp-2">{name}</h3>
+            </Link>
             {customization && (
-              <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <div className="mb-3 p-3 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800 font-medium">Customization:</p>
-                <p className="text-sm text-blue-600">{JSON.stringify(customization)}</p>
+                <p className="text-sm text-blue-600 break-words">{JSON.stringify(customization)}</p>
               </div>
             )}
           </div>
-          <div className="mb-5 flex gap-[14px] items-end">
+          <div className="mb-4 flex gap-2 lg:gap-3 items-center flex-wrap">
             <p className="">
-              <SpecialText className="font-inter text-[30px] font-medium text-black tracking-[-0.6px]">
-                Rs {parseFloat(price).toFixed(2)}
+              <SpecialText className="font-inter text-[18px] lg:text-[20px] font-semibold text-black tracking-[-0.4px]">
+                ₹{parseFloat(price).toFixed(0)}
               </SpecialText>
             </p>
             {originalPrice && originalPrice > price && (
               <>
                 <p>
-                  <SpecialText className="font-inter text-[20px] font-normal text-[#828282] tracking-[-0.4px] line-through">
-                    Rs {parseFloat(originalPrice).toFixed(2)}
+                  <SpecialText className="font-inter text-[14px] lg:text-[16px] font-normal text-[#828282] tracking-[-0.3px] line-through">
+                    ₹{parseFloat(originalPrice).toFixed(0)}
                   </SpecialText>
                 </p>
                 {discountPercentage && (
                   <p>
-                    <SpecialText className="font-inter text-[20px] font-normal text-[#009D08] tracking-[-0.4px]">
+                    <SpecialText className="font-inter text-[12px] lg:text-[14px] font-medium text-[#009D08] tracking-[-0.2px]">
                       {discountPercentage}% off
                     </SpecialText>
                   </p>
@@ -171,18 +171,18 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
               </>
             )}
           </div>
-          <div className="flex gap-4 items-center">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <QuantityCounter count={count} setCount={handleQuantityChange} />
             <button
               onClick={handleRemove}
-              className="text-red-500 hover:text-red-700 font-medium text-sm transition-colors"
+              className="text-red-500 hover:text-red-700 font-medium text-[14px] transition-colors"
             >
               Remove
             </button>
           </div>
         </div>
         <div>
-          <p className="text-[#CACACA] text-[16px] font-medium">
+          <p className="text-[#CACACA] text-[14px] font-medium">
             Delivery in 5-7 days
           </p>
         </div>
@@ -201,32 +201,32 @@ function CartSummary() {
   const finalTotal = safeTotal + deliveryCharge;
 
   return (
-    <div className="px-5 py-9 shadow-cart-summary">
-      <h3 className="text-[16px] text-[#828282] font-medium mb-3.5">
+    <div className="px-4 lg:px-5 py-6 lg:py-9 shadow-cart-summary">
+      <h3 className="text-[12px] lg:text-[14px] text-[#828282] font-semibold mb-3.5 uppercase tracking-wider">
         PRICE SUMMARY
       </h3>
       <hr />
-      <div className="space-y-3.5 py-[30px] px-1">
+      <div className="space-y-3.5 py-6 lg:py-[30px] px-1">
         <div className="flex justify-between items-center">
-          <p>Price ({safeTotalItems} items)</p>
-          <p>Rs {safeTotal.toFixed(2)}</p>
+          <p className="text-[14px] lg:text-[15px] text-gray-700">Price ({safeTotalItems} items)</p>
+          <p className="text-[14px] lg:text-[15px] font-medium">₹{safeTotal.toFixed(0)}</p>
         </div>
         <div className="flex justify-between items-center">
-          <p>Delivery Charges</p>
-          <p className={safeTotal > 500 ? "text-green-600" : ""}>
-            {safeTotal > 500 ? "FREE" : `Rs ${deliveryCharge.toFixed(2)}`}
+          <p className="text-[14px] lg:text-[15px] text-gray-700">Delivery Charges</p>
+          <p className={`text-[14px] lg:text-[15px] font-medium ${safeTotal > 500 ? "text-green-600" : ""}`}>
+            {safeTotal > 500 ? "FREE" : `₹${deliveryCharge.toFixed(0)}`}
           </p>
         </div>
         {safeTotal > 500 && (
-          <div className="text-sm text-green-600">
-            🎉 You saved Rs 50 on delivery!
+          <div className="text-[12px] lg:text-[13px] text-green-600 font-medium">
+            🎉 You saved ₹50 on delivery!
           </div>
         )}
       </div>
       <hr />
-      <div className="flex justify-between items-center mt-5 font-semibold text-lg">
-        <p>Total</p>
-        <p>Rs {finalTotal.toFixed(2)}</p>
+      <div className="flex justify-between items-center mt-4 lg:mt-5 font-semibold text-[16px] lg:text-[18px]">
+        <p>Total Amount</p>
+        <p>₹{finalTotal.toFixed(0)}</p>
       </div>
     </div>
   );
@@ -296,6 +296,35 @@ function Checkout({ setShowCheckout }) {
       // Generate order number
       const orderNumber = `#ORD${Date.now()}`;
       
+      // Save order to database first
+      try {
+        const orderResponse = await fetch('/api/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            customerDetails,
+            cartSummary,
+            orderNumber
+          })
+        });
+
+        const orderData = await orderResponse.json();
+        
+        if (!orderData.success) {
+          throw new Error(orderData.error || 'Failed to save order');
+        }
+        
+        console.log('Order saved successfully:', orderData.orderNumber);
+        toast.success("Order saved successfully!");
+        
+      } catch (orderError) {
+        console.error('Error saving order:', orderError);
+        toast.error("Failed to save order to database. Please try again.");
+        return; // Don't proceed to WhatsApp if order save failed
+      }
+      
       // Format WhatsApp message
       const message = WhatsAppService.formatCartMessage(cartSummary, {
         ...customerDetails,
@@ -313,7 +342,7 @@ function Checkout({ setShowCheckout }) {
         duration: 3000
       });
       
-      // Optional: Clear cart after successful order
+      // Clear cart after successful order
       setTimeout(() => {
         clearCart();
         setShowCheckout(false);
@@ -329,23 +358,23 @@ function Checkout({ setShowCheckout }) {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex items-center mb-8">
+      <div className="flex items-center mb-6 lg:mb-8">
         <button
           onClick={() => setShowCheckout(false)}
-          className="mr-4 text-gray-600 hover:text-gray-800 transition-colors"
+          className="mr-3 lg:mr-4 text-gray-600 hover:text-gray-800 transition-colors text-[12px] lg:text-[14px]"
         >
           ← Back to Cart
         </button>
-        <h1 className="text-[36px] font-semibold text-[#8300FF]">
+        <h1 className="text-[24px] lg:text-[28px] font-semibold text-[#8300FF]">
           Customer Details
         </h1>
       </div>
       
-      <p className="w-full max-w-[500px] text-[14px] text-[#8300FF] mb-8">
+      <p className="w-full max-w-[500px] text-[12px] lg:text-[14px] text-[#666] mb-6 lg:mb-8 leading-relaxed">
         Please provide your details below. Your order will be sent via WhatsApp for confirmation.
       </p>
       
-      <form onSubmit={handleSubmit} className="space-y-6 mb-10">
+      <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6 mb-8 lg:mb-10">
         <Input 
           label="Full Name *" 
           name="name"
@@ -388,23 +417,23 @@ function Checkout({ setShowCheckout }) {
           placeholder="Enter 6-digit pincode"
         />
         
-        <div className="flex justify-between items-center max-w-[490px] w-full pt-6">
-          <p className="text-[12px] text-[#828282] max-w-[280px]">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center max-w-[490px] w-full pt-4 lg:pt-6 gap-4 lg:gap-0">
+          <p className="text-[10px] lg:text-[12px] text-[#828282] max-w-[280px] leading-relaxed">
             *By clicking continue, your order details will be sent via WhatsApp for confirmation and payment.
           </p>
           <button 
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#8300FF] text-white text-[20px] font-semibold py-3 px-8 rounded-[100vmin] hover:bg-[#7300e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#8300FF] text-white text-[14px] lg:text-[16px] font-semibold py-2.5 lg:py-3 px-5 lg:px-6 rounded-[100vmin] hover:bg-[#7300e6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full lg:w-auto"
           >
             {isSubmitting ? "Placing Order..." : "Place Order"}
           </button>
         </div>
       </form>
       
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4 mt-8">
-        <h3 className="font-semibold text-green-800 mb-2">📱 What happens next?</h3>
-        <ul className="text-sm text-green-700 space-y-1">
+      <div className="bg-green-50 border border-green-200 rounded-lg p-3 lg:p-4 mt-6 lg:mt-8">
+        <h3 className="font-semibold text-green-800 mb-2 text-[14px] lg:text-[16px]">📱 What happens next?</h3>
+        <ul className="text-[12px] lg:text-sm text-green-700 space-y-1">
           <li>• Your order will be sent via WhatsApp</li>
           <li>• Our team will confirm your order details</li>
           <li>• Payment options will be shared</li>
@@ -418,12 +447,12 @@ function Checkout({ setShowCheckout }) {
 function Input({ label, ...props }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-[12px] lg:text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
       <input
         className={cn(
-          "bg-[#D9D9D933] border-[#DBDBDB] border rounded-sm px-[19px] py-[22px] max-w-[490px] w-full focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent transition-all"
+          "bg-[#D9D9D933] border-[#DBDBDB] border rounded-sm px-[15px] lg:px-[19px] py-[18px] lg:py-[22px] max-w-[490px] w-full focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent transition-all text-[14px] lg:text-[16px]"
         )}
         placeholder={label}
         {...props}
@@ -435,12 +464,12 @@ function Input({ label, ...props }) {
 function TextArea({ label, ...props }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-[12px] lg:text-sm font-medium text-gray-700 mb-2">
         {label}
       </label>
       <textarea
         className={cn(
-          "bg-[#D9D9D933] border-[#DBDBDB] border rounded-sm px-[19px] py-[22px] max-w-[490px] w-full focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent transition-all resize-vertical"
+          "bg-[#D9D9D933] border-[#DBDBDB] border rounded-sm px-[15px] lg:px-[19px] py-[18px] lg:py-[22px] max-w-[490px] w-full focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent transition-all resize-vertical text-[14px] lg:text-[16px]"
         )}
         placeholder={label}
         {...props}

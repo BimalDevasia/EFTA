@@ -91,6 +91,10 @@ const ProductListContent = () => {
           setPageTitle(decodeURIComponent(titleParam));
         } else if (featuredParam === 'true') {
           setPageTitle('Featured Gifts');
+        } else if (giftTypeParam === 'personalisedGift') {
+          setPageTitle('Personalised Gifts');
+        } else if (giftTypeParam === 'corporateGift') {
+          setPageTitle('Corporate Gifts');
         } else if (categoryParam === 'cake') {
           setPageTitle('Cakes');
         } else if (categoryParam === 'hamper') {

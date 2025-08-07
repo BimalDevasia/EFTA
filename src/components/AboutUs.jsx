@@ -94,7 +94,7 @@ function AboutUs() {
 
 
   return (
-    <div className='relative w-full lg:h-screen md:min-h-[500px] min-h-[450px] pb-8 lg:pb-0'>
+    <div className='relative w-full min-h-screen lg:h-auto xl:h-screen'>
        <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-full font-italiana overflow-hidden lg:text-9xl z-50 pointer-events-none'>
         <div ref={item1} className='flex gap-32 z-50'>
         <div>EVENTS</div>
@@ -111,29 +111,42 @@ function AboutUs() {
         
       </div>
      
-    <div className='relative flex flex-col lg:w-3/5 w-full lg:mt-0 mt-10 lg:justify-center lg:pl-20 px-10 lg:px-8 lg:h-full h-auto py-8 lg:py-0 z-20' ref={containerRef}>
-      <div className='font-poppins'>
-        <p className='lg:text-5xl  text-3xl font-medium text-primary_color'>About Us</p>
-        <p className='lg:w-8/12 pt-5 lg:text-xl text-xs  '>We would love to be known as a happiness-quotient booster service company! Yes, although it’s too broad a term to rein in to this particular usage, we’d still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we’re playing a part in!</p>
+    {/* Main content container with proper responsive layout */}
+    <div className='flex flex-col lg:flex-row min-h-screen'>
+      {/* Left content section */}
+      <div className='relative flex flex-col lg:w-3/5 w-full lg:justify-center lg:pl-20 px-6 sm:px-10 lg:px-8 py-12 lg:py-16 xl:py-20 z-20 order-2 lg:order-1' ref={containerRef}>
+        <div className='font-poppins mb-8 lg:mb-12'>
+          <p className='lg:text-5xl text-3xl sm:text-4xl font-medium text-primary_color mb-6'>About Us</p>
+          <p className='lg:w-10/12 xl:w-8/12 lg:text-xl text-sm sm:text-base leading-relaxed text-gray-700'>
+            We would love to be known as a happiness-quotient booster service company! Yes, although it's too broad a term to rein in to this particular usage, we'd still tend to believe that what we do will only help boost happiness and all the other associated sweetness of emotions wherever we're playing a part in!
+          </p>
         </div>
-      <div className='lg:absolute lg:bottom-12 lg:text-3xl lg:mt-0 mt-8 text-base font-medium text-primary_color'><p>We Offer:</p>
-      <div className='flex flex-wrap gap-3 font-poppins pt-5' >
-            {visibleItems.map((item, index) => (
-                <div key={index} className='lg:px-9 lg:py-2 lg:h-11 px-4 py-1 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs flex items-center ' >
-                    {item}
-                </div>
-            ))}
-            {remainingCount > 0 && (
-                <div className='lg:px-9 lg:py-2 lg:h-11 px-4 py-1 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs flex items-center'>
-                    +{remainingCount} more
-                </div>
-            )}
+        
+        {/* Services section */}
+        <div className='lg:text-3xl text-lg sm:text-xl font-medium text-primary_color'>
+          <p className='mb-6'>We Offer:</p>
+          <div className='flex flex-wrap gap-3 font-poppins'>
+                {visibleItems.map((item, index) => (
+                    <div key={index} className='lg:px-9 lg:py-2 lg:h-11 px-4 py-2 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs sm:text-sm flex items-center'>
+                        {item}
+                    </div>
+                ))}
+                {remainingCount > 0 && (
+                    <div className='lg:px-9 lg:py-2 lg:h-11 px-4 py-2 bg-white bg-clip-border rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-xs sm:text-sm flex items-center'>
+                        +{remainingCount} more
+                    </div>
+                )}
+            </div>
+        </div>
+      </div>
+      
+      {/* Right image section */}
+      <div className='lg:w-2/5 w-full lg:flex lg:items-center lg:justify-center order-1 lg:order-2 relative'>
+        <div className='lg:relative lg:w-full lg:h-[70vh] xl:h-[80vh] h-[300px] sm:h-[400px] md:h-[500px] lg:max-w-none max-w-[90%] mx-auto lg:mx-0 rounded-l-full lg:rounded-l-none lg:rounded-r-3xl bg-no-repeat bg-cover bg-center' 
+             style={{backgroundImage:`url('./about.png')`}}>
         </div>
       </div>
     </div>
-    <div className='absolute right-0 lg:top-1/2 top-auto bottom-0 lg:translate-y-[-50%] lg:w-6/12 lg:h-[70%] h-[295px] w-[90%] rounded-l-full bg-no-repeat bg-cover bg-center z-10' style={{backgroundImage:`url('./about.png')`}}>
-
-</div>
 
     
     </div>
