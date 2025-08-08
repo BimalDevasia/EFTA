@@ -10,25 +10,15 @@ function community() {
             {/* Meet Our text with vectors in same line */}
             <div className="flex items-center justify-center gap-4 md:gap-8 lg:gap-12">
               <Image src="/person.png" className='w-[clamp(50px,8vw,100px)] h-[clamp(55px,8.5vw,115px)] z-20' alt="person" width={120} height={131} />
-              <div className="text-purple-600" style={{
-                background: 'linear-gradient(249.81deg, #8300FF -9.71%, #FB718B 61.86%, #FA6D47 105.74%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>
-                <div className="whitespace-nowrap">Meet Our</div>
+              <div className="gradient-text whitespace-nowrap">
+                Meet Our
               </div>
               <Image src="/person.png" className='w-[clamp(50px,8vw,100px)] h-[clamp(55px,8.5vw,115px)] transform scale-x-[-1] z-20' alt="person" width={120} height={131} />
             </div>
             
             {/* Creative Community text */}
-            <div className="text-purple-600" style={{
-              background: 'linear-gradient(249.81deg, #8300FF -9.71%, #FB718B 61.86%, #FA6D47 105.74%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              <div className="whitespace-nowrap">Creative Community</div>
+            <div className="gradient-text whitespace-nowrap">
+              Creative Community
             </div>
             </div> 
            <div className='text-sm md:text-lg lg:text-2xl font-poppins font-normal text-center w-[90%] md:w-3/4 text-primary_color mt-4 md:mt-6'>

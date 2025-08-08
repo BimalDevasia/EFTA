@@ -20,6 +20,21 @@
 }
 
 @layer utilities {
+  /* Gradient text utilities for cross-browser support */
+  .gradient-text {
+    background: linear-gradient(249.81deg, #8300FF -9.71%, #FB718B 61.86%, #FA6D47 105.74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  /* Ensure gradient text is visible */
+  .bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
   /* Line clamp utilities for text truncation */
   .line-clamp-2 {
     display: -webkit-box;
