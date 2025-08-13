@@ -1,10 +1,12 @@
 // WhatsApp Business API integration utilities
-import { config } from './config';
+import { getWhatsAppNumbers, getBusinessWhatsAppNumber, getCustomerSupportPhone } from './dynamicWhatsApp';
+import { FALLBACK_CONSTANTS } from './constants';
 
 export class WhatsAppService {
   // Format cart items for WhatsApp message
-  static formatCartMessage(cartSummary, customerDetails) {
+  static async formatCartMessage(cartSummary, customerDetails) {
     const { items, totalItems, totalPrice, deliveryCharge, finalTotal } = cartSummary;
+    const { supportNumber } = await getWhatsAppNumbers();
     
     let message = `🛍️ *NEW ORDER FROM EFTA GIFTS*\n\n`;
     message += `👤 *Customer Details:*\n`;
@@ -37,7 +39,7 @@ export class WhatsAppService {
     message += `*Total Amount: Rs ${parseFloat(finalTotal).toFixed(2)}*\n\n`;
     
     message += `⏰ Expected Delivery: 5-7 business days\n`;
-    message += `📞 For any queries, call: ${config.whatsapp.supportNumber}`;
+    message += `📞 For any queries, call: ${supportNumber}`;
     
     return message;
   }
@@ -104,7 +106,9 @@ export class WhatsAppService {
   }
 
   // Generate order confirmation message for customer
-  static formatCustomerConfirmation(cartSummary, customerDetails, orderNumber) {
+  static async formatCustomerConfirmation(cartSummary, customerDetails, orderNumber) {
+    const { supportNumber } = await getWhatsAppNumbers();
+    
     let message = `🎉 *Order Confirmed - EFTA Gifts*\n\n`;
     message += `Hi ${customerDetails.name}!\n\n`;
     message += `Thank you for your order. Here are the details:\n\n`;
@@ -120,12 +124,17 @@ export class WhatsAppService {
     message += `📍 Delivery Address: ${customerDetails.address}\n`;
     message += `⏰ Expected Delivery: 5-7 business days\n\n`;
     message += `We'll keep you updated on your order status!\n`;
-    message += `For support: ${config.whatsapp.supportNumber}`;
+    message += `For support: ${supportNumber}`;
     
     return message;
   }
 }
 
-// Phone numbers from environment variables with fallbacks
-export const BUSINESS_PHONE = config.whatsapp.businessNumber;
-export const CUSTOMER_SUPPORT_PHONE = config.whatsapp.supportNumber;
+// Dynamic phone numbers from database with caching
+export const getBusinessPhone = getBusinessWhatsAppNumber;
+export const getSupportPhone = getCustomerSupportPhone;
+
+// Legacy constants (kept for backward compatibility - will be deprecated)
+// TODO: Remove these and update all usages to use the async functions above
+export const BUSINESS_PHONE = FALLBACK_CONSTANTS.BUSINESS_PHONE_FALLBACK; // Fallback only
+export const CUSTOMER_SUPPORT_PHONE = FALLBACK_CONSTANTS.SUPPORT_PHONE_FALLBACK; // Fallback only

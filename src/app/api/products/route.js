@@ -35,20 +35,14 @@ export async function GET(request) {
     // Only show visible products to regular users
     if (!isAdminRequest) {
       query.isVisible = true;
-      console.log('🔒 API: Non-admin request - filtering to visible products only');
     } else {
-      console.log('👨‍💼 API: Admin request detected - can access all products');
       // Admin requests can specify visibility
       if (showHidden === 'true') {
         // Admin requesting hidden items only
         query.isVisible = false;
-        console.log('👨‍💼 API: Admin requesting hidden products only');
       } else if (visible !== null && visible !== undefined) {
         // Admin with explicit visibility parameter
         query.isVisible = visible === 'true';
-        console.log(`👨‍💼 API: Admin with explicit visibility: ${visible}`);
-      } else {
-        console.log('👨‍💼 API: Admin without visibility filter - showing all products');
       }
       // If no visibility parameter for admin, show all items (both visible and hidden)
     }
@@ -59,7 +53,6 @@ export async function GET(request) {
         const eventCat = await EventCategory.findById(eventCategory);
         if (eventCat && eventCat.products && eventCat.products.length > 0) {
           query._id = { $in: eventCat.products };
-          console.log(`🎉 API: Filtering by event category "${eventCat.title}" with ${eventCat.products.length} products`);
         } else {
           // If no products in event category, return empty results
           return NextResponse.json({
@@ -73,7 +66,6 @@ export async function GET(request) {
           });
         }
       } catch (error) {
-        console.error('Error fetching event category:', error);
         // Continue with normal filtering if event category fetch fails
       }
     }
@@ -152,7 +144,6 @@ export async function GET(request) {
       }
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch products' },
       { status: 500 }
@@ -168,21 +159,16 @@ export async function POST(request) {
     // Verify admin authentication
     const adminUser = await verifyAdmin(request);
     if (!adminUser) {
-      console.log('❌ Admin verification failed for product creation');
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
       );
     }
     
-    console.log('✅ Admin verified for product creation:', adminUser.email);
-    
     const rawBody = await request.json();
-    console.log('📥 Raw body received for product creation:', rawBody);
     
     // Apply proper case formatting to the data
     const body = formatProductTextCasing(rawBody);
-    console.log('📝 Formatted body for product creation:', body);
     
     const {
       productId,
@@ -205,30 +191,8 @@ export async function POST(request) {
       isFeatured
     } = body;
     
-    console.log('📊 Extracted fields for product creation:', {
-      productId,
-      productName,
-      productCategory,
-      productMRP,
-      offerType,
-      offerPercentage,
-      offerPrice,
-      productType,
-      giftType,
-      imagesCount: images?.length,
-      isVisible,
-      isFeatured
-    });
-    
     // Validation
     if (!productName || !description || !productDetails || !productCategory || !productMRP) {
-      console.log('❌ Missing required fields for product creation:', {
-        productName: !!productName,
-        description: !!description,
-        productDetails: !!productDetails,
-        productCategory: !!productCategory,
-        productMRP: !!productMRP
-      });
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -236,7 +200,6 @@ export async function POST(request) {
     }
     
     if (!images || images.length === 0) {
-      console.log('❌ No images provided for product creation');
       return NextResponse.json(
         { success: false, error: 'At least one product image is required' },
         { status: 400 }
@@ -245,7 +208,6 @@ export async function POST(request) {
     
     // Validate productId is provided and unique
     if (!productId || !productId.trim()) {
-      console.log('❌ Product ID is required');
       return NextResponse.json(
         { success: false, error: 'Product ID is required' },
         { status: 400 }
@@ -255,21 +217,16 @@ export async function POST(request) {
     // Check if productId already exists
     const existingProduct = await Product.findOne({ productId: productId.toLowerCase().trim() });
     if (existingProduct) {
-      console.log('❌ Product ID already exists:', productId);
       return NextResponse.json(
         { success: false, error: 'Product ID already exists' },
         { status: 400 }
       );
     }
     
-    console.log('✅ Product ID is available:', productId);
-    
     // Find or create the product category
-    console.log('📂 Finding/creating product category:', productCategory);
     await ProductCategory.findOrCreate(productCategory, adminUser.id);
     
     // Create product
-    console.log('🛠️ Creating new product...');
     const productData = {
       productId: productId.toLowerCase().trim(),
       productName,
@@ -292,19 +249,12 @@ export async function POST(request) {
       createdBy: adminUser.id
     };
     
-    console.log('📝 Product data prepared:', productData);
-    
     const product = new Product(productData);
-
-    console.log('💾 Saving product to database...');
     await product.save();
-    console.log('✅ Product saved successfully:', product._id);
     
     // Increment product count for the category
-    console.log('🔢 Incrementing category count for:', productCategory);
     await ProductCategory.incrementProductCount(productCategory);
     
-    console.log('🎉 Product creation completed successfully');
     return NextResponse.json({
       success: true,
       message: 'Product created successfully',
@@ -312,9 +262,6 @@ export async function POST(request) {
     }, { status: 201 });
     
   } catch (error) {
-    console.error('💥 Error creating product:', error);
-    console.error('Error stack:', error.stack);
-    
     // Provide more specific error messages
     let errorMessage = 'Failed to create product';
     if (error.code === 11000) {

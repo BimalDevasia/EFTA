@@ -49,8 +49,12 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
     if (typeof window === 'undefined') return;
     
     try {
-      // Dynamic import of WhatsApp service to avoid SSR issues
-      const { WhatsAppService, BUSINESS_PHONE } = await import('@/lib/whatsapp');
+      // Dynamic import of WhatsApp service and phone numbers
+      const { WhatsAppService } = await import('@/lib/whatsapp');
+      const { getBusinessWhatsAppNumber } = await import('@/lib/dynamicWhatsApp');
+      
+      // Get current business number from database
+      const businessPhone = await getBusinessWhatsAppNumber();
       
       let message = '';
       
@@ -60,7 +64,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
         message = `🎉 *Event Planning Enquiry - EFTA*\n\nHi! I'm interested in your event planning services. Could you please provide me with details about:\n\n• Available event packages\n• Pricing and customization options\n• Venue arrangements\n• Catering and decoration services\n\nThank you!`;
       }
       
-      const whatsappLink = WhatsAppService.generateWhatsAppLink(BUSINESS_PHONE, message);
+      const whatsappLink = WhatsAppService.generateWhatsAppLink(businessPhone, message);
       window.open(whatsappLink, '_blank');
     } catch (error) {
       console.error('Error loading WhatsApp service:', error);

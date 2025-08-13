@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 const Cardcomponent=({ className,item ,title,reverse })=> {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(prev => (prev - 1 + 3) % 3);

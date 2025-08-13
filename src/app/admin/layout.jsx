@@ -237,6 +237,17 @@ const Sidebar = () => {
               <Link
                 className={cn(
                   "text-[20px] text-[#00000063] font-bold",
+                  pathname === "/admin/events" && "text-[#8300FF]"
+                )}
+                href="/admin/events"
+              >
+                Events
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={cn(
+                  "text-[20px] text-[#00000063] font-bold",
                   pathname === "/admin/testimonies" && "text-[#8300FF]"
                 )}
                 href="/admin/testimonies"

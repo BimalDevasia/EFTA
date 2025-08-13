@@ -41,7 +41,6 @@ export async function PUT(request, { params }) {
     // Verify admin authentication
     const adminUser = await verifyAdmin(request);
     if (!adminUser) {
-      console.log('❌ Admin verification failed');
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -49,14 +48,11 @@ export async function PUT(request, { params }) {
     }
     
     const { id } = params;
-    console.log('📝 Updating product with ID:', id);
     
     const rawBody = await request.json();
-    console.log('📥 Raw body received:', rawBody);
     
     // Apply proper case formatting to the data
     const body = formatProductTextCasing(rawBody);
-    console.log('📝 Formatted body:', body);
     
     const {
       productId,
@@ -79,29 +75,8 @@ export async function PUT(request, { params }) {
       isFeatured
     } = body;
     
-    console.log('📊 Extracted fields:', {
-      productName,
-      productCategory,
-      productMRP,
-      offerType,
-      offerPercentage,
-      offerPrice,
-      productType,
-      giftType,
-      imagesCount: images?.length,
-      isVisible,
-      isFeatured
-    });
-    
     // Validation
     if (!productName || !description || !productDetails || !productCategory || !productMRP) {
-      console.log('❌ Missing required fields:', {
-        productName: !!productName,
-        description: !!description,
-        productDetails: !!productDetails,
-        productCategory: !!productCategory,
-        productMRP: !!productMRP
-      });
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -109,7 +84,6 @@ export async function PUT(request, { params }) {
     }
     
     if (!images || images.length === 0) {
-      console.log('❌ No images provided');
       return NextResponse.json(
         { success: false, error: 'At least one product image is required' },
         { status: 400 }
@@ -119,23 +93,17 @@ export async function PUT(request, { params }) {
     // Get the existing product to check if category is changing
     const existingProduct = await Product.findById(id);
     if (!existingProduct) {
-      console.log('❌ Product not found with ID:', id);
       return NextResponse.json(
         { success: false, error: 'Product not found' },
         { status: 404 }
       );
     }
     
-    console.log('✅ Found existing product:', existingProduct.productName);
-    
     const oldCategory = existingProduct.productCategory;
     const newCategory = productCategory.toLowerCase().trim();
     
-    console.log('🔄 Category change check:', { oldCategory, newCategory });
-    
     // Find or create the new product category
     if (newCategory !== oldCategory) {
-      console.log('📂 Creating/finding new category:', newCategory);
       await ProductCategory.findOrCreate(productCategory, adminUser.id);
     }
     
@@ -188,14 +156,12 @@ export async function PUT(request, { params }) {
     }
     
     if (!updatedProduct) {
-      console.log('❌ Product update failed - product not found');
       return NextResponse.json(
         { success: false, error: 'Product not found' },
         { status: 404 }
       );
     }
     
-    console.log('🎉 Product update successful');
     return NextResponse.json({
       success: true,
       message: 'Product updated successfully',
@@ -203,8 +169,6 @@ export async function PUT(request, { params }) {
     });
     
   } catch (error) {
-    console.error('💥 Error updating product:', error);
-    console.error('Error stack:', error.stack);
     return NextResponse.json(
       { success: false, error: 'Failed to update product', details: error.message },
       { status: 500 }

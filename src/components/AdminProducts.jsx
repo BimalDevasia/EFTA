@@ -65,18 +65,13 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
       
       const response = await fetch(`/api/products?giftType=${apiCategory}&adminAccess=true`);
       const data = await response.json();
-      console.log('API response status:', response.status);
-      console.log('API response data:', data);
       
       if (response.ok) {
-        console.log(`Fetched ${data.products?.length || 0} products for ${apiCategory}`);
         setProducts(data.products || []);
       } else {
-        console.error('Failed to fetch products:', data.error);
         setProducts([]); // Clear products on error
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
       setProducts([]); // Clear products on error
     } finally {
       setLoading(false);
@@ -165,7 +160,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         });
       }
     } catch (error) {
-      console.error('Error checking product ID:', error);
       setProductIdStatus({
         available: false,
         message: 'Error checking product ID'
@@ -330,7 +324,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         }))]
       }));
     } catch (error) {
-      console.error('Error uploading images:', error);
       // Show detailed image upload error
       const uploadErrorMessage = error.message 
         ? `Failed to upload images: ${error.message}` 
@@ -389,23 +382,16 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log('Form submission started');
-    console.log('Form data before validation:', formData);
     
     if (!validateForm()) {
-      console.log('Form validation failed:', errors);
       return;
     }
 
-    console.log('Form validation passed');
     setIsSubmitting(true);
     
     try {
       const url = editingProduct ? `/api/products/${editingProduct._id}` : '/api/products';
       const method = editingProduct ? 'PUT' : 'POST';
-      
-      // Log the effective category before submitting
-      console.log(`AdminProducts: Submit - effectiveCategory: ${effectiveCategory}`);
       
       const submitData = {
         ...formData,
@@ -428,24 +414,20 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
       });
 
       const data = await response.json();
-      console.log('API Response:', data);
 
       if (response.ok) {
-        console.log('Product saved successfully');
         await fetchProducts();
         setShowAddForm(false);
         setEditingProduct(null);
         resetForm();
       } else {
-        console.error('API Error:', data);
-        // Show detailed error information for debugging
+        // Show detailed error information
         const errorMessage = data.details 
           ? `${data.error}: ${data.details}` 
           : data.error || `Failed to ${editingProduct ? 'update' : 'create'} product`;
         setErrors({ submit: errorMessage });
       }
     } catch (error) {
-      console.error('Network error:', error);
       // Show detailed network error information
       const networkErrorMessage = error.message 
         ? `Network error: ${error.message}` 
@@ -457,8 +439,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
   };
 
   const handleEdit = (product) => {
-    console.log('AdminProducts: handleEdit - product:', product);
-    console.log('AdminProducts: handleEdit - giftType:', product.giftType);
     setEditingProduct(product);
     setFormData({
       productId: product.productId || '',
@@ -502,7 +482,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         alert(deleteErrorMessage);
       }
     } catch (error) {
-      console.error('Error deleting product:', error);
       // Show detailed delete network error
       const deleteNetworkError = error.message 
         ? `Network error while deleting product: ${error.message}` 
@@ -519,11 +498,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
     try {
       setTogglingVisibility(productId); // Set loading state for this specific product
       
-      console.log('=== Visibility Toggle Debug ===');
-      console.log('Product ID:', productId);
-      console.log('Current visibility:', currentVisibility);
-      console.log('New visibility will be:', !currentVisibility);
-      
       const response = await fetch(`/api/products/${productId}`, {
         method: 'PATCH',
         headers: {
@@ -534,12 +508,9 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         })
       });
 
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (response.ok) {
-        console.log('✅ Visibility updated successfully');
         
         // Update only the specific product in the state instead of refetching all products
         setProducts(prevProducts => 
@@ -559,7 +530,6 @@ const AdminProducts = ({ categoryId, hideHeading = false }) => {
         alert(visibilityErrorMessage);
       }
     } catch (error) {
-      console.error('❌ Error updating product visibility:', error);
       // Show detailed visibility network error
       const visibilityNetworkError = error.message 
         ? `Network error while updating visibility: ${error.message}` 

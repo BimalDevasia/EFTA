@@ -2,7 +2,8 @@
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { WhatsAppService, WhatsAppButton, CUSTOMER_SUPPORT_PHONE } from "@/lib/whatsapp";
+import { WhatsAppService } from "@/lib/whatsapp";
+import { useCustomerSupportPhone } from "@/hooks/useWhatsAppNumbers";
 import {
   Select,
   SelectContent,
@@ -20,9 +21,8 @@ const myCountryCodesObject = countryCodes.customList(
 
 const countryCodesArray = Object.values(myCountryCodesObject);
 
-console.log(countryCodesArray);
-
 const EnquiryPage = () => {
+  const { supportNumber, loading: phoneLoading } = useCustomerSupportPhone();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,7 +53,7 @@ const EnquiryPage = () => {
     message += "Please get back to me with more information about your services.";
     
     // Generate WhatsApp link that opens in app
-    const whatsappLink = WhatsAppService.generateWhatsAppLink(CUSTOMER_SUPPORT_PHONE, message);
+    const whatsappLink = WhatsAppService.generateWhatsAppLink(supportNumber, message);
     
     // Create and click a temporary link element to open WhatsApp
     const link = document.createElement('a');

@@ -1,6 +1,8 @@
 // Environment configuration for EFTA application
 // This file centralizes environment variable management
 
+import { FALLBACK_CONSTANTS } from './constants';
+
 export const config = {
   // Database Configuration
   mongodb: {
@@ -21,10 +23,11 @@ export const config = {
     jwtSecret: process.env.JWT_SECRET,
   },
 
-  // WhatsApp Configuration
+  // WhatsApp Configuration (Legacy - now using database settings)
+  // These fallbacks are only used if database fetch fails
   whatsapp: {
-    businessNumber: process.env.BUSINESS_WHATSAPP_NUMBER || '+919847213659',
-    supportNumber: process.env.CUSTOMER_SUPPORT_PHONE || '+919876543210',
+    businessNumber: process.env.BUSINESS_WHATSAPP_NUMBER || FALLBACK_CONSTANTS.BUSINESS_PHONE_FALLBACK,
+    supportNumber: process.env.CUSTOMER_SUPPORT_PHONE || FALLBACK_CONSTANTS.SUPPORT_PHONE_FALLBACK,
   },
 
   // Application Configuration
@@ -52,13 +55,8 @@ export function validateConfig() {
     console.warn('⚠️  Cloudinary configuration is incomplete. Image uploads may not work.');
   }
 
-  if (!process.env.BUSINESS_WHATSAPP_NUMBER) {
-    console.warn('⚠️  BUSINESS_WHATSAPP_NUMBER not set. Using fallback number.');
-  }
-
-  if (!process.env.CUSTOMER_SUPPORT_PHONE) {
-    console.warn('⚠️  CUSTOMER_SUPPORT_PHONE not set. Using fallback number.');
-  }
+  // WhatsApp numbers are now managed through the database via admin panel
+  // No need to warn about missing environment variables
 
   if (errors.length > 0) {
     throw new Error(`Configuration errors:\n${errors.join('\n')}`);
