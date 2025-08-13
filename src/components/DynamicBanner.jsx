@@ -41,6 +41,7 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
   const displaySubtitle = banner?.subtitle || defaultSubtitle;
   const buttonText = banner?.buttonText || (pageType === 'courses' || pageType === 'events' ? "Enquiry" : "Shop Now");
   const description = banner?.description;
+  const buttonColor = banner?.buttonColor || (pageType === 'gifts' ? '#8300FF' : '#4338CA'); // Default colors for fallback
 
   // Handle WhatsApp enquiry for courses and events
   const handleEnquiry = async (pageType) => {
@@ -108,7 +109,10 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
           </div>
           
           <Link href="/products?giftType=personalisedGift">
-            <button className='w-max bg-primary_color shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'>
+            <button 
+              className='w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]'
+              style={{ backgroundColor: '#8300FF' }}
+            >
               Shop Now
             </button>
           </Link>
@@ -170,15 +174,17 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
         {(pageType === 'courses' || pageType === 'events') ? (
           <button 
             onClick={() => handleEnquiry(pageType)}
-            className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] bg-gift_blue`}
+            className="w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]"
+            style={{ backgroundColor: buttonColor }}
           >
             {buttonText}
           </button>
         ) : (
           <Link href={getLinkDestination()}>
-            <button className={`w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px] ${
-              pageType === 'gifts' ? 'bg-primary_color' : pageType === 'corporate' ? 'bg-gift_blue' : 'bg-gift_blue'
-            }`}>
+            <button 
+              className="w-max shadow-button_shadow lg:py-4 lg:px-12 py-3 px-8 rounded-[100px] text-white font-semibold text-sm lg:text-[20px]"
+              style={{ backgroundColor: buttonColor }}
+            >
               {buttonText}
             </button>
           </Link>

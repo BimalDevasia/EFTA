@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongoose';
 import Product from '@/lib/models/product';
 import ProductCategory from '@/lib/models/productCategory';
+import EventCategory from '@/lib/models/eventCategory';
 import { verifyAdmin } from '@/lib/auth-helpers';
 import { formatProductTextCasing } from '@/utils/textFormatting';
 
@@ -12,6 +13,7 @@ export async function GET(request) {
     
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
+    const eventCategory = searchParams.get('eventCategory');
     const giftType = searchParams.get('giftType');
     const productType = searchParams.get('productType');
     const tags = searchParams.get('tags');
@@ -49,6 +51,31 @@ export async function GET(request) {
         console.log('👨‍💼 API: Admin without visibility filter - showing all products');
       }
       // If no visibility parameter for admin, show all items (both visible and hidden)
+    }
+    
+    // Handle event category filtering (new feature)
+    if (eventCategory) {
+      try {
+        const eventCat = await EventCategory.findById(eventCategory);
+        if (eventCat && eventCat.products && eventCat.products.length > 0) {
+          query._id = { $in: eventCat.products };
+          console.log(`🎉 API: Filtering by event category "${eventCat.title}" with ${eventCat.products.length} products`);
+        } else {
+          // If no products in event category, return empty results
+          return NextResponse.json({
+            products: [],
+            pagination: {
+              page,
+              limit,
+              total: 0,
+              pages: 0
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching event category:', error);
+        // Continue with normal filtering if event category fetch fails
+      }
     }
     
     // Filter by giftType

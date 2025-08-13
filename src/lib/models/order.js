@@ -18,8 +18,7 @@ const OrderSchema = new mongoose.Schema({
   orderNumber: { 
     type: String, 
     required: true, 
-    unique: true,
-    index: true
+    unique: true
   },
   customerName: { 
     type: String, 

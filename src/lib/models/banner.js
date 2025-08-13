@@ -32,12 +32,15 @@ const bannerSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['home', 'gifts', 'courses', 'events', 'corporate'],
-    unique: true, // Each page can have only one banner
-    index: true // Index already defined here, no need for separate index
+    unique: true // Each page can have only one banner (unique automatically creates index)
   },
   buttonText: {
     type: String,
     default: 'Shop Now'
+  },
+  buttonColor: {
+    type: String,
+    default: '#8300FF'
   },
   buttonLink: {
     type: String,

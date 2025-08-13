@@ -38,36 +38,50 @@ export async function POST(req) {
     const data = await req.json();
     
     // Validate required fields
-    if (!data.title || !data.image?.url || !data.pageType) {
+    if (!data.title || !data.pageType) {
       return NextResponse.json(
-        { error: 'Title, image, and page type are required' },
+        { error: 'Title and page type are required' },
         { status: 400 }
       );
     }
 
-    // Always set buttonLink to /gifts
-    data.buttonLink = '/gifts';
+    // Validate image data structure
+    if (!data.image || !data.image.url || !data.image.public_id) {
+      return NextResponse.json(
+        { error: 'Valid image data with URL and public_id is required' },
+        { status: 400 }
+      );
+    }
+
+    // Set buttonLink based on pageType
+    data.buttonLink = `/${data.pageType}`;
+    
+    console.log('Received banner data:', data);
     
     // Check if banner for this pageType already exists
     const existingBanner = await Banner.findOne({ pageType: data.pageType });
     
     if (existingBanner) {
       // Update existing banner
+      console.log('Updating existing banner:', existingBanner._id);
       const updatedBanner = await Banner.findByIdAndUpdate(
         existingBanner._id,
         data,
         { new: true, runValidators: true }
       );
       
+      console.log('Banner updated successfully:', updatedBanner);
       return NextResponse.json({
         message: 'Banner updated successfully',
         banner: updatedBanner
       });
     } else {
       // Create new banner
+      console.log('Creating new banner for pageType:', data.pageType);
       const banner = new Banner(data);
       const savedBanner = await banner.save();
       
+      console.log('Banner created successfully:', savedBanner);
       return NextResponse.json({
         message: 'Banner created successfully',
         banner: savedBanner

@@ -7,7 +7,6 @@ import Wrapper from "../Wrapper";
 const FeaturedCorporateGiftSection = () => {
   const [hasFeaturedGifts, setHasFeaturedGifts] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // Start with false to avoid hydration mismatch
-  const [debug, setDebug] = useState(null);
 
   // Check if there are any featured corporate gifts
   useEffect(() => {
@@ -20,12 +19,6 @@ const FeaturedCorporateGiftSection = () => {
           const response = await fetch('/api/products?giftType=corporateGift&featured=true&limit=1');
           const data = await response.json();
           setHasFeaturedGifts(data.products && data.products.length > 0);
-          setDebug({
-            success: data.success,
-            count: data.products ? data.products.length : 0,
-            sample: data.products && data.products.length > 0 ? 
-              {name: data.products[0].productName, id: data.products[0]._id} : null
-          });
         } catch (error) {
           console.error('Error checking for featured corporate gifts:', error);
           setHasFeaturedGifts(false);
@@ -48,9 +41,6 @@ const FeaturedCorporateGiftSection = () => {
             <SpecialText className="text-3xl">
               Featured Corporate Gifts
               {/* Move loading indicator to a separate element to avoid hydration issues */}
-              <span className="text-sm ml-2 text-gray-500 font-normal">
-                {!isLoading && debug && !hasFeaturedGifts && '(No gifts found)'}
-              </span>
             </SpecialText>
           </h2>
           <Link href="/products?giftType=corporateGift&featured=true&hideCategoryFilter=true&title=Featured%20Corporate%20Gifts">

@@ -1,6 +1,5 @@
 "use client";
 
-import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -117,7 +116,7 @@ const AuthGuard = ({ children }) => {
 
   // If authenticated and not on login page, show with sidebar
   return (
-    <Wrapper>
+    <div className="w-full">
       <div className="flex h-screen overflow-hidden">
         <div className="flex-shrink-0 w-[232px]">
           <Sidebar />
@@ -126,7 +125,7 @@ const AuthGuard = ({ children }) => {
           {children}
         </div>
       </div>
-    </Wrapper>
+    </div>
   );
 };
 
@@ -221,6 +220,17 @@ const Sidebar = () => {
                 href="/admin/banners"
               >
                 Banners
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={cn(
+                  "text-[20px] text-[#00000063] font-bold",
+                  pathname === "/admin/event-categories" && "text-[#8300FF]"
+                )}
+                href="/admin/event-categories"
+              >
+                Event Categories
               </Link>
             </li>
             <li>

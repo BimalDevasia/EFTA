@@ -1,6 +1,12 @@
 import React from "react";
 
-const Logo = () => {
+const Logo = ({ size = "default" }) => {
+  const sizeClasses = {
+    default: "lg:w-[220px] lg:h-[140px] w-[100px] h-[65.34px]",
+    small: "w-[120px] h-[54px]",
+    medium: "w-[160px] h-[72px]"
+  };
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +14,7 @@ const Logo = () => {
       height={105}
       viewBox="0 0 232 105"
       fill="none"
-      className="lg:w-[220px] lg:h-[140px] w-[100px] h-[65.34px]"
+      className={sizeClasses[size]}
     >
       <path
         fillRule="evenodd"

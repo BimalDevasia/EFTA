@@ -1,9 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Select,
   SelectContent,
@@ -12,65 +9,107 @@ import {
   SelectValue,
 } from "./ui/select";
 
-const schema = z.object({
-  title: z.string().min(1, "Title is required"),
-  subtitle: z.string().optional(),
-  description: z.string().optional(),          pageType: z.enum(['gifts', 'courses', 'events', 'corporate'], {
-    required_error: "Page type is required"
-  }),
-  buttonText: z.string().min(1, "Button text is required"),
-  image: z.object({
-    url: z.string().url("Invalid image URL"),
-    public_id: z.string().min(1, "Public ID is required"),
-    alt: z.string().optional()
-  }, { required_error: "Banner image is required" }),
-});
+const BANNER_SECTIONS = [
+  {
+    id: 'gifts',
+    title: 'Valentine',
+    subtitle: 'Surprise your',
+    description: 'Create unique and memorable gifts for your loved ones',
+    defaultButtonText: 'Shop Gifts',
+    defaultButtonColor: '#F46782'  // primary_color
+  },
+  {
+    id: 'courses',
+    title: 'Creativity',
+    subtitle: 'Unlock',
+    description: 'Learn new skills with our comprehensive course offerings',
+    defaultButtonText: 'Browse Courses',
+    defaultButtonColor: '#1F76BD'  // gift_blue
+  },
+  {
+    id: 'events',
+    title: 'Style',
+    subtitle: 'Celebrate In',
+    description: 'Discover and join exciting events in your area',
+    defaultButtonText: 'View Events',
+    defaultButtonColor: '#1F76BD'  // gift_blue
+  },
+  {
+    id: 'corporate',
+    title: 'Company',
+    subtitle: 'Brand your',
+    description: 'Professional solutions for your business needs',
+    defaultButtonText: 'Learn More',
+    defaultButtonColor: '#1F76BD'  // gift_blue
+  }
+];
 
-function AdminBanner() {
+const BUTTON_COLORS = [
+  { name: 'Primary Pink', value: '#F46782' },     // primary_color (for gifts)
+  { name: 'Gift Blue', value: '#1F76BD' },       // gift_blue (for courses, events, corporate)
+  { name: 'Nav Purple', value: '#8300FF' },      // nav_blue (admin color)
+  { name: 'Course Blue', value: '#297CC0' },     // course_blue (alternative blue)
+  { name: 'Green', value: '#22C55E' },
+  { name: 'Orange', value: '#F97316' }
+];
+
+const AdminBanner = () => {
+  const [banners, setBanners] = useState({});
+  const [activeBannerSection, setActiveBannerSection] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [banners, setBanners] = useState([]);
-  const [selectedBanner, setSelectedBanner] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [showAddForm, setShowAddForm] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      title: "",
-      subtitle: "",
-      description: "",
-      pageType: "gifts",
-      buttonText: "Shop Now",
-      image: null,
-    },
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [imageRemoved, setImageRemoved] = useState(false);
+  const [formData, setFormData] = useState({
+    subtitle: '',
+    title: '',
+    description: '',
+    buttonText: '',
+    buttonColor: '#8300FF',
+    image: null
   });
 
-  const selectedPageType = watch('pageType');
-
-  // Fetch existing banners
   useEffect(() => {
     fetchBanners();
   }, []);
 
   const fetchBanners = async () => {
     try {
-      const response = await fetch('/api/banner');
+      const response = await fetch("/api/banner");
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
-        setBanners(Array.isArray(data.banners) ? data.banners : []);
+        const bannersObj = {};
+        data.banners.forEach(banner => {
+          bannersObj[banner.pageType] = banner;
+        });
+        setBanners(bannersObj);
       }
     } catch (error) {
-      console.error('Error fetching banners:', error);
+      console.error("Error fetching banners:", error);
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.subtitle.trim()) newErrors.subtitle = 'Heading (small text) is required';
+    if (!formData.title.trim()) newErrors.title = 'Main heading is required';
+    if (!formData.buttonText.trim()) newErrors.buttonText = 'Button text is required';
+    if (!formData.buttonColor.trim()) newErrors.buttonColor = 'Button color is required';
+    
+    // Image validation - always required, either new image or existing image (unless removed)
+    const hasNewImage = formData.image && formData.image.url;
+    const hasExistingImage = isEditing && banners[activeBannerSection]?.image?.url && !imageRemoved;
+    
+    if (!hasNewImage && !hasExistingImage) {
+      newErrors.image = 'Banner image is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleImageUpload = async (event) => {
@@ -78,29 +117,31 @@ function AdminBanner() {
     if (!file) return;
 
     setIsUploading(true);
-    
-    try {
-      const formData = new FormData();
-      formData.append('images', file);
+    const formData = new FormData();
+    formData.append('images', file); // Use 'images' to match API expectation
 
+    try {
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const result = await response.json();
+        // API returns array of images, take the first one
+        const uploadedImageData = result.images[0];
         const imageData = {
-          url: data.images[0].url,
-          public_id: data.images[0].public_id,
-          alt: ''
+          url: uploadedImageData.url,
+          public_id: uploadedImageData.public_id,
+          alt: `Banner image for ${activeBannerSection}`
         };
-        
         setUploadedImage(imageData);
-        setValue('image', imageData);
+        setFormData(prev => ({ ...prev, image: imageData }));
+        setImageRemoved(false); // Reset the removed flag when new image is uploaded
       } else {
         const errorData = await response.json();
-        alert(`Failed to upload image: ${errorData.error}`);
+        console.error('Upload failed:', errorData);
+        alert(`Failed to upload image: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -111,35 +152,121 @@ function AdminBanner() {
   };
 
   const handleRemoveImage = async () => {
-    if (!uploadedImage) return;
+    // For newly uploaded images, delete from cloud storage
+    if (uploadedImage?.public_id) {
+      try {
+        await fetch('/api/upload', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ public_id: uploadedImage.public_id }),
+        });
+      } catch (error) {
+        console.error('Error removing image from cloud:', error);
+        alert('Error removing image. Please try again.');
+        return;
+      }
+    }
 
-    try {
-      await fetch('/api/upload', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ public_id: uploadedImage.public_id }),
+    // Reset image state regardless of whether it was newly uploaded or existing
+    setUploadedImage(null);
+    setFormData(prev => ({ ...prev, image: null }));
+    setImageRemoved(true); // Mark that the image has been removed
+  };
+
+  const handleEditBanner = (sectionId) => {
+    const section = BANNER_SECTIONS.find(s => s.id === sectionId);
+    const existingBanner = banners[sectionId];
+    
+    setActiveBannerSection(sectionId);
+    setIsEditing(!!existingBanner);
+    setImageRemoved(false); // Reset image removed flag when starting to edit
+    
+    if (existingBanner) {
+      // Populate form with existing banner data
+      console.log('Editing existing banner:', existingBanner);
+      setFormData({
+        subtitle: existingBanner.subtitle || '',
+        title: existingBanner.title || '',
+        description: existingBanner.description || '',
+        buttonText: existingBanner.buttonText || '',
+        buttonColor: existingBanner.buttonColor || section.defaultButtonColor,
+        image: existingBanner.image
       });
-
+      setUploadedImage(existingBanner.image);
+    } else {
+      // Populate with default values for new banner
+      console.log('Creating new banner for section:', sectionId);
+      setFormData({
+        subtitle: section.subtitle,
+        title: section.title,
+        description: section.description,
+        buttonText: section.defaultButtonText,
+        buttonColor: section.defaultButtonColor,
+        image: null
+      });
       setUploadedImage(null);
-      setValue('image', null);
-    } catch (error) {
-      console.error('Error removing image:', error);
-      alert('Error removing image. Please try again.');
     }
   };
 
-  const onSubmit = async (data) => {
-    if (!uploadedImage) {
-      alert("Please upload a banner image before saving.");
+  const handleCancel = () => {
+    console.log('handleCancel called - resetting form and navigation');
+    setFormData({
+      subtitle: '',
+      title: '',
+      description: '',
+      buttonText: '',
+      buttonColor: '#8300FF',
+      image: null
+    });
+    setUploadedImage(null);
+    setActiveBannerSection(null);
+    setIsEditing(false);
+    setImageRemoved(false); // Reset image removed flag
+    setErrors({});
+    console.log('handleCancel completed - should show preview grid');
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log('=== onSubmit function called ===');
+    console.log('Form data:', formData);
+    
+    // Validate form like AdminProducts
+    if (!validateForm()) {
+      console.log('Form validation failed:', errors);
+      return;
+    }
+    
+    console.log('Form validation passed');
+    setIsSubmitting(true);
+    
+    if (!activeBannerSection) {
+      console.log('No banner section selected');
+      alert("No banner section selected.");
+      setIsSubmitting(false);
       return;
     }
 
     try {
+      // Determine which image to use: new image, or existing (if not removed)
+      const imageToUse = formData.image || (!imageRemoved ? banners[activeBannerSection]?.image : null);
+      
+      // Additional validation to ensure we have a valid image
+      if (!imageToUse || !imageToUse.url || !imageToUse.public_id) {
+        alert("Error: No valid image found. Please upload an image before saving.");
+        setIsSubmitting(false);
+        return;
+      }
+      
       const submitData = {
-        ...data,
-        buttonLink: "/gifts", // Always use /gifts as the button link
-        image: uploadedImage
+        ...formData,
+        pageType: activeBannerSection,
+        buttonLink: `/${activeBannerSection}`,
+        image: imageToUse,
+        isActive: true
       };
+
+      console.log('Submitting banner data:', submitData);
 
       const response = await fetch('/api/banner', {
         method: 'POST',
@@ -149,71 +276,26 @@ function AdminBanner() {
 
       if (response.ok) {
         const result = await response.json();
+        console.log('Banner save successful:', result);
+        
+        // Update banners state first
+        await fetchBanners();
+        
+        // Reset form and navigation state (same as products pattern)
+        handleCancel();
+        
+        // Show success message
         alert(result.message);
-        reset();
-        setUploadedImage(null);
-        setIsEditing(false);
-        setSelectedBanner(null);
-        fetchBanners();
       } else {
         const errorData = await response.json();
+        console.error('Banner save error:', errorData);
         alert(`Failed to save banner: ${errorData.error}`);
       }
     } catch (error) {
       console.error("Error saving banner:", error);
       alert("Error saving banner. Please try again.");
-    }
-  };
-
-  const handleEdit = (banner) => {
-    setSelectedBanner(banner);
-    setIsEditing(true);
-    setUploadedImage(banner.image);
-    
-    // Populate form with banner data
-    setValue('title', banner.title);
-    setValue('subtitle', banner.subtitle || '');
-    setValue('description', banner.description || '');
-    setValue('pageType', banner.pageType);
-    setValue('buttonText', banner.buttonText);
-    setValue('image', banner.image);
-  };
-
-  const handleCancel = () => {
-    reset();
-    setUploadedImage(null);
-    setIsEditing(false);
-    setSelectedBanner(null);
-  };
-
-  const handleDelete = async (bannerId, publicId) => {
-    if (!confirm('Are you sure you want to delete this banner?')) return;
-
-    try {
-      // Delete image from Cloudinary
-      if (publicId) {
-        await fetch('/api/upload', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ public_id: publicId }),
-        });
-      }
-
-      // Delete banner from database
-      const response = await fetch(`/api/banner/${bannerId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        alert('Banner deleted successfully');
-        fetchBanners();
-      } else {
-        const errorData = await response.json();
-        alert(`Failed to delete banner: ${errorData.error}`);
-      }
-    } catch (error) {
-      console.error('Error deleting banner:', error);
-      alert('Error deleting banner');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -221,243 +303,360 @@ function AdminBanner() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-[36px] text-[#8300FF] font-bold">Banner Management</h1>
-        <button
-          onClick={() => {
-            setShowAddForm(!showAddForm);
-            if (!showAddForm) {
-              setIsEditing(false);
-              setSelectedBanner(null);
-              reset();
-              setUploadedImage(null);
-            }
-          }}
-          className="bg-[#8300FF] text-white px-4 py-2 rounded-md hover:bg-[#6b00cc] transition-colors"
-        >
-          {showAddForm ? 'Cancel' : (isEditing ? 'Cancel Edit' : 'Add Banner')}
-        </button>
       </div>
 
-      {showAddForm && (
+      {activeBannerSection ? (
+        /* Edit Form */
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4">
-            {isEditing ? 'Edit Banner' : 'Add New Banner'}
-          </h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Page Type</p>
-            <Controller
-              name="pageType"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a page type" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="gifts">Gifts Page</SelectItem>
-                    <SelectItem value="courses">Courses Page</SelectItem>
-                    <SelectItem value="events">Events Page</SelectItem>
-                    <SelectItem value="corporate">Corporate Page</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {errors.pageType && (
-              <p className="text-red-500">{errors.pageType.message}</p>
-            )}
+          <div className="border-b border-gray-200 pb-4 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              {isEditing ? 'Edit Banner' : 'Create Banner'}
+            </h2>
+            <p className="text-sm text-gray-600">
+              {isEditing 
+                ? `Update the ${BANNER_SECTIONS.find(s => s.id === activeBannerSection)?.title} banner information below and save your changes.`
+                : `Create a new ${BANNER_SECTIONS.find(s => s.id === activeBannerSection)?.title} banner by filling out the form below.`
+              }
+            </p>
           </div>
 
-          {/* Title */}
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Banner Title</p>
-            <input
-              {...register("title")}
-              className="border-[#0000004D] border-2 w-full border-solid rounded-[8px] min-h-10 focus:outline-none px-5 py-3 text-lg font-medium font-poppins"
-            />
-            {errors.title && (
-              <p className="text-red-500">{errors.title.message}</p>
-            )}
-          </div>
+          <form onSubmit={onSubmit} className="space-y-6">
+            {/* Basic Information Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Banner Content
+              </h3>
 
-          {/* Subtitle */}
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Banner Subtitle</p>
-            <input
-              {...register("subtitle")}
-              className="border-[#0000004D] border-2 w-full border-solid rounded-[8px] min-h-10 focus:outline-none px-5 py-3 text-base font-medium font-poppins"
-            />
-          </div>
-
-          {/* Description */}
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Description (Optional)</p>
-            <textarea
-              {...register("description")}
-              rows={3}
-              className="border-[#0000004D] border-2 w-full border-solid rounded-[8px] focus:outline-none px-5 py-3 text-base font-medium font-poppins"
-            />
-          </div>
-
-          {/* Button Text */}
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Button Text</p>
-            <input
-              {...register("buttonText")}
-              className="border-[#0000004D] border-2 w-full border-solid rounded-[8px] min-h-10 focus:outline-none px-5 py-3 text-base font-medium font-poppins"
-            />
-            {errors.buttonText && (
-              <p className="text-red-500">{errors.buttonText.message}</p>
-            )}
-            <p className="text-sm text-gray-500">Button will always link to /gifts</p>
-          </div>
-
-          {/* Image Upload */}
-          <div className="flex flex-col gap-2">
-            <p className="font-poppins text-base font-light">Banner Image</p>
-            
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="banner-upload"
-                disabled={isUploading}
-              />
-              <label
-                htmlFor="banner-upload"
-                className={`cursor-pointer inline-block px-4 py-2 rounded-md font-poppins text-sm transition-colors ${
-                  isUploading 
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                    : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
-                }`}
-              >
-                {isUploading ? 'Uploading...' : 'Choose Banner Image'}
-              </label>
-              <p className="text-gray-500 font-poppins text-sm mt-2">
-                Recommended: 1920x800px (JPG, PNG, GIF)
-              </p>
-            </div>
-
-            {uploadedImage && (
-              <div className="relative group mt-4">
-                <Image
-                  src={uploadedImage.url}
-                  alt="Banner Preview"
-                  width={400}
-                  height={160}
-                  className="w-full h-40 object-cover rounded-lg border-2 border-gray-200"
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {errors.image && (
-              <p className="text-red-500 text-sm">{errors.image.message}</p>
-            )}
-          </div>
-
-          <div className="flex gap-3">
-            <button
-              type="submit"
-              disabled={isUploading || !uploadedImage}
-              className="bg-[#8300FF] text-white px-6 py-2 rounded-md hover:bg-[#6b00cc] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isUploading ? 'Processing...' : (isEditing ? 'Update Banner' : 'Add Banner')}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setShowAddForm(false);
-                setIsEditing(false);
-                setSelectedBanner(null);
-                reset();
-                setUploadedImage(null);
-              }}
-              className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-
-          {errors.image && (
-            <p className="text-red-500 text-sm">{errors.image.message}</p>
-          )}
-        </form>
-        </div>
-      )}
-
-      {/* Banners List Section */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">Existing Banners ({banners.length})</h2>
-        </div>
-        
-        <div className="p-6">
-          {banners.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">No banners created yet</p>
-          ) : (
-            <div className="space-y-4">
-              {banners.map((banner) => (
-                <div key={banner._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h4 className="font-semibold text-lg">{banner.title}</h4>
-                      <p className="text-sm text-gray-600 capitalize">{banner.pageType} Page</p>
-                      {banner.subtitle && (
-                        <p className="text-sm text-gray-500">{banner.subtitle}</p>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          handleEdit(banner);
-                          setShowAddForm(true);
-                        }}
-                        className="text-[#8300FF] hover:text-[#6b00cc] text-sm font-medium"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(banner._id, banner.image.public_id)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {banner.image && (
+              {/* Live Preview */}
+              <div className="bg-gray-100 p-6 rounded-lg mb-6">
+                <h4 className="text-lg font-semibold mb-4 text-gray-700">Live Preview</h4>
+                <div className="relative h-64 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg overflow-hidden">
+                  {uploadedImage ? (
                     <Image
-                      src={banner.image.url}
-                      alt={banner.title}
-                      width={300}
-                      height={96}
-                      className="w-full h-24 object-cover rounded border mb-3"
+                      src={uploadedImage.url}
+                      alt="Banner Preview"
+                      fill
+                      className="object-cover"
                     />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-white">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <span className="text-2xl">📄</span>
+                        </div>
+                        <p className="text-sm opacity-80">Upload an image to see preview</p>
+                      </div>
+                    </div>
                   )}
                   
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Button: {banner.buttonText}</span>
-                    <span>Page: {banner.pageType}</span>
+                  <div className="absolute inset-0 bg-black/40 flex items-center">
+                    <div className="text-white px-8 max-w-lg">
+                      {formData.subtitle && (
+                        <p className="text-lg mb-3 font-semibold opacity-90">{formData.subtitle}</p>
+                      )}
+                      <h2 className="text-6xl font-satisfy mb-2">
+                        {formData.title || "Enter main heading..."}
+                      </h2>
+                      {formData.description && (
+                        <p className="text-sm mb-4 opacity-80">{formData.description}</p>
+                      )}
+                      <button 
+                        className="text-white px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        style={{ 
+                          backgroundColor: formData.buttonColor || "#8300FF",
+                          boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.1)'
+                        }}
+                      >
+                        {formData.buttonText || "Enter button text..."}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Section Overlay Tag */}
+                  <div className="absolute top-3 left-3">
+                    <div className="bg-black/70 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+                      {activeBannerSection.toUpperCase()}
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Form Fields */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Heading (Small Text) */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Heading (Small Text) *
+                  </label>
+                  <input
+                    value={formData.subtitle}
+                    onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
+                    placeholder="e.g., Surprise your"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                  />
+                  {errors.subtitle && (
+                    <p className="text-red-500 text-sm mt-1">{errors.subtitle}</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">Small text that appears above the main heading</p>
+                </div>
+
+                {/* Main Heading */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Main Heading *
+                  </label>
+                  <input
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                    placeholder="e.g., Valentine"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                  />
+                  {errors.title && (
+                    <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">Large decorative text - the main banner heading</p>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Banner Description (Optional)
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  rows={3}
+                  placeholder="Additional descriptive text for the banner"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent resize-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">Optional description text that appears below the heading</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                {/* Button Text */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Button Text *
+                  </label>
+                  <input
+                    value={formData.buttonText}
+                    onChange={(e) => setFormData(prev => ({ ...prev, buttonText: e.target.value }))}
+                    placeholder="e.g., Shop Now"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8300FF] focus:border-transparent"
+                  />
+                  {errors.buttonText && (
+                    <p className="text-red-500 text-sm mt-1">{errors.buttonText}</p>
+                  )}
+                </div>
+
+                {/* Button Color */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Button Color *
+                  </label>
+                  <Select 
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, buttonColor: value }))} 
+                    value={formData.buttonColor}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select button color" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {BUTTON_COLORS.map((color) => (
+                        <SelectItem key={color.value} value={color.value}>
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-4 h-4 rounded-full border border-gray-300"
+                              style={{ backgroundColor: color.value }}
+                            ></div>
+                            <span>{color.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.buttonColor && (
+                    <p className="text-red-500 text-sm mt-1">{errors.buttonColor}</p>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Image Upload Section */}
+            <div className="border-b border-gray-100 pb-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <svg className="w-5 h-5 mr-2 text-[#8300FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Banner Image
+              </h3>
+
+              {uploadedImage ? (
+                <div className="relative inline-block">
+                  <Image
+                    src={uploadedImage.url}
+                    alt="Banner"
+                    width={300}
+                    height={200}
+                    className="rounded-lg object-cover border border-gray-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600 transition-colors"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="cursor-pointer flex flex-col items-center"
+                  >
+                    <svg className="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span className="text-gray-600">Click to upload banner image</span>
+                    <span className="text-sm text-gray-400 mt-1">PNG, JPG up to 10MB</span>
+                  </label>
+                </div>
+              )}
+
+              {errors.image && (
+                <p className="text-red-500 text-sm mt-2">{errors.image.message}</p>
+              )}
+            </div>
+
+            {/* Form Actions */}
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={isSubmitting || isUploading}
+                className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                  isSubmitting || isUploading
+                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                    : 'bg-[#8300FF] text-white hover:bg-[#6b00cc]'
+                }`}
+              >
+                {isSubmitting ? 'Saving...' : isUploading ? 'Processing...' : (isEditing ? 'Update Banner' : 'Create Banner')}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+
+            {errors.submit && (
+              <div className="text-red-500 text-sm">{errors.submit}</div>
+            )}
+            
+            
+          </form>
         </div>
-      </div>
+      ) : (
+        /* Banner Preview Grid */
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 mb-1">Banner Management</h2>
+                <p className="text-sm text-gray-600">
+                  Manage your website banners • 4 sections available
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {BANNER_SECTIONS.map((section) => {
+                const existingBanner = banners[section.id];
+                return (
+                  <div 
+                    key={section.id}
+                    className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-[#8300FF] transition-all cursor-pointer group"
+                    onClick={() => handleEditBanner(section.id)}
+                  >
+                    {/* Banner Preview - Frontend Style */}
+                    <div className="relative h-48 bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center overflow-hidden">
+                      {existingBanner?.image ? (
+                        <Image
+                          src={existingBanner.image.url}
+                          alt={existingBanner.title}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="text-white text-center">
+                          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span className="text-2xl">📄</span>
+                          </div>
+                          <p className="text-sm opacity-80">No banner image</p>
+                        </div>
+                      )}
+                      
+                      {/* Banner Content Overlay - Frontend Style */}
+                      <div className="absolute inset-0 bg-black/40 flex items-center">
+                        <div className="text-white px-8 max-w-lg">
+                          {existingBanner?.subtitle && (
+                            <p className="text-lg mb-3 font-semibold opacity-90">{existingBanner.subtitle}</p>
+                          )}
+                          <h2 className="text-6xl font-satisfy mb-2">
+                            {existingBanner?.title || section.title}
+                          </h2>
+                          {existingBanner?.description && (
+                            <p className="text-sm mb-4 opacity-80">{existingBanner.description}</p>
+                          )}
+                          <button 
+                            className="text-white px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                            style={{ 
+                              backgroundColor: existingBanner?.buttonColor || section.defaultButtonColor,
+                              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 10px rgba(0, 0, 0, 0.1)'
+                            }}
+                          >
+                            {existingBanner?.buttonText || section.defaultButtonText}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      {/* Section Overlay Tag */}
+                      <div className="absolute top-3 left-3">
+                        <div className="bg-black/70 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+                          {section.id.toUpperCase()}
+                        </div>
+                      </div>
+
+                      {/* Click to Edit Overlay */}
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="bg-white/90 text-gray-800 px-6 py-3 rounded-lg font-semibold shadow-lg transform scale-95 group-hover:scale-100 transition-transform duration-300">
+                          {existingBanner ? 'Click to Edit' : 'Click to Create'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default AdminBanner;

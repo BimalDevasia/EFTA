@@ -46,7 +46,8 @@ const ProductListContent = () => {
     featured: false,
     visible: false,
     giftType: null,
-    category: null
+    category: null,
+    eventCategory: null
   });
 
   // UI control flags
@@ -72,13 +73,17 @@ const ProductListContent = () => {
         const visibleParam = searchParams.get('visible');
         const hideCategoryFilterParam = searchParams.get('hideCategoryFilter');
         const titleParam = searchParams.get('title');
+        const tagsParam = searchParams.get('tags');
+        const eventCategoryParam = searchParams.get('eventCategory');
 
         console.log('🔍 DEBUG - URL params:', { 
           category: categoryParam, 
           giftType: giftTypeParam,
           featured: featuredParam,
           visible: visibleParam,
-          title: titleParam
+          title: titleParam,
+          tags: tagsParam,
+          eventCategory: eventCategoryParam
         });
 
         // 2. Set UI state based on URL parameters
@@ -89,6 +94,18 @@ const ProductListContent = () => {
         // 3. Set page title
         if (titleParam) {
           setPageTitle(decodeURIComponent(titleParam));
+        } else if (tagsParam) {
+          // Handle special tag-based titles
+          const tag = tagsParam.toLowerCase();
+          if (tag === 'valentine') {
+            setPageTitle("Valentine's Day Gifts");
+          } else if (tag === 'christmas') {
+            setPageTitle('Christmas Gifts');
+          } else if (tag === 'halloween') {
+            setPageTitle('Halloween Gifts');
+          } else {
+            setPageTitle(`${tag.charAt(0).toUpperCase() + tag.slice(1)} Gifts`);
+          }
         } else if (featuredParam === 'true') {
           setPageTitle('Featured Gifts');
         } else if (giftTypeParam === 'personalisedGift') {
@@ -123,29 +140,42 @@ const ProductListContent = () => {
         if (categoryParam && hideCategoryFilterParam === 'true') apiQueryParams.set('category', categoryParam);
         if (featuredParam === 'true') apiQueryParams.set('featured', 'true');
         if (visibleParam === 'true') apiQueryParams.set('visible', 'true');
+        if (tagsParam) apiQueryParams.set('tags', tagsParam);
         
         // 5. Set hidden filters for UI state
         const newHiddenFilters = {
           featured: featuredParam === 'true',
           visible: visibleParam === 'true',
           giftType: giftTypeParam,
-          category: categoryParam && hideCategoryFilterParam === 'true' ? categoryParam : null
+          category: categoryParam && hideCategoryFilterParam === 'true' ? categoryParam : null,
+          tags: tagsParam,
+          eventCategory: eventCategoryParam
         };
-        // If API is filtering for featured or cake, skip client filtering
-        const shouldSkipClientFiltering = (featuredParam === 'true') || (categoryParam === 'cake');
+        // If API is filtering for featured, cake, tags, or event category, skip client filtering
+        const shouldSkipClientFiltering = (featuredParam === 'true') || (categoryParam === 'cake') || (tagsParam) || (eventCategoryParam);
         setSkipClientFiltering(shouldSkipClientFiltering);
         console.log('🔍 DEBUG - API query params:', apiQueryParams.toString());
         console.log('🔍 DEBUG - Setting hidden filters:', newHiddenFilters, 'skipClientFiltering:', shouldSkipClientFiltering);
         setHiddenFilters(newHiddenFilters);
 
         // 6. Fetch products with the constructed query
-        const queryString = apiQueryParams.toString();
-        const apiUrl = `/api/products${queryString ? `?${queryString}` : ''}`;
+        let queryString, apiUrl;
+        
+        // Special handling for event categories - fetch associated products
+        if (eventCategoryParam) {
+          console.log('🔍 DEBUG - Fetching products for event category:', eventCategoryParam);
+          apiUrl = `/api/products?eventCategory=${eventCategoryParam}`;
+        } else {
+          queryString = apiQueryParams.toString();
+          apiUrl = `/api/products${queryString ? `?${queryString}` : ''}`;
+        }
         
         console.log('🔍 DEBUG - Fetching products from:', apiUrl);
         
         const response = await fetch(apiUrl);
         const data = await response.json();
+        
+        console.log('🔍 DEBUG - API Response:', response.status, data);
         
         if (response.ok) {
           console.log(`🔍 DEBUG - Found ${data.products?.length || 0} products`);
