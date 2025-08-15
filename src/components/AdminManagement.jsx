@@ -63,14 +63,22 @@ const AdminManagement = () => {
           settingsMap[setting.key] = setting.value;
         });
         
+        // Debug: Log what was retrieved from database
+        console.log('Retrieved settings from database:', settingsMap);
+        
         // Set default values if settings don't exist (use fallbacks)
-        setWhatsappSettings({
+        const finalSettings = {
           business_whatsapp_number: settingsMap.business_whatsapp_number || FALLBACK_CONSTANTS.BUSINESS_PHONE_FALLBACK,
           customer_support_phone: settingsMap.customer_support_phone || FALLBACK_CONSTANTS.SUPPORT_PHONE_FALLBACK
-        });
+        };
+        
+        console.log('Final WhatsApp settings set in component:', finalSettings);
+        setWhatsappSettings(finalSettings);
+      } else {
+        console.error('Failed to fetch settings:', data);
       }
     } catch (error) {
-      // Error handled silently
+      console.error('Error fetching WhatsApp settings:', error);
     } finally {
       setSettingsLoading(false);
     }
@@ -120,6 +128,9 @@ const AdminManagement = () => {
     setIsUpdatingSettings(true);
     
     try {
+      // Debug: Log the current values being sent
+      console.log('Current WhatsApp settings being saved:', whatsappSettings);
+      
       const settingsToUpdate = [
         {
           key: 'business_whatsapp_number',
@@ -148,12 +159,20 @@ const AdminManagement = () => {
       if (response.ok) {
         alert('WhatsApp settings updated successfully!');
         setShowWhatsAppForm(false);
-        fetchWhatsAppSettings(); // Refresh settings
+        fetchWhatsAppSettings(); // Refresh settings immediately
       } else {
-        alert(`Failed to update settings: ${data.error}`);
+        console.error('Failed to update settings:', data);
+        if (response.status === 401) {
+          alert('Authentication failed. Please log in again.');
+          // Optionally redirect to login
+          window.location.href = '/admin/login';
+        } else {
+          alert(`Failed to update settings: ${data.error || 'Unknown error'}`);
+        }
       }
     } catch (error) {
-      alert('Error updating settings. Please try again.');
+      console.error('Error updating settings:', error);
+      alert(`Error updating settings: ${error.message}`);
     } finally {
       setIsUpdatingSettings(false);
     }

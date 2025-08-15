@@ -6,7 +6,7 @@ import { SpecialText } from "@/components/typography";
 import Wrapper from "@/components/Wrapper";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/stores/useCart";
-import { WhatsAppService, BUSINESS_PHONE } from "@/lib/whatsapp";
+import { useBusinessWhatsAppNumber, useWhatsAppNumbers } from "@/hooks/useWhatsAppNumbers";
 import React, { useState } from "react";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -242,6 +242,10 @@ function Checkout({ setShowCheckout }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getCartSummary, clearCart } = useCart();
+  
+  // Use WhatsApp hook with error handling
+  const { businessNumber, loading: phoneLoading } = useBusinessWhatsAppNumber();
+  const { supportNumber } = useWhatsAppNumbers();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -286,6 +290,12 @@ function Checkout({ setShowCheckout }) {
     e.preventDefault();
     
     if (!validateForm()) return;
+    
+    // Check if phone number is still loading
+    if (phoneLoading) {
+      toast.error("Please wait while we load the contact information...");
+      return;
+    }
 
     setIsSubmitting(true);
     
@@ -325,14 +335,62 @@ function Checkout({ setShowCheckout }) {
         return; // Don't proceed to WhatsApp if order save failed
       }
       
-      // Format WhatsApp message
-      const message = WhatsAppService.formatCartMessage(cartSummary, {
+      // Format WhatsApp message locally (without database dependencies)
+      const formatCartMessage = (cartSummary, customerDetails, supportNumber) => {
+        const { items, totalItems, totalPrice, deliveryCharge, finalTotal } = cartSummary;
+        
+        let message = `🛍️ *NEW ORDER FROM EFTA GIFTS*\n\n`;
+        message += `👤 *Customer Details:*\n`;
+        message += `Name: ${customerDetails.name}\n`;
+        message += `Phone: ${customerDetails.phone}\n`;
+        message += `Email: ${customerDetails.email}\n`;
+        message += `Address: ${customerDetails.address}\n`;
+        message += `Pincode: ${customerDetails.pincode}\n\n`;
+        
+        message += `🛒 *Order Details:*\n`;
+        message += `Order ID: ${customerDetails.orderNumber || '#ORD' + Date.now()}\n`;
+        message += `Date: ${new Date().toLocaleDateString('en-IN')}\n\n`;
+        
+        message += `📦 *Items Ordered:*\n`;
+        items.forEach((item, index) => {
+          message += `${index + 1}. ${item.name}\n`;
+          message += `   Quantity: ${item.quantity}\n`;
+          message += `   Price: Rs ${parseFloat(item.price).toFixed(2)} each\n`;
+          message += `   Total: Rs ${parseFloat(item.total).toFixed(2)}\n`;
+          
+          if (item.customization) {
+            message += `   🎨 Customization: ${JSON.stringify(item.customization)}\n`;
+          }
+          message += `\n`;
+        });
+        
+        message += `💰 *Order Summary:*\n`;
+        message += `Subtotal (${totalItems} items): Rs ${parseFloat(totalPrice).toFixed(2)}\n`;
+        message += `Delivery Charges: Rs ${parseFloat(deliveryCharge).toFixed(2)}\n`;
+        message += `*Total Amount: Rs ${parseFloat(finalTotal).toFixed(2)}*\n\n`;
+        
+        message += `⏰ Expected Delivery: 5-7 business days\n`;
+        message += `📞 For any queries, call: ${supportNumber}`;
+        
+        return message;
+      };
+      
+      // Generate WhatsApp link locally (without database dependencies)
+      const generateWhatsAppLink = (phoneNumber, message) => {
+        const cleanNumber = phoneNumber.replace(/^\+91/, '').replace(/\D/g, '');
+        const formattedNumber = `91${cleanNumber}`;
+        const encodedMessage = encodeURIComponent(message);
+        return `https://wa.me/${formattedNumber}?text=${encodedMessage}`;
+      };
+      
+      // Get support number from hook for message formatting
+      const message = formatCartMessage(cartSummary, {
         ...customerDetails,
         orderNumber
-      });
+      }, supportNumber || '+910000000000');
       
       // Generate WhatsApp link that opens in app
-      const whatsappLink = WhatsAppService.generateWhatsAppLink(BUSINESS_PHONE, message);
+      const whatsappLink = generateWhatsAppLink(businessNumber || '+910000000000', message);
       
       // Open WhatsApp directly - this will open in app if available, web otherwise
       window.open(whatsappLink, '_blank');

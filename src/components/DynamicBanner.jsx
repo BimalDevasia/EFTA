@@ -48,26 +48,60 @@ function DynamicBanner({ pageType, onClick, defaultImage = null, defaultTitle = 
     // Only run on client side
     if (typeof window === 'undefined') return;
     
+    console.log('=== ENQUIRY DEBUG START ===');
+    console.log('handleEnquiry called with pageType:', pageType);
+    
     try {
-      // Dynamic import of WhatsApp service and phone numbers
-      const { WhatsAppService } = await import('@/lib/whatsapp');
-      const { getBusinessWhatsAppNumber } = await import('@/lib/dynamicWhatsApp');
+      console.log('Starting WhatsApp enquiry process...');
       
-      // Get current business number from database
-      const businessPhone = await getBusinessWhatsAppNumber();
+      // Get current business number from API instead of database
+      console.log('Fetching business phone number from API...');
+      const response = await fetch('/api/settings?key=business_whatsapp_number');
+      
+      let businessPhone = '+910000000000'; // fallback
+      
+      if (response.ok) {
+        const data = await response.json();
+        businessPhone = data.setting?.value || '+910000000000';
+        console.log('Business phone retrieved from API:', businessPhone);
+      } else {
+        console.warn('Failed to fetch business phone from API, using fallback');
+      }
+      
+      // Warn if using fallback but still proceed
+      if (!businessPhone || businessPhone === '+910000000000') {
+        console.warn('Using fallback business phone number');
+      }
       
       let message = '';
       
+      console.log('Preparing message for pageType:', pageType);
       if (pageType === 'courses') {
         message = `🎨 *Enquiry about Courses - EFTA*\n\nHi! I'm interested in learning more about your courses and training programs. Could you please provide me with details about:\n\n• Available courses\n• Course schedules\n• Fees and registration process\n• Certification details\n\nThank you!`;
       } else if (pageType === 'events') {
         message = `🎉 *Event Planning Enquiry - EFTA*\n\nHi! I'm interested in your event planning services. Could you please provide me with details about:\n\n• Available event packages\n• Pricing and customization options\n• Venue arrangements\n• Catering and decoration services\n\nThank you!`;
       }
       
-      const whatsappLink = WhatsAppService.generateWhatsAppLink(businessPhone, message);
-      window.open(whatsappLink, '_blank');
+      console.log('Message prepared:', message.substring(0, 50) + '...');
+      
+      console.log('Generating WhatsApp link...');
+      // Generate WhatsApp link directly (avoiding database dependencies)
+      const cleanNumber = businessPhone.replace(/^\+91/, '').replace(/\D/g, '');
+      const formattedNumber = `91${cleanNumber}`;
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappLink = `https://wa.me/${formattedNumber}?text=${encodedMessage}`;
+      
+      console.log('WhatsApp link generated:', whatsappLink);
+      
+      console.log('Opening WhatsApp window...');
+      const result = window.open(whatsappLink, '_blank');
+      console.log('Window.open result:', result);
+      console.log('=== ENQUIRY DEBUG END ===');
     } catch (error) {
-      console.error('Error loading WhatsApp service:', error);
+      console.error('=== ENQUIRY ERROR ===');
+      console.error('Error details:', error);
+      console.error('Error stack:', error.stack);
+      alert('Error opening WhatsApp: ' + error.message);
     }
   };
 
