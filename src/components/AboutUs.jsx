@@ -1,11 +1,11 @@
 "use client"
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback, forwardRef } from 'react';
 import Image from 'next/image';
 
 
 
 
-function AboutUs() {
+const AboutUs = forwardRef((props, ref) => {
   const [visibleItems, setVisibleItems] = useState([]);
     const [remainingCount, setRemainingCount] = useState(0);
     const containerRef = useRef(null);
@@ -85,7 +85,7 @@ function AboutUs() {
 
 
   return (
-    <div className='relative w-full min-h-screen lg:h-auto xl:h-screen'>
+    <div ref={ref} className='relative w-full min-h-screen lg:h-auto xl:h-screen'>
        <div className='hidden lg:absolute top-[-10%] lg:flex justify-around w-full font-italiana overflow-hidden lg:text-9xl z-50 pointer-events-none'>
         <div ref={item1} className='flex gap-32 z-50'>
         <div>EVENTS</div>
@@ -148,7 +148,9 @@ function AboutUs() {
 
     
     </div>
-  )
-}
+  );
+});
+
+AboutUs.displayName = 'AboutUs';
 
 export default AboutUs

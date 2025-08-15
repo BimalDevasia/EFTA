@@ -1,7 +1,8 @@
 
+"use client"
 import HomeFront from "@/components/homeFront";
 import AboutUs from "@/components/AboutUs";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useRef } from "react";
 
 // Lazy load below-the-fold components
 const Community = lazy(() => import("@/components/community"));
@@ -16,11 +17,19 @@ const LoadingSpinner = () => (
 );
 
 export default function home() {
+  const aboutUsRef = useRef(null);
+
+  const scrollToAboutUs = () => {
+    if (aboutUsRef.current) {
+      aboutUsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       {/* Critical above-the-fold content - not lazy loaded */}
-      <HomeFront />
-      <AboutUs />
+      <HomeFront onKnowMoreClick={scrollToAboutUs} />
+      <AboutUs ref={aboutUsRef} />
       
       {/* Below-the-fold content - lazy loaded */}
       <Suspense fallback={<LoadingSpinner />}>

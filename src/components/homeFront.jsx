@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-function HomeFront() {
+function HomeFront({ onKnowMoreClick }) {
   return (
     <div className='relative flex flex-col justify-center items-center min-h-screen w-full font-poppins gap-14 overflow-hidden '>
       <div className='absolute lg:top-24 lg:left-24 top-24 left-5 z-0'>
@@ -17,7 +17,12 @@ function HomeFront() {
       </div>
       <div className='flex gap-14'>
         <Link href="/gifts"> <button className='bg-primary_color shadow-button_shadow lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-white font-semibold lg:text-[20px] text-[14px]'>Shop Now</button> </Link>
-        <button className='bg-white bg-clip-border lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-[14px]'>Know More</button>
+        <button 
+          onClick={onKnowMoreClick}
+          className='bg-white bg-clip-border lg:py-4 py-2 lg:px-12 px-6 rounded-[100px] text-primary_color border-primary_color border-dashed border-2 font-semibold lg:text-[20px] text-[14px]'
+        >
+          Know More
+        </button>
       </div>
      
     </div>
