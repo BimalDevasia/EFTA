@@ -16,7 +16,7 @@ const LoadingSpinner = () => (
   </div>
 );
 
-export default function home() {
+export default function Home() {
   const aboutUsRef = useRef(null);
 
   const scrollToAboutUs = () => {
